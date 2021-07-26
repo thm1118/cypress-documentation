@@ -15,7 +15,7 @@ title: 为什么选择Cypress?
 
 <!-- textlint-disable -->
 
-<DocsVideo src="https://youtube.com/embed/LcGHiFnBh3Y"></DocsVideo>
+<DocsVideo src="/img/snippets/Cypress-in-a-Nutshell.mp4"></DocsVideo>
 
 <!-- textlint-enable -->
 

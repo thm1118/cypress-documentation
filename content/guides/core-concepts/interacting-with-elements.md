@@ -1,21 +1,21 @@
 ---
-title: Interacting with Elements
+title: 与DOM元素的互动
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- How Cypress calculates visibility
-- How Cypress ensures elements are actionable
-- How Cypress deals with animating elements
-- How you can bypass these checks and force events
+- Cypress如何计算可见性
+- Cypress如何确保元素是可操作的
+- Cypress如何处理动画元素
+- 如何绕过这些检查和强制事件
 
 </Alert>
 
-## Actionability
+## 可操作性
 
-Some commands in Cypress are for interacting with the DOM such as:
+Cypress中的一些命令是用于与DOM交互的，比如:
 
 - [`.click()`](/api/commands/click)
 - [`.dblclick()`](/api/commands/dblclick)
@@ -27,99 +27,99 @@ Some commands in Cypress are for interacting with the DOM such as:
 - [`.select()`](/api/commands/select)
 - [`.trigger()`](/api/commands/trigger)
 
-These commands simulate a user interacting with your application. Under the hood, Cypress fires the events a browser would fire thus causing your application's event bindings to fire.
+这些命令模拟用户与应用程序交互。在幕后，Cypress触发浏览器会触发的事件，从而导致应用程序的事件绑定被触发。
 
-Prior to issuing any of the commands, we check the current state of the DOM and take some actions to ensure the DOM element is "ready" to receive the action.
+在发出任何命令之前，我们检查DOM的当前状态，并采取一些操作来确保DOM元素已经“准备好”接收操作。
 
-Cypress will wait for the element to pass all of these checks for the duration of the [`defaultCommandTimeout`](/guides/references/configuration#Timeouts) (described in depth in the [Default Assertions](/guides/core-concepts/introduction-to-cypress#Default-Assertions) core concept guide).
+Cypress将在持续时间[`defaultCommandTimeout`](/guides/references/configuration#Timeouts) 内等待元素通过所有这些检查.(在[默认断言](/guides/core-concepts/introduction-to-cypress#Default-Assertions)中进行了深入的核心概念描述).
 
-**_Checks and Actions Performed_**
+**_执行的检查和操作_**
 
-- [Scroll the element into view.](#Scrolling)
-- [Ensure the element is not hidden.](#Visibility)
-- [Ensure the element is not disabled.](#Disability)
-- [Ensure the element is not detached.](#Detached)
-- [Ensure the element is not readonly.](#Readonly)
-- [Ensure the element is not animating.](#Animations)
-- [Ensure the element is not covered.](#Covering)
-- [Scroll the page if still covered by an element with fixed position.](#Scrolling)
-- [Fire the event at the desired coordinates.](#Coordinates)
+- [将元素滚动到视野中.](#Scrolling)
+- [确保元素没有被隐藏.](#Visibility)
+- [确保元素没有被禁用.](#Disability)
+- [确保元素没有分离.](#Detached)
+- [确保元素不是只读的.](#Readonly)
+- [确保元素不在动画中.](#Animations)
+- [确保元素没有被覆盖.](#Covering)
+- [如果仍然被位置固定的元素覆盖，则滚动页面.](#Scrolling)
+- [在所需的坐标处触发事件.](#Coordinates)
 
-Whenever Cypress cannot interact with an element, it could fail at any of the above steps. You will usually get an error explaining why the element was not found to be actionable.
+每当Cypress不能与元素交互时，它可能会在上述任何步骤中失败。您通常会得到一个错误，解释为什么没有发现元素来操作。
 
-### Visibility
+### 可见性
 
-Cypress checks a lot of things to determine an element's visibility. The following calculations factor in CSS translations and transforms.
+Cypress通过检查很多东西来确定元素的可见性。包括以下这些在CSS翻译和转换时的计算因子。
 
-#### An element is considered hidden if:
+#### 一个元素如果被认为是隐藏的，是因为:
 
-- Its `width` or `height` is `0`.
-- Its CSS property (or ancestors) is `visibility: hidden`.
-- Its CSS property (or ancestors) is `display: none`.
-- Its CSS property is `position: fixed` and it's offscreen or covered up.
-- Any of its ancestors **hides overflow**\*
-  - AND that ancestor has a `width` or `height` of `0`
-  - AND an element between that ancestor and the element is `position: absolute`
-- Any of its ancestors **hides overflow**\*
-  - AND that ancestor or an ancestor between it and that ancestor is its offset parent
-  - AND it is positioned outside that ancestor's bounds
-- Any of its ancestors **hides overflow**\*
-  - AND the element is `position: relative`
-  - AND it is positioned outside that ancestor's bounds
+- 它的`width` 或 `height` 是 `0`.
+- 它的CSS属性(或其祖先)是 `visibility: hidden`.
+- 它的CSS属性(或祖先)是 `display: none`.
+- 其CSS属性为 `position: fixed`，并且在屏幕外或者被覆盖.
+- 它的任一个祖先 **隐藏溢出**
+  - 这个祖先的宽度或高度都是0
+  - 以及该祖先和元素之间的元素是绝对位置 `position: absolute`
+- 它的任一祖先 **隐藏溢出**
+  - 这个祖先或者它和那个祖先之间的祖先是它的偏移父代？？-- todo： off 的翻译？
+  - 并且它位于祖先的边界之外
+- 它的任一个祖先 **隐藏溢出**
+  - 它的位置是 `position: relative`
+  - 并且它位于祖先的边界之外
 
-\***hides overflow** means it has `overflow: hidden`, `overflow-x: hidden`, `overflow-y: hidden`, `overflow: scroll`, or `overflow: auto`
-
-<Alert type="info">
-
-<strong class="alert-header">Opacity</strong>
-
-Elements where the CSS property (or ancestors) is `opacity: 0` are considered hidden when [asserting on the element's visibility directly](/guides/references/assertions#Visibility).
-
-However elements where the CSS property (or ancestors) is `opacity: 0` are considered actionable and any commands used to interact with the hidden element will perform the action.
-
-</Alert>
-
-### Disability
-
-Cypress checks whether an element's `disabled` property is `true`.
-
-### Detached
-
-When many applications rerender the DOM, they actually remove the DOM element and insert a new DOM element in its place with the newly change attributes.
-
-Cypress checks whether an element you are making assertions is detached from the DOM. This checks that the element is still within the `document` of the application under test.
-
-### Readonly
-
-Cypress checks whether an element's `readonly` property is set during [.type()](/api/commands/type).
-
-### Animations
-
-Cypress will automatically determine if an element is animating and wait until it stops.
-
-To calculate whether an element is animating we take a sample of the last positions it was at and calculate the element's slope. You might remember this from 8th grade algebra. 😉
-
-To calculate whether an element is animating we check the current and previous positions of the element itself. If the distance exceeds the [`animationDistanceThreshold`](/guides/references/configuration#Actionability), then we consider the element to be animating.
-
-When coming up with this value, we did a few experiments to find a speed that "feels" too fast for a user to interact with. You can always [increase or decrease this threshold](/guides/references/configuration#Actionability).
-
-You can also turn off our checks for animations with the configuration option [`waitForAnimations`](/guides/references/configuration#Actionability).
-
-### Covering
-
-We also ensure that the element we're attempting to interact with isn't covered by a parent element.
-
-For instance, an element could pass all of the previous checks, but a giant dialog could be covering the entire screen making interacting with the element impossible for any real user.
+\***隐藏溢出** 的含义表示元素有这样的属性 `overflow: hidden`, `overflow-x: hidden`, `overflow-y: hidden`, `overflow: scroll`, 或 `overflow: auto`
 
 <Alert type="info">
 
-When checking to see if the element is covered we always check its center coordinates.
+<strong class="alert-header">CSS属性 Opacity(不透明度)</strong>
+
+CSS属性(或祖先属性)`opacity:0`的元素在[直接断言元素的可见性](/guides/references/assertions#Visibility)时被认为是隐藏的.
+
+然而，CSS属性(或祖先)为`opacity:0`的元素被认为是可操作的，任何用于与隐藏元素交互的命令都将执行该操作。
 
 </Alert>
 
-If a _child_ of the element is covering it - that's okay. In fact we'll automatically issue the events we fire to that child.
+### 禁用
 
-Imagine you have a button:
+Cypress检查一个元素的`disabled`属性是否为`true`。
+
+### 分离
+
+当许多应用程序重新呈现DOM时，它们实际上删除了DOM元素，并使用新更改的属性在其位置插入新的DOM元素。
+
+Cypress检查正在进行断言的元素是否与DOM分离。这将检查元素是否仍然在被测试应用程序的`document`中。
+
+### 只读
+
+Cypress检查在[.type()](/api/commands/type)键入期间是否设置了元素的`readonly`属性.
+
+### 动画
+
+Cypress将自动确定一个元素是否是正在动画过程中，并会等待到它停止。
+
+为了计算一个元素是否正在执行动画，我们取它在最后位置的一个样本，并计算该元素的斜率。你们可能还记得8年级的代数课。 😉
+
+为了计算一个元素是否在动画，我们检查元素本身的当前和以前的位置。如果距离超过[`animationDistanceThreshold`](/guides/references/configuration#Actionability), 那么我们认为元素在执行动画。
+
+当我们想出这个值时，我们做了一些实验，以找到一个“感觉”过快的用户交互速度。你可以[增加或减少这个阈值](/guides/references/configuration#Actionability).
+
+你也可以使用配置选项[`waitForAnimations`](/guides/references/configuration#Actionability)来关闭我们的动画检查。.
+
+### 遮盖
+
+我们还确保我们试图交互的元素不在父元素中.
+
+例如，一个元素可以通过之前的所有检查，但一个巨大的对话框可能会覆盖整个屏幕，使任何真正的用户都无法与该元素进行交互。
+
+<Alert type="info">
+
+当检查元素是否被覆盖时，我们总是检查它的中心坐标。
+
+</Alert>
+
+如果元素的子元素覆盖了它，那也没关系。事实上，我们会自动向该子对象发出我们所触发的事件。
+
+假设你有一个按钮:
 
 ```html
 <button>
@@ -128,117 +128,116 @@ Imagine you have a button:
 </button>
 ```
 
-Oftentimes either the `<i>` or `<span>` element is covering the exact coordinate we're attempting to interact with. In those cases, the event fires on the child. We even note this for you in the [Command Log](/guides/core-concepts/test-runner#Command-Log).
+通常情况下，`<i>`或`<span>`元素覆盖了我们试图与之交互按钮的精确坐标。在这些情况下，事件会触发在子元素上。我们在[命令日志](/guides/core-concepts/test-runner#Command-Log)中标注这个
 
-### Scrolling
+### 滚动
 
-Before interacting with an element, we will _always_ scroll it into view (including any of its parent containers). Even if the element was visible without scrolling, we perform the scrolling algorithm in order to reproduce the same behavior every time the command is run.
+在与元素交互之前，我们 _总是_ 将它滚动到视野中(包括它的任何父容器)。即使元素在不滚动的情况下是可见的，我们也会执行滚动算法，以便在每次运行命令时重现相同的行为。
 
 <Alert type="info">
 
-This scrolling logic only applies to [commands that are actionable above](#Actionability). **We do not scroll elements** into view when using DOM commands such as [cy.get()](/api/commands/get) or [.find()](/api/commands/find).
+这个滚动逻辑只适用于[上面提到的可操作的命令](#Actionability).当使用[cy.get()](/api/commands/get)或者[.find()](/api/commands/find)这样的DOM操作命令时，我们不会将元素滚动到视野中。
 
 </Alert>
 
-By default, the scrolling algorithm works by scrolling the top, leftmost point of the element we issued the command on to the top, leftmost scrollable point of its scrollable container.
+默认情况下，滚动算法的工作原理是将发出命令的元素的顶部最左的点滚动到可滚动容器的顶部最左的可滚动点。
 
-After scrolling the element, if we determine that it is still being covered up, we will continue to scroll and "nudge" the page until it becomes visible. This most frequently happens when you have `position: fixed` or `position: sticky` navigation elements which are fixed to the top of the page.
+在滚动元素之后，如果我们确定它仍然被覆盖，我们将继续滚动和“轻推”页面，直到它变得可见. 这种情况最常发生在`position: fixed`或`position: sticky`导航元素固定在页面顶部时.
 
-Our algorithm _should_ always be able to scroll until the element is not covered.
+我们的算法 _应该_ 总是能够滚动到元素没有被覆盖。
 
-To change the position in the viewport to where we scroll an element, you can use the [`scrollBehavior`](/guides/references/configuration#Actionability) configuration option. This can be useful if the element is covered up when aligned to the top of the viewport, or if you just prefer the element to be centered during scrolling of action commands. Accepted values are `'center'`, `'top'`, `'bottom'`, `'nearest'`, and `false`, with `false` disabling scrolling altogether.
+要改变视图中滚动元素的位置，你可以使用[`scrollBehavior`](/guides/references/configuration#Actionability)配置选项. 如果元素在对齐到视口顶部时被覆盖，或者如果您只是希望元素在滚动操作命令时居中，那么这将非常有用. 可接受的选项是`center`、`top`、`bottom`、`nearest`和`false`，`false`禁用滚动。
 
-### Coordinates
+###  坐标
 
-After we verify the element is actionable, Cypress will then fire all of the appropriate events and corresponding default actions. Usually these events' coordinates are fired at the center of the element, but most commands enable you to change the position it's fired to.
+在我们确定元素可以被操作之后，Cypress将触发所有适当的事件和相应的默认操作.通常这些事件的坐标是在元素的中心触发，但是大多数命令都允许您更改触发位置.
 
 ```js
 cy.get('button').click({ position: 'topLeft' })
 ```
 
-The coordinates we fired the event at will generally be available when clicking the command in the [Command Log](/guides/core-concepts/test-runner#Command-Log).
+当点击[命令日志](/guides/core-concepts/test-runner#Command-Log)中的命令时，我们触发事件的坐标通常可用。
 
 <DocsImage src="/img/guides/coords.png" alt="Event coordinates" ></DocsImage>
 
-Additionally we'll display a red "hitbox" - which is a dot indicating the coordinates of the event.
+此外，我们将显示一个红色的`点击框`——这是一个表示事件坐标的圆点。
 
 <DocsImage src="/img/guides/hitbox.png" alt="Hitbox" ></DocsImage>
 
-## Debugging
+## 调试
 
-It can be difficult to debug problems when elements are not considered actionable by Cypress.
+当Cypress认为元素不可操作时，调试问题可能会很困难.
 
-Although you _should_ see a nice error message, nothing beats visually inspecting and poking at the DOM yourself to understand the reason why.
+尽管您应该会看到一个很好的错误消息，但没有什么比亲自查看DOM来理解原因更棒了。
 
-When you use the [Command Log](/guides/core-concepts/test-runner#Command-Log) to hover over a command, you'll notice that we will always scroll the element the command was applied to into view. Please note that this is _NOT_ using the same algorithms that we described above.
+当你使用[命令日志](/guides/core-concepts/test-runner#Command-Log)，把鼠标悬停在一个命令上时，你会注意到我们总是将对应的元素滚动到视野中。请注意，这里的算法与我们上面描述的 _不一样_
 
-In fact we only ever scroll elements into view when actionable commands are running using the above algorithms. We _do not_ scroll elements into view on regular DOM commands like [`cy.get()`](/api/commands/get) or [`.find()`](/api/commands/find).
+事实上，只有在使用上述算法运行操作命令时，我们才会将元素滚动到视野中. 我们在使用常规的DOM命令(如[`cy.get()`](/api/commands/get) 或 [`.find()`](/api/commands/find))时，_不会_ 将元素滚动到视野中。.
 
-The reason we scroll an element into view when hovering over a snapshot is to help you to see which element(s) were found by that corresponding command. It's a purely visual feature and does not necessarily reflect what your page looked like when the command ran.
+当鼠标悬停在快照上时，我们将元素滚动到视野中的原因是帮助您查看相应的命令找到了哪个元素. 它是一个纯粹的视觉特性，并不一定反映您的页面在命令运行时的样子.
 
-In other words, you cannot get a correct visual representation of what Cypress "saw" when looking at a previous snapshot.
+换句话说，当你查看之前的快照时，你无法得到Cypress“看到”的正确的视觉表现.
 
-The only way for you to "see" and debug why Cypress thought an element was not visible is to use a `debugger` statement.
+“看到”和调试为什么Cypress认为一个元素是不可见的唯一方法是使用`debugger`语句.
 
-We recommend placing `debugger` or using the [`.debug()`](/api/commands/debug) command directly BEFORE the action.
+我们建议在操作之前直接放置`debugger`或使用[`.debug()`](/api/commands/debug) 命令.
 
-Make sure your Developer Tools are open and you can get pretty close to "seeing" the calculations Cypress is performing.
+确保你的开发工具是打开状态，你可以非常接近“看到”Cypress正在执行的计算。
 
-You can also [bind to Events](/api/events/catalog-of-events) that Cypress fires as it's working with your element. Using a debugger with these events will give you a much lower level view into how Cypress works.
+你也可以[绑定事件](/api/events/catalog-of-events)， Cypress在处理你的元素时触发它. 使用带有这些事件的debugger将使您对Cypress如何工作有一个更低层次的了解。
 
 ```js
-// break on a debugger before the action command
+// 在动作命令之前在调试器前停止
 cy.get('button').debug().click()
 ```
 
-## Forcing
+## 强制
 
-While the above checks are super helpful at finding situations that would prevent your users from interacting with elements - sometimes they can get in the way!
+虽然上面的检查在寻找可能阻止用户与元素交互的情况时非常有用——但有时它们会碍事!
 
-Sometimes it's not worth trying to "act like a user" to get a robot to do the exact steps a user would to interact with an element.
+有时候，尝试“像用户一样行事”让机器人执行用户与元素交互的精确步骤是不值得的。
 
-Imagine you have a nested navigation structure where the user must hover over and move the mouse in a very specific pattern to reach the desired link.
+假设您有一个嵌套的导航结构，用户必须将鼠标悬停在上面，并以非常特定的模式移动鼠标才能到达所需的链接。
 
-Is this worth trying to replicate when you're testing?
+当您进行测试时，是否值得尝试完整复制 ?
 
-Maybe not! For these scenarios, we give you an escape hatch to bypass all of the checks above and force events to happen!
+也许不是! 对于这些情况，我们给你一个逃生出口，绕过上面所有的检查，强制事件触发!
 
-You can pass `{ force: true }` to most action commands.
+您可以将`{force: true}`传递给大多数动作命令。
 
 ```js
-// force the click and all subsequent events
-// to fire even if this element isn't considered 'actionable'
+// 强制点击并触发所有后续事件，即使该元素不被认为是“可操作的”
 cy.get('button').click({ force: true })
 ```
 
 <Alert type="info">
 
-<strong class="alert-header">What's the difference?</strong>
+<strong class="alert-header">有什么不同?</strong>
 
-When you force an event to happen we will:
+当你强迫某件事发生时，我们会:
 
-- Continue to perform all default actions
-- Forcibly fire the event at the element
+- 继续执行所有默认动作
+- 强制在元素上触发事件
 
-We will NOT perform these:
+我们不会执行这些:
 
-- Scroll the element into view
-- Ensure it is visible
-- Ensure it is not disabled
-- Ensure it is not detached
-- Ensure it is not readonly
-- Ensure it is not animating
-- Ensure it is not covered
-- Fire the event at a descendent
+- 将元素滚动到视野中
+- 确保是可见的
+- 确保它没有被禁用
+- 确保它没有被分离
+- 确保它不是只读的
+- 确保它不在动画中
+- 确保它没有被覆盖
+- 向后代发射事件
 
 </Alert>
 
-In summary, `{ force: true }` skips the checks, and it will always fire the event at the desired element.
+总之，`{ force: true }`'会跳过检查，并且总是在所需的元素上触发事件。
 
 <Alert type="warning">
 
-<strong class="alert-header">force `.select()` disabled options</strong>
+<strong class="alert-header">强制`.select()`禁用选项</strong>
 
-Passing `{ force: true }` to [.select()](/api/commands/select) will not override the actionability checks for selecting a disabled `<option>` or an option within a disabled `<optgroup>`. See [this issue](https://github.com/cypress-io/cypress/issues/107) for more detail.
+将`{force: true}`传递给[.select()](/api/commands/select)不会覆盖选择禁用的`<option>`或禁用的`<optgroup>`中的选项时的可操作性检查. 详见[此问题](https://github.com/cypress-io/cypress/issues/107).
 
 </Alert>
