@@ -1,142 +1,139 @@
 ---
-title: Variables and Aliases
+title: 变量和别名
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- How to deal with async commands
-- What Aliases are and how they simplify your code
-- Why you rarely need to use variables with Cypress
-- How to use Aliases for objects, elements and routes
+- 如何处理异步命令
+- 别名是什么以及它们如何简化您的代码
+- 为什么在Cypress中很少需要使用变量
+- 如何为对象，元素和路由使用别名
 
 </Alert>
 
 ## Return Values
 
-New users to Cypress may initially find it challenging to work with the asynchronous nature of our APIs.
+Cypress的新用户最初可能会发现使用我们api的异步特性很有挑战性。
 
 <Alert type="success">
 
-<strong class="alert-header">Do not worry!</strong>
+<strong class="alert-header">不要担心!</strong>
 
-There are many ways to reference, compare and utilize the objects that Cypress commands yield you.
+有许多方法可以引用、比较和利用Cypress命令生成的对象。
 
-Once you get the hang of async code you'll realize you can do everything you could do synchronously, without your code doing any backflips.
+一旦你掌握了异步代码的窍门，你就会意识到你可以做所有你可以同步做的事情，而不会让你的代码做后空翻。
 
-This guide explores many common patterns for writing good Cypress code that can handle even the most complex situations.
+本指南探索了许多常见的模式，用于编写能够处理最复杂情况的优秀Cypress代码。
 
 </Alert>
 
-Asynchronous APIs are here to stay in JavaScript. They are found everywhere in modern code. In fact, most new browser APIs are asynchronous and many core Node modules are asynchronous as well.
+异步api始终存在JavaScript中。它们在现代代码中随处可见。事实上，大多数新的浏览器api都是异步的，许多核心Node模块也是异步的.
 
-The patterns we'll explore below are useful in and outside of Cypress.
+下面我们将探索的模式在Cypress内外都很有用。
 
-The first and most important concept you should recognize is...
+你应该认识到的第一个也是最重要的概念是...
 
 <Alert type="danger">
 
-<strong class="alert-header">Return Values</strong>
+<strong class="alert-header">返回值</strong>
 
-**You cannot assign or work with the return values** of any Cypress command. Commands are enqueued and run asynchronously.
+您不能分配或使用任何 **Cypress命令的返回值**. 命令排队并异步运行.
 
 </Alert>
 
 ```js
-// this won't work the way you think it does
+// 事情不会像你想的那样发生
 const button = cy.get('button')
 const form = cy.get('form')
 
 button.click()
 ```
 
-### Closures
+### 闭包
 
-To access what each Cypress command yields you use [`.then()`](/api/commands/then).
+使用[`.then()`](/api/commands/then)可以访问每个Cypress命令输出的结果.
 
 ```js
 cy.get('button').then(($btn) => {
-  // $btn is the object that the previous
-  // command yielded us
+  // $btn是前一个命令输出给我们的对象
 })
 ```
 
-If you're familiar with [native Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) the Cypress `.then()` works the same way. You can continue to nest more Cypress commands inside of the `.then()`.
+如果你熟悉[原生Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) ，Cypress的`.then() `也以同样的方式工作. 您可以继续在`.then()`中嵌套更多的Cypress命令.
 
-Each nested command has access to the work done in previous commands. This ends up reading very nicely.
+每个嵌套命令都可以访问前面命令中完成的工作. 下面的代码是更好的阐述.
 
 ```js
 cy.get('button').then(($btn) => {
 
-  // store the button's text
+  // 存储按钮的文本
   const txt = $btn.text()
 
-  // submit a form
+  // 提交表单
   cy.get('form').submit()
 
-  // compare the two buttons' text
-  // and make sure they are different
+  // 比较两个按钮的文本，确保它们是不同的
   cy.get('button').should(($btn2) => {
     expect($btn2.text()).not.to.eq(txt)
   })
 })
 
-// these commands run after all of the
-// other previous commands have finished
+// 这些命令在所有其他前面的命令完成后运行
 cy.get(...).find(...).should(...)
 ```
 
-The commands outside of the `.then()` will not run until all of the nested commands finish.
+直到所有嵌套的命令都完成，`.then()` 之外的命令才会运行，
 
 <Alert type="info">
 
-By using callback functions we've created a [closure](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures). Closures enable us to keep references around to refer to work done in previous commands.
+通过使用回调函数，我们创建了一个[闭包](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures). 闭包使我们能够保持引用，用来引用之前命令已完成的工作.
 
 </Alert>
 
 ### Debugging
 
-Using `.then()` functions is an excellent opportunity to use [`debugger`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger). This can help you understand the order in which commands are run. This also enables you to inspect the objects that Cypress yields you in each command.
+使用`.then()`函数是使用[`debugger`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger) 的绝佳机会. 这可以帮助您理解命令运行的顺序。这还使您能够检查Cypress在每个命令中生成的对象。
 
 ```js
 cy.get('button').then(($btn) => {
-  // inspect $btn <object>
+  // 检查 $btn <object>
   debugger
 
   cy.get('#countries')
     .select('USA')
     .then(($select) => {
-      // inspect $select <object>
+      // 检查 $select <object>
       debugger
 
       cy.url().should((url) => {
-        // inspect the url <string>
+        // 检查 the url <string>
         debugger
 
-        $btn // is still available
-        $select // is still available too
+        $btn // 仍然可用
+        $select // 也仍然可用
       })
     })
 })
 ```
 
-### Variables
+###  变量
 
-Typically in Cypress you hardly need to ever use `const`, `let`, or `var`. When using closures you'll always have access to the objects that were yielded to you without assigning them.
+通常在Cypress中, 你几乎不需要使用`const`, `let`, 或 `var`. 当使用闭包时，你总是可以访问那些给你的对象，而不需要分配它们到某个变量。
 
-The one exception to this rule is when you are dealing with mutable objects (that change state). When things change state you often want to compare an object's previous value to the next value.
+这个规则的一个例外是当你处理可变对象(改变状态)时.当事情的状态发生变化时，你通常想要比较对象的前一个值和下一个值。
 
-Here's a great use case for a `const`.
+这里有一个`const`的很好的用例.
 
 ```html
 <button>increment</button>
 
-you clicked button <span id="num">0</span> times
+你点击按钮 <span id="num">0</span> 次
 ```
 
 ```js
-// app code
+// 应用代码
 let count = 0
 
 $('button').on('click', () => {
@@ -145,28 +142,28 @@ $('button').on('click', () => {
 ```
 
 ```js
-// cypress test code
+// cypress 测试代码
 cy.get('#num').then(($span) => {
-  // capture what num is right now
+  // 捕获num现在是什么值
   const num1 = parseFloat($span.text())
 
   cy.get('button')
     .click()
     .then(() => {
-      // now capture it again
+      // 现在再捕捉一次
       const num2 = parseFloat($span.text())
 
-      // make sure it's what we expected
+      // 确保这是我们所期望的
       expect(num2).to.eq(num1 + 1)
     })
 })
 ```
 
-The reason for using `const` is because the `$span` object is mutable. Whenever you have mutable objects and you're trying to compare them, you'll need to store their values. Using `const` is a perfect way to do that.
+使用`const`的原因是`$span`对象是可变的. 当你有可变对象并试图比较它们时，你需要存储它们的值。使用`const`是一种完美的方式.
 
-## Aliases
+## 别名
 
-Using `.then()` callback functions to access the previous command values is great&mdash;but what happens when you're running code in hooks like `before` or `beforeEach`?
+使用`.then()`回调函数来访问之前的命令值是很好的;但是当你在`before`or `beforeEach`这样的钩子中运行代码,会发生什么呢 ?
 
 ```js
 beforeEach(() => {
@@ -176,77 +173,75 @@ beforeEach(() => {
 })
 
 it('does not have access to text', () => {
-  // how do we get access to text ?!?!
+  //我们如何访问 text ?!
 })
 ```
 
-How will we get access to `text`?
+我们将如何访问`text`?
 
-We could make our code do some ugly backflips using `let` to get access to it.
+我们可以使用“`let`让代码做一些丑陋的后空翻来访问它.
 
 <Alert type="danger">
 
-<strong class="alert-header">Do not do this</strong>
+<strong class="alert-header">不要这样做</strong>
 
-This code below is just for demonstration.
+下面的代码只是用于不好的演示。
 
 </Alert>
 
 ```js
 describe('a suite', () => {
-  // this creates a closure around
-  // 'text' so we can access it
+  //这创建了一个围绕'text'的闭包，这样我们就可以访问它了
   let text
 
   beforeEach(() => {
     cy.button().then(($btn) => {
-      // redefine text reference
+      // 定义 text的引用
       text = $btn.text()
     })
   })
 
-  it('does have access to text', () => {
-    // now text is available to us
-    // but this is not a great solution :(
+  it('可以使用text', () => {
+    // 现在我们可以使用text，但这不是一个很好的解决方案:(
     text
   })
 })
 ```
 
-Fortunately, you don't have to make your code do backflips. With Cypress, we can better handle these situations.
+幸运的是，您不必让您的代码做后空翻。有了Cypress，我们能更好地处理这些情况。
 
 <Alert type="success">
 
-<strong class="alert-header">Introducing Aliases</strong>
+<strong class="alert-header">引入别名</strong>
 
-Aliases are a powerful construct in Cypress that have many uses. We'll explore each of their capabilities below.
+别名在Cypress中是一个功能强大的结构，有很多用途。我们将在下面探索它们的每个功能.
 
-At first, we'll use them to share objects between your hooks and your tests.
+首先，我们将使用它们在钩子和测试之间共享对象.
 
 </Alert>
 
-### Sharing Context
+### 共享上下文
 
-Sharing context is the simplest way to use aliases.
+共享上下文是使用别名的最简单方法.
 
-To alias something you'd like to share use the [`.as()`](/api/commands/as) command.
+使用[`.as()`](/api/commands/as)命令别名您想要共享的内容.
 
-Let's look at our previous example with aliases.
+让我们看一下前面使用别名的示例.
 
 ```js
 beforeEach(() => {
-  // alias the $btn.text() as 'text'
+  // 将$btn.text()别名为'text'
   cy.get('button').invoke('text').as('text')
 })
 
 it('has access to text', function () {
-  this.text // is now available
+  this.text // 现在可以引用
 })
 ```
 
-Under the hood, aliasing basic objects and primitives utilizes Mocha's shared [`context`](https://github.com/mochajs/mocha/wiki/Shared-Behaviours) object: that is, aliases are available as `this.*`.
+在底层，别名的基本对象和原语利用了Mocha的共享[`context`](https://github.com/mochajs/mocha/wiki/Shared-Behaviours) 对象:也就是说，别名可以通过`this.*`的属性使用.
 
-Mocha automatically shares contexts for us across all applicable hooks for each test. Additionally these aliases and properties are automatically cleaned up after each test.
+Mocha在每个测试的所有适用钩子上自动为我们共享上下文. 此外，这些别名和属性会在每次测试后自动清除。
 
 ```js
 describe('parent', () => {
@@ -264,7 +259,7 @@ describe('parent', () => {
         cy.wrap('three').as('c')
       })
 
-      it('can access all aliases as properties', function () {
+      it('可以访问作为属性的所有别名', function () {
         expect(this.a).to.eq('one') // true
         expect(this.b).to.eq('two') // true
         expect(this.c).to.eq('three') // true
@@ -274,149 +269,147 @@ describe('parent', () => {
 })
 ```
 
-#### Accessing Fixtures:
+#### 访问夹具:
 
-The most common use case for sharing context is when dealing with [`cy.fixture()`](/api/commands/fixture).
+共享上下文最常见的用例是在处理[`cy.fixture()`](/api/commands/fixture).
 
-Often times you may load a fixture in a `beforeEach` hook but want to utilize the values in your tests.
+通常情况下，您可能会在`beforeEach` 钩子中加载一个fixture，在测试中使用.
 
 ```js
 beforeEach(() => {
-  // alias the users fixtures
+  // 别名 用户fixture
   cy.fixture('users.json').as('users')
 })
 
-it('utilize users in some way', function () {
-  // access the users property
+it('以某种方式使用用户', function () {
+  // 访问users属性
   const user = this.users[0]
 
-  // make sure the header contains the first
-  // user's name
+  // 确保标题包含第一个
+  // user的name
   cy.get('header').should('contain', user.name)
 })
 ```
 
 <Alert type="danger">
 
-<strong class="alert-header">Watch out for async commands</strong>
+<strong class="alert-header">注意异步命令</strong>
 
-Do not forget that **Cypress commands are async**!
+不要忘记 **Cypress命令是异步的** !
 
-You cannot use a `this.*` reference until the `.as()` command runs.
+在`.as()`命令运行完成前，你不能用`this.*`引用.
 
 </Alert>
 
 ```js
-it('is not using aliases correctly', function () {
+it('不正确使用别名', function () {
   cy.fixture('users.json').as('users')
 
-  // nope this won't work
+  // 这是错误的
   //
-  // this.users is not defined
-  // because the 'as' command has only
-  // been enqueued - it has not run yet
+  // this.users 还没有定义
+  // 因为`as`命令只被加入了队列-它还没有运行
   const user = this.users[0]
 })
 ```
 
-The same principles we introduced many times before apply to this situation. If you want to access what a command yields you have to do it in a closure using a [`.then()`](/api/commands/then).
+我们以前介绍过很多次的原则也适用于这种情况。如果你想要访问命令产生的结果你必须在闭包中使用[`.then()`](/api/commands/then).
 
 ```js
-// yup all good
+// 是的好
 cy.fixture('users.json').then((users) => {
-  // now we can avoid the alias altogether
-  // and use a callback function
+  // 现在我们可以完全避免使用别名
+  // 并使用回调函数
   const user = users[0]
 
-  // passes
+  // 通过
   cy.get('header').should('contain', user.name)
 })
 ```
 
-#### Avoiding the use of `this`
+#### 避免使用 `this`
 
 <Alert type="warning">
 
-<strong class="alert-header">Arrow Functions</strong>
+<strong class="alert-header">箭头函数</strong>
 
-Accessing aliases as properties with `this.*` will not work if you use [arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) for your tests or hooks.
+如果你使用[箭头函数](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) 作为测试或钩子函数体，就无法使用`this.*`属性访问别名，
 
-This is why all of our examples use the regular `function () {}` syntax as opposed to the lambda "fat arrow" syntax `() => {}`.
+这就是为什么我们所有的例子都使用常规的`function(){}`语法而不是lambda的`fat arrow`语法`() => {}`.
 
 </Alert>
 
-Instead of using the `this.*` syntax, there is another way to access aliases.
+除了`this.*`语法访问别名，还有另一种访问别名的方法。
 
-The [`cy.get()`](/api/commands/get) command is capable of accessing aliases with a special syntax using the `@` character:
+[`cy.get()`](/api/commands/get) 命令能够使用特殊的语法使用`@`字符访问别名:
 
 ```js
 beforeEach(() => {
-  // alias the users fixtures
+  // 别名用户fixture
   cy.fixture('users.json').as('users')
 })
 
-it('utilize users in some way', function () {
-  // use the special '@' syntax to access aliases
-  // which avoids the use of 'this'
+it('以某种方式使用用户', function () {
+  // 使用特殊的'@'语法访问别名
+  // 从而避免使用`this.*`
   cy.get('@users').then((users) => {
-    // access the users argument
+    // 访问users
     const user = users[0]
 
-    // make sure the header contains the first
+    // 确保标题包含第一个
     // user's name
     cy.get('header').should('contain', user.name)
   })
 })
 ```
 
-By using [`cy.get()`](/api/commands/get) we avoid the use of `this`.
+通过使用[`cy.get()`](/api/commands/get) 我们可以避免使用`this`.
 
-Keep in mind that there are use cases for both approaches because they have different ergonomics.
+记住，这两种方法都有用例，因为它们有不同的工效.
 
-When using `this.users` we have access to it synchronously, whereas when using `cy.get('@users')` it becomes an asynchronous command.
+当使用`this.users`时，是同步访问它, 而当使用 `cy.get('@users')`时，它变成了一个异步命令.
 
-You can think of the `cy.get('@users')` as doing the same thing as [`cy.wrap(this.users)`](/api/commands/wrap).
+你可以把`cy.get('@users')`想成与[`cy.wrap(this.users)`](/api/commands/wrap)一样 .
 
-### Elements
+### 元素
 
-Aliases have other special characteristics when being used with DOM elements.
+在与DOM元素一起使用时，别名还有其他特殊特征.
 
-After you alias DOM elements, you can then later access them for reuse.
+在给DOM元素起了别名之后，可用于后面的重用。
 
 ```javascript
-// alias all of the tr's found in the table as 'rows'
+// 将table 中找到的所有tr别名为'rows'
 cy.get('table').find('tr').as('rows')
 ```
 
-Internally, Cypress has made a reference to the `<tr>` collection returned as the alias "rows". To reference these same "rows" later, you can use the [`cy.get()`](/api/commands/get) command.
+在内部，Cypress引用了`<tr>`集合作为别名"rows"返回。 要在以后引用这些“rows”，可以使用[`cy.get()`](/api/commands/get) 命令.
 
 ```javascript
-// Cypress returns the reference to the <tr>'s
-// which allows us to continue to chain commands
-// finding the 1st row.
+// Cypress返回对<tr> 的引用，
+// 这允许我们继续链上查找第一行的命令
 cy.get('@rows').first().click()
 ```
 
-Because we've used the `@` character in [`cy.get()`](/api/commands/get), instead of querying the DOM for elements, [`cy.get()`](/api/commands/get) looks for an existing alias called `rows` and returns the reference (if it finds it).
+因为我们在[`cy.get()`](/api/commands/get)中使用了`@`字符，而不是在DOM中查询元素，[`cy.get()`](/api/commands/get)查找名为`rows`的现有别名并返回引用(如果找到它).
 
-#### Stale Elements:
+#### 不新鲜的元素:
 
-In many single-page JavaScript applications the DOM re-renders parts of the application constantly. If you alias DOM elements that have been removed from the DOM by the time you call [`cy.get()`](/api/commands/get) with the alias, Cypress automatically re-queries the DOM to find these elements again.
+在许多单页面JavaScript应用程序中，DOM不断地重新呈现应用程序的某些部分. 如果在使用别名调用[`cy.get()`](/api/commands/get)时将已从DOM中删除的DOM元素作为别名，Cypress将自动重新查询DOM以再次找到这些元素。
 
 ```html
 <ul id="todos">
   <li>
-    Walk the dog
-    <button class="edit">edit</button>
+   遛狗
+    <button class="edit">编辑</button>
   </li>
   <li>
-    Feed the cat
-    <button class="edit">edit</button>
+    喂猫
+    <button class="edit">编辑</button>
   </li>
 </ul>
 ```
 
-Let's imagine when we click the `.edit` button that our `<li>` is re-rendered in the DOM. Instead of displaying the edit button it instead displays an `<input />` text field allowing you to edit the todo. The previous `<li>` has been _completely_ removed from the DOM and a new `<li>` is rendered in its place.
+让我们想象一下，当我们点击'.edit'按钮，我们的`<li>`在DOM中被重新渲染. 它不再显示编辑案例，而是显示了一个`<input />`表单文本，从而允许您编辑todo. 之前的`<li>`已经完全从DOM中删除，并在其位置呈现一个新的`<li>`.
 
 ```javascript
 cy.get('#todos li').first().as('firstTodo')
@@ -427,32 +420,32 @@ cy.get('@firstTodo')
   .type('Clean the kitchen')
 ```
 
-When we reference `@firstTodo`, Cypress checks to see if all of the elements it is referencing are still in the DOM. If they are, it returns those existing elements. If they aren't, Cypress replays the commands leading up to the alias definition.
+当我们引用`@firstTodo`时，Cypress会检查它所引用的所有元素是否仍然在DOM中. 如果是，则返回那些现有的元素。如果不是，Cypress将重播通向别名定义的命令.
 
-In our case it would re-issue the commands: `cy.get('#todos li').first()`. Everything works because the new `<li>` is found.
+在我们的例子中，它将重新发出命令: `cy.get('#todos li').first()`. 一切正常，因为找到了新的`<li>`。
 
 <Alert type="warning">
 
-_Usually_, replaying previous commands will return what you expect, but not always. It is recommended that you **alias elements as soon as possible** instead of further down a chain of commands.
+通常，重放以前的命令会返回您所期望的结果，但并不总是如此. 建议您尽快为元素设置别名，而不是进一步使用命令链.
 
-- `cy.get('#nav header .user').as('user')` <Icon name="check-circle" color="green"></Icon> (good)
-- `cy.get('#nav').find('header').find('.user').as('user')` <Icon name="exclamation-triangle" color="red"></Icon> (bad)
+- `cy.get('#nav header .user').as('user')` <Icon name="check-circle" color="green"></Icon> (好)
+- `cy.get('#nav').find('header').find('.user').as('user')` <Icon name="exclamation-triangle" color="red"></Icon> (差)
 
-When in doubt, you can _always_ issue a regular [`cy.get()`](/api/commands/get) to query for the elements again.
+当有疑问时，您总是可以发出一个常规的[`cy.get()`](/api/commands/get)来再次查询元素.
 
 </Alert>
 
-### Intercepts
+### 拦截
 
-Aliases can also be used with [cy.intercept()](/api/commands/intercept). Aliasing your intercepted routes enables you to:
+别名也可以与[cy.intercept()](/api/commands/intercept)一起使用. 别名你拦截的路由可以让你:
 
-- ensure your application makes the intended requests
-- wait for your server to send the response
-- access the actual request object for assertions
+- 确保应用程序发出预期的请求
+- 等待服务器发送响应
+- 访问断言的实际请求对象
 
 <DocsImage src="/img/guides/aliasing-routes.jpg" alt="Alias commands" ></DocsImage>
 
-Here's an example of aliasing an intercepted route and waiting on it to complete.
+这里有一个别名拦截路由的例子，并等待它完成。
 
 ```js
 cy.intercept('POST', '/users', { id: 123 }).as('postUser')
@@ -463,79 +456,79 @@ cy.wait('@postUser').then(({ request }) => {
   expect(request.body).to.have.property('name', 'Brian')
 })
 
-cy.contains('Successfully created user: Brian')
+cy.contains('成功创建用户: Brian')
 ```
 
 <Alert type="info">
 
-<strong class="alert-header">New to Cypress?</strong>
+<strong class="alert-header">刚接触Cypress ?</strong>
 
-[We have a much more detailed and comprehensive guide on routing Network Requests.](/guides/guides/network-requests)
+[我们有一个关于路由网络请求的更详细和全面的指南](/guides/guides/network-requests)
 
 </Alert>
 
-### Requests
+###  请求
 
-Aliases can also be used with [requests](/api/commands/request).
+别名也可以用于[请求](/api/commands/request).
 
-Here's an example of aliasing a request and accessing its properties later.
+下面是一个别名请求，并稍后访问其属性的示例.
 
 ```js
 cy.request('https://jsonplaceholder.cypress.io/comments').as('comments')
 
-// other test code here
+// 这里还有 其他测试代码
 
 cy.get('@comments').should((response) => {
   if (response.status === 200) {
       expect(response).to.have.property('duration')
     } else {
-      // whatever you want to check here
+      // 你想查什么都行
     }
   })
 })
 ```
 
-### Aliases are reset before each test
+### 在每个测试之前都会重置别名
 
-**Note:** all aliases are reset before each test. A common user mistake is to create aliases using the `before` hook. Such aliases work in the first test only!
+**Note:** 在每个测试之前会重置所有别名. 一个常见的用户错误是使用`before`钩子创建别名. 这样的别名仅在第一个测试中有效!
 
 ```js
-// 🚨 THIS EXAMPLE DOES NOT WORK
+// 🚨 这是错误的例子
 before(() => {
-  // notice this alias is created just once using "before" hook
+  // 注意，这个别名只使用`before`钩子创建了一次
   cy.wrap('some value').as('exampleValue')
 })
 
-it('works in the first test', () => {
+it('在第一个测试中有效', () => {
   cy.get('@exampleValue').should('equal', 'some value')
 })
 
-// NOTE the second test is failing because the alias is reset
-it('does not exist in the second test', () => {
-  // there is not alias because it is created once before
-  // the first test, and is reset before the second test
+// 说明由于别名被重置，第二次测试失败
+it('不存在于第二次测试吗', () => {
+  // 这里没有别名，因为它是在第一个测试之前创建的，
+  // 并且在第二个测试之前重置
   cy.get('@exampleValue').should('equal', 'some value')
 })
 ```
 
-The solution is to create the aliases before each test using the `beforeEach` hook
+解决方案是在每次测试之前使用 `beforeEach`钩子创建别名
 
 ```js
-// ✅ THE CORRECT EXAMPLE
+// ✅ 正确的例子
 beforeEach(() => {
-  // we will create a new alias before each test
+  // 我们将在每次测试之前创建一个新的别名
   cy.wrap('some value').as('exampleValue')
 })
 
-it('works in the first test', () => {
+it('在第一个测试中有效', () => {
   cy.get('@exampleValue').should('equal', 'some value')
 })
 
-it('works in the second test', () => {
+it('在第二个测试中有效', () => {
   cy.get('@exampleValue').should('equal', 'some value')
 })
 ```
 
-## See also
+## 参见
 
-- [Blog: Load Fixtures from Cypress Custom Commands](https://glebbahmutov.com/blog/fixtures-in-custom-commands/) explains how to load or import fixtures to be used in the Cypress custom commands.
+- [博客:从Cypress自定义命令加载夹具](https://glebbahmutov.com/blog/fixtures-in-custom-commands/) 说明如何加载或导入要在Cypress自定义命令中使用的fixture.
