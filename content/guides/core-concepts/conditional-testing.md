@@ -1,251 +1,245 @@
 ---
-title: Conditional Testing
+title: 条件测试
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- When conditional testing is a good choice for your tests
-- Situations where conditional testing is impossible
-- Strategies to handle common scenarios of conditional testing
+- 何时应该基于条件测试
+- 不可能进行条件测试的情况
+- 条件测试的常见场景策略
 
 </Alert>
 
-## Definition
+## 定义
 
-Conditional testing refers to the common programming pattern:
+条件测试指的是通用的编程模式:
 
 > If X, then Y, else Z
 
-Many of our users ask how to accomplish this seemingly simple idiom in Cypress.
+许多用户询问如何在Cypress中完成这个看似简单的习惯用语.
 
-Here are some example use cases:
+下面是一些示例用例:
 
-- How do I do something different whether an element does or doesn't exist?
-- My application does A/B testing, how do I account for that?
-- My users receive a "welcome wizard", but existing ones don't. Can I always close the wizard in case it's shown, and ignore it when it's not?
-- Can I recover from failed Cypress commands like if a [cy.get()](/api/commands/get) doesn't find an element?
-- I am trying to write dynamic tests that do something different based on the text on the page.
-- I want to automatically find all `<a>` elements and based on which ones I find, I want to check that each link works.
+- 一个元素可能存在，我怎么做不同的事情?
+- 我的应用开展A/B测试，该怎么处理?
+- 我的新用户会收到一个“欢迎向导”，但现有老用户不会.当向导显示时，我可以关闭它吗? 当向导不显示时，我可以忽略它吗?
+- 如果[cy.get()](/api/commands/get)没有找到元素，我可以从失败的Cypress命令中恢复吗?
+- 我正在尝试编写动态测试，根据页面上的文本做一些不同的事情.
+- 我想自动找到所有的`<a>`元素，并根据我找到的结果，想检查每个链接是否有效.
 
-The problem is - while first appearing simple, writing tests in this fashion often leads to flaky tests, random failures, and difficult to track down edge cases.
+问题是——虽然一开始看起来很简单，但以这种方式编写测试通常会导致不可靠的测试、随机失败和难以跟踪边缘情况。
 
-Let's investigate why and how you can overcome these problems...
+让我们来研究一下为什么以及如何克服这些问题...
 
-## The problem
+## 问题
 
-These days modern JavaScript applications are highly dynamic and mutable. Their state and the DOM are continuously changing over a period of time.
+现在，现代JavaScript应用程序是高度动态和可变的。它们的状态和DOM在一段时间内不断变化.
 
-The problem with **conditional testing** is that it can only be used when the state has stabilized. In modern day applications, knowing when state is stable is oftentimes impossible.
+条件测试的问题是，它只能在状态稳定时使用. 在现代应用程序中，通常不可能知道什么时候状态是稳定的.
 
-To a human - if something changes 10ms or 100ms from now, we may not even notice this change and assume the state was always the same.
+对于人类来说，如果某样东西在10毫秒或100毫秒后发生了变化，我们甚至可能不会注意到这种变化，并认为状态始终不变.
 
-To a robot - even 10ms represents billions+ of clock cycles. The timescale difference is incredible.
+对一个机器人来说，即使是10毫秒也代表了数十亿个时钟周期。时间上的差异是难以置信的.
 
-A human also has intuition. If you click a button and see a loading spinner, you will assume the state is in flux and will automatically wait for it to finish.
+人类也有直觉。如果单击一个按钮并看到一个加载菊花，您将假定状态处于变化中，并将自动等待它完成.
 
-A robot has no intuition - it will do exactly as it is programmed to do.
+机器人没有直觉——它会完全按照程序所设定的去做.
 
-To illustrate this, let's take a straightforward example of trying to conditionally test unstable state.
+为了说明这一点，让我们举一个简单的例子，试着按条件来测试不稳定状态.
 
-### The DOM is unstable
+### DOM是不稳定的
 
 ```js
-// your app code
+// 您的应用程序代码
 
-// random amount of time
+// 随机时间
 const random = Math.random() * 100
 
-// create a <button> element
+// 创建一个<button>元素
 const btn = document.createElement('button')
 
-// attach it to the body
+// 把它附加到body上
 document.body.appendChild(btn)
 
 setTimeout(() => {
-  // add the class active after an indeterminate amount of time
+  // 在不确定的时间后添加active class
   btn.setAttribute('class', 'active')
 }, random)
 ```
 
 ```js
-// your cypress test code
-it('does something different based on the class of the button', () => {
-  // RERUN THIS TEST OVER AND OVER AGAIN
-  // AND IT WILL SOMETIMES BE TRUE, AND
-  // SOMETIMES BE FALSE.
-
+// 您的Cypress测试代码
+it('根据按钮的class 会有什么不同吗', () => {
+  // 反复运行这个测试，它有时为真，有时为假。
   cy.get('button').then(($btn) => {
     if ($btn.hasClass('active')) {
-      // do something if it's active
+      // 如果它是active ，做...
     } else {
-      // do something else
+      // 做其他的事情
     }
   })
 })
 ```
 
-Do you see the problem here? This test is non-deterministic. The `<button>` will sometimes have the class `active` and sometimes not. In **most** cases, you cannot rely on the state of the DOM to determine what you should conditionally do.
+你看到问题了吗?这个测试是非确定性的. `<button>`有时有class `active`，有时没有. 在**大多数**情况下，不能依靠DOM的状态来决定应该有条件地做什么。
 
-This is the heart of flaky tests. At Cypress we have designed our API to combat this type of flakiness at every step.
+这是脆弱测试的核心. 在Cypress，我们设计了我们的API，以在每一步都与这种脆弱类型作斗争.
 
-## The situations
+## 现状
 
-The **only** way to do conditional testing on the DOM is if you are 100% sure that the state has "settled" and there is no possible way for it to change.
+在DOM上进行有条件的测试的唯一方法是，如果您100%确定状态已经“解决”，并且不可能改变它。
 
-That is it! In any other circumstance you will have flaky tests if you try to rely on the state of the DOM for conditional testing.
+在任何其他情况下，如果您试图依赖DOM的状态进行条件测试，那么您将会遇到不稳定的测试.
 
-Let's explore a few examples.
+让我们探讨几个例子。
 
-### Server side rendering
+### 服务器端渲染
 
-If your application is server side rendered without JavaScript that asynchronously modifies the DOM - congratulations, you can do conditional testing on the DOM!
+如果您的应用程序是服务器端渲染的，没有异步修改DOM的JavaScript代码，祝贺您，您可以在DOM上进行有条件测试!
 
-Why? Because if the DOM is not going to change after the `load` event occurs, then it can accurately represent a stable state of truth.
+为什么?因为如果DOM在`load`事件发生后不改变，那么它可以准确地表示一个稳定的真实状态.
 
-You can safely skip down to the bottom where we provide examples of conditional testing.
+您可以安全地跳到下面，在那里我们提供了条件测试的示例。
 
-### Client side rendering
+### 客户端渲染
 
-However, in most modern applications these days - when the `load` event occurs, usually nothing has rendered on the screen. It is usually at this moment that your scripts begin to load dynamic content and begin to render asynchronously.
+然而，在现在的大多数应用程序中——当`load`事件发生时，通常屏幕上什么也没有，此时脚本开始加载动态内容并开始异步渲染。
 
-Unfortunately, it is not possible for you to use the DOM to do conditional testing. To do this would require you to know with 100% guarantee that your application has finished all asynchronous rendering and that there are no pending network requests, setTimeouts, intervals, postMessage, or async/await code.
+不幸的是，您不可能使用DOM来进行条件测试。否则，你需要100%保证你的应用程序已经完成了所有的异步渲染，并且没有挂起的网络请求、setTimeout、interval、postMessage或async/await代码。
 
-This is difficult to do (if not impossible) without making changes to your application. You could use a library like [Zone.js](https://github.com/angular/angular/tree/master/packages/zone.js), but even that does not capture every async possibility.
+如果不对应用程序进行更改，这是很难做到的(如果不是不可能的话). 你可以使用[Zone.js](https://github.com/angular/angular/tree/master/packages/zone.js) 这样的库，但即使这样,也不能捕获所有可能的异步。
 
-In other words, you cannot do conditional testing safely if you want your tests to run 100% consistently.
+换句话说，如果您希望您的测试100%一致地运行，您就不能安全地进行条件测试.
 
-But do not fret - there are better workarounds to still achieve conditional testing **without** relying on the DOM. You have to _anchor_ yourself to another piece of truth that is not mutable.
+但是不要担心——有更好的解决方案，可以在不依赖DOM的情况下实现条件测试。 你必须将自己锚定在另一个不可改变的真相上.
 
-## The strategies
+## 策略
 
-If you are unable to guarantee that the DOM is stable - don't worry, there are other ways you can do conditional testing or work around the problems inherent with it.
+如果您不能保证DOM是稳定的——不要担心，还有其他方法可以进行条件测试或解决它所固有的问题.
 
-**You could:**
+**你可以:**
 
-- Remove the need to ever do conditional testing.
-- Force your application to behave deterministically.
-- Check other sources of truth (like your server or database).
-- Embed data into other places (cookies / local storage) you could read off.
-- Add data to the DOM that you can read off to know how to proceed.
+- 不做条件测试.
+- 强制应用程序具有确定性的行为.
+- 检查其他源的事实(如服务器或数据库).
+- 将数据嵌入到其他可以读取的地方(cookie或本地存储).
+- 向DOM添加可以读取的数据，以了解如何继续.
 
-Let's explore some examples of conditional testing that will pass or fail 100% of the time.
+让我们来探讨一些条件测试的例子，这些测试有可能100%通过，也有可能100%不通过.
 
-### A/B campaign
+### A/B 活动
 
-In this example let's assume you visit your website and the content will be different based on which A/B campaign your server decides to send. Perhaps it is based on geo-location, IP address, time of day, locale, or other factors that are difficult to control. How can you write tests in this manner?
+在这个例子中，让我们假设您访问您的网站，内容将根据您的服务器A/B活动策略有所区别. 它可能基于地理位置、IP地址、一天中的时间、地区或其他难以控制的因素. 如何为这种方式编写测试?
 
-Control which campaign gets sent, or provide a reliable means to know which one it is.
+控制发送的活动，或者提供一个可靠的方法来知道是哪个活动。
 
-#### Use URL query params:
+#### 使用URL查询参数:
 
 ```js
-// tell your back end server which campaign you want sent
-// so you can deterministically know what it is ahead of time
-cy.visit('https://app.com?campaign=A')
+// 告诉你的后端服务器你想发送的活动
+// 所以你可以确定地提前知道它是什么
+cy.visit('https://app.com?活动=A')
 
 ...
 
-cy.visit('https://app.com?campaign=B')
+cy.visit('https://app.com?活动=B')
 
 ...
 
-cy.visit('https://app.com?campaign=C')
+cy.visit('https://app.com?活动=C')
 ```
 
-Now there is not even a need to do conditional testing since you are able to know ahead of time what campaign was sent. Yes, this may require server side updates, but you have to make an untestable app testable if you want to test it!
+现在甚至不需要做条件测试，因为你可以提前知道发送了什么活动. 是的，这可能需要服务器端更新，但如果你想测试，你必须让一个不可测试的应用程序可测试!
 
-#### Use the server:
+#### 使用服务:
 
-Alternatively, if your server saves the campaign with a session, you could ask your server to tell you which campaign you are on.
+或者，如果你的服务器用一个session保存活动，你可以让你的服务器告诉你你在哪个活动.
 
 ```js
-// this sends us the session cookies
+// 这将给我们发送会话cookie
 cy.visit('https://app.com')
 
-// assuming this sends us back
-// the campaign information
+// 假设这能把活动信息传回来
 cy.request('https://app.com/me')
   .its('body.campaign')
-  .then((campaign) => {
-    // runs different cypress test code
-    // based on the type of campaign
+  .then((活动) => {
+    // 根据活动类型运行不同的cypress测试代码
     return campaigns.test(campaign)
   })
 ```
 
-#### Use session cookies:
+#### 使用会话cookie:
 
-Another way to test this is if your server sent the campaign in a session cookie that you could read off.
+另一种测试方法是，您的服务器在会话cookie中发送活动，您可以读取.
 
 ```js
 cy.visit('https://app.com')
-cy.getCookie('campaign').then((campaign) => {
-  return campaigns.test(campaign)
+cy.getCookie('campaign').then((活动) => {
+  return campaigns.test(活动)
 })
 ```
 
-#### Embed data in the DOM:
+#### 在DOM中嵌入数据:
 
-Another valid strategy would be to embed data directly into the DOM - but do so in a way where this data is **always** present and query-able. It would have to be present 100% of the time, else this would not work.
+另一种有效的策略是直接将数据嵌入到DOM中，但要以**始终**显示该数据并可查询的方式进行。它必须在100%的时间内存在，否则这将不起作用。
 
 ```js
 cy.get('html')
   .should('have.attr', 'data-campaign')
-  .then((campaign) => {
-    return campaigns.test(campaign)
+  .then((活动) => {
+    return campaigns.test(活动)
   })
 ```
 
-### Welcome wizard
+### 欢迎向导
 
-In this example, let's imagine you are running a bunch of tests and each time you load your application, it may show a "Welcome Wizard" modal.
+在本例中，让我们假设您正在运行一系列测试，每次加载应用程序时，它可能会显示一个“欢迎向导”模式.
 
-In this situation, you want to close the wizard when it is present and ignore it if it is not.
+在这种情况下，您希望在向导存在时关闭它，如果不存在则忽略它.
 
-The problem with this is that if the wizard renders asynchronously (as it likely does) you cannot use the DOM to conditionally dismiss it.
+这样做的问题是，如果向导异步呈现(很可能是这样)，您就不能使用DOM有条件地关闭它.
 
-Once again - we will need another reliable way to achieve this without involving the DOM.
+同样，我们需要另一种不涉及DOM的可靠方法来实现这一点.
 
-These patterns are pretty much the same as before:
+这些模式和以前几乎一样:
 
-#### Use the URL to control it:
+#### 使用URL来控制它:
 
 ```js
-// dont show the wizard
+// 不要显示向导
 cy.visit('https://app.com?wizard=0')
 ```
 
 ```js
-// show the wizard
+// 显示向导
 cy.visit('https://app.com?wizard=1')
 ```
 
-We would likely need to update our client side code to check whether this query param is present. Now we know ahead of time whether it will or will not be shown.
+我们可能需要更新我们的客户端代码来检查这个查询参数是否存在。现在我们提前知道它是否会被展示。
 
-#### Use Cookies to know ahead of time:
+#### 使用cookie提前知道:
 
-In the case where you cannot control it, you can still conditionally dismiss it **if** you know whether it is going to be shown.
+在你无法控制它的情况下，如果你知道它是否会被显示，你仍然可以有条件地取消它。
 
 ```js
 cy.visit('https://app.com')
 cy.getCookie('showWizard')
   .then((val) => {
     if (val) {
-      // dismiss the wizard conditionally by enqueuing these
-      // three additional commands
+      // 通过附加这三个命令，有条件地关闭向导
       cy.get('#wizard').contains('Close').click()
     }
   })
-  .get(...)    // more commands here
-  .should(...) // more commands here
-  .click()     // more commands here
+  .get(...)    // 在这里更多的命令
+  .should(...) // 在这里更多的命令
+  .click()     // 在这里更多的命令
 ```
 
-#### Use your server or database:
+#### 使用您的服务器或数据库:
 
-If you store and/or persist whether to show the wizard on the server, then ask it.
+如果您服务端存储或保持是否显示向导，请询问它。
 
 ```js
 cy.visit('https://app.com')
@@ -253,8 +247,7 @@ cy.request('https://app.com/me')
   .its('body.showWizard')
   .then((val) => {
     if (val) {
-      // dismiss the wizard conditionally by enqueuing these
-      // three additional commands
+      // 通过附加这三个命令，有条件地关闭向导
       cy.get('#wizard').contains('Close').click()
     }
   })
@@ -263,17 +256,16 @@ cy.request('https://app.com/me')
   .click()     // more commands here
 ```
 
-Alternatively, if you are creating users, it might take less time to create the user and set whether you want the wizard to be shown ahead of time. That would avoid this check later.
+或者，如果您正在创建用户，那么创建用户并设置是否希望提前显示向导可能会花费更少的时间。这样能避免之后的检查。
 
-#### Embed data in DOM:
+#### 在DOM中嵌入数据:
 
-Another valid strategy would be to embed data directly into the DOM but to do so in a way that the data is **always** present and query-able. The data would have to be present 100% of the time, otherwise this strategy would not work.
+另一种有效的策略是将数据直接嵌入DOM，但要以数据始终存在并可查询的方式进行。数据必须在100%的时间内呈现，否则该策略将不起作用。
 
 ```js
 cy.get('html').should('have.attr', 'data-wizard').then((wizard) => {
   if (wizard) {
-    // dismiss the wizard conditionally by enqueuing these
-    // three additional commands
+    // 通过附加这三个命令，有条件地关闭向导
     cy.get('#wizard').contains('Close').click()
   }
 })
@@ -282,94 +274,87 @@ cy.get('html').should('have.attr', 'data-wizard').then((wizard) => {
 .click()     // more commands here
 ```
 
-### Element existence
+### 元素存在
 
-In the case where you **are** trying to use the DOM to do conditional testing, you can utilize the ability to synchronously query for elements in Cypress to create control flow.
+在尝试使用DOM进行条件测试的情况下，可以利用同步查询Cypress中的元素的能力来创建控制流。
 
 <Alert type="warning">
 
-In the event you did not read a word above and skipped down here, we will reiterate it one more time:
+如果你没有阅读上面的内容，跳到这里，我们将再次重申:
 
-You cannot do conditional testing on the DOM unless you are either:
+除非您是其中之一，否则无法对DOM进行条件测试:
 
-- Server side rendering with no asynchronous JavaScript.
-- Using client side JavaScript that **only** ever does synchronous rendering.
+- 服务器端渲染模式，没有异步JavaScript代码.
+- 使用JavaScript，但是只以同步方式渲染客户端.
 
-It is crucial that you understand how your application works else you will write flaky tests.
+理解应用程序是如何工作的至关重要，否则您将编写不可靠的测试。
 
 </Alert>
 
-Let's imagine we have a scenario where our application may do two separate things that we are unable to control. In other words you tried every strategy above and for whatever reason you were unable to know ahead of time what your application will do.
+假设我们有这样一个场景，我们的应用程序可能做两件我们无法控制的事情. 换句话说，您尝试了上面的每一种策略，但由于某种原因，您无法提前知道您的应用程序将做什么。
 
-Testing this in Cypress is possible.
+Cypress是可以做这种测试的。
 
 ```js
-// app code
+// 应用程序代码
 $('button').on('click', (e) => {
-  // do something synchronously randomly
+  // 同步随机地做某事
   if (Math.random() < 0.5) {
-    // append an input
+    // 添加一个 input
     $('<input />').appendTo($('body'))
   } else {
-    // or append a textarea
+    // 或添加一个 textarea
     $('<textarea />').appendTo($('body'))
   }
 })
 ```
 
 ```js
-// click the button causing the new
-// elements to appear
+// 测试代码：单击该按钮使新元素出现
 cy.get('button').click()
 cy.get('body')
   .then(($body) => {
-    // synchronously query from body
-    // to find which element was created
+    // 从body同步查询以查找创建的元素
     if ($body.find('input').length) {
-      // input was found, do something else here
+      // input被找到了，在这里做些别的事情
       return 'input'
     }
 
-    // else assume it was textarea
+    // 否则假设是 textarea
     return 'textarea'
   })
   .then((selector) => {
-    // selector is a string that represents
-    // the selector we could use to find it
-    cy.get(selector).type(`found the element by selector ${selector}`)
+    // Selector是一个字符串，表示我们可以用来找到它的选择器
+    cy.get(selector).type(`通过选择器找到元素 ${selector}`)
   })
 ```
 
-We will reiterate one more time. Had the `<input>` or the `<textarea>` been rendered asynchronously, you could not use the pattern above. You would have to involve arbitrary delays which will not work in every situation, will slow down your tests, and will still leave chances that your tests are flaky (and are an all-around anti-pattern).
+我们再重申一次. 如果`<input>`或`<textarea>`被异步渲染，你不能使用上面的模式. 您将不得不涉及任意的延迟，但这并不适用于每一种情况，这将让测试变慢，并且仍然有可能使您的测试不稳定(并且是完全的反模式)。
 
-Cypress is built around creating **reliable tests**. The secret to writing good tests is to provide as much "state" and "facts" to Cypress and to "guard it" from issuing new commands until your application has reached the desired state it needs to proceed.
+Cypress是围绕创建可靠的测试而构建的. 编写良好测试的秘密是向Cypress提供尽可能多的“状态”和“事实”，并“保护它”不发出新命令，直到应用程序达到继续运行所需的状态。
 
-Doing conditional testing adds a huge problem - that the test writers themselves are unsure what the given state will be. In those situations, the only reliable way to have accurate tests is to embed this dynamic state in a reliable and consistent way.
+做条件测试会带来一个巨大的问题- 测试编写者自己不确定给定的状态是什么。在这些情况下，进行准确测试的唯一可靠方法是以可靠和一致的方式嵌入这个动态状态。
 
-If you are not sure if you have written a potentially flaky test, there is a way to figure it out. Repeat the test an excessive number of times, and then repeat by modifying the Developer Tools to throttle the Network and the CPU. This will create different loads that simulate different environments (like CI). If you've written a good test, it will pass or fail 100% of the time.
+如果您不确定是否编写了一个不可靠的测试，那么有一种方法可以解决这个问题. 多次重复测试，然后通过修改Developer Tools来控制网络和CPU。 这将创建不同的负载来模拟不同的环境(如CI). 如果你写了一个好的测试，它100%都会通过或不通过。
 
 ```js
 Cypress._.times(100, (i) => {
-  it(`num ${i + 1} - test the thing conditionally`, () => {
+  it(`num ${i + 1} - 有条件地测试`, () => {
     // do the conditional bits 100 times
   })
 })
 ```
 
-### Dynamic text
+### 动态文本
 
-The pattern of doing something conditionally based on whether or not certain text is present is identical to element existence above.
+基于是否存在特定文本而有条件地执行某些操作的模式与上面的元素存在是相同的.
 
-#### Conditionally check whether an element has certain text:
+#### 有条件地检查元素是否有特定的文本:
 
 ```js
-// this only works if there's 100% guarantee
-// body has fully rendered without any pending changes
-// to its state
+// 这只有在100%保证body已经完全渲染而没有任何对其状态的未决更改时才有效
 cy.get('body').then(($body) => {
-    // synchronously ask for the body's text
-    // and do something based on whether it includes
-    // another string
+    // 同步地请求body的文本，并根据它是否包含另一个字符串来做一些事情
     if ($body.text().includes('some string')) {
       // yup found it
       cy.get(...).should(...)
@@ -380,55 +365,55 @@ cy.get('body').then(($body) => {
   })
 ```
 
-## Error Recovery
+##  错误恢复
 
-Many of our users ask how they can recover from failed commands.
+许多用户询问如何从失败的命令中恢复。
 
-> If I had error handling, I could try to find X and if X fails go find Y
+> 如果我有错误，我可以尝试找到X，如果X失败，就去找Y
 
-Because error handling is a common idiom in most programming languages, and especially in Node, it seems reasonable to expect to do that in Cypress.
+因为错误处理在大多数编程语言中是一种常见的习惯用法，尤其是在Node中，所以在Cypress中这样做似乎是合理的.
 
-However, this is really the same question as asking to do conditional testing, but wrapped up in a slightly different implementation detail.
+然而，这实际上是与要求进行条件测试相同的问题，只是在实现细节上略有不同。
 
-For instance you may want to do this:
+例如，你可能想这样做:
 
 <Alert type="danger">
 
-<Icon name="exclamation-triangle" color="red"></Icon> The following code is not valid.
+<Icon name="exclamation-triangle" color="red"></Icon> 以下代码是无效的.
 
 </Alert>
 
 ```js
-//! You cannot add error handling to Cypress commands
-//! This code is just for demonstration purposes
+//! 不能在Cypress命令中添加错误处理
+//! 此代码仅用于演示错误行为
 cy.get('button')
   .contains('hello')
   .catch((err) => {
-    // oh no the button wasn't found
-    // (or something else failed)
+    // 哦，没有找到按钮
+    // (或者别的什么失败了)
     cy.get('somethingElse').click()
   })
 ```
 
-If you've been reading along, then you should already have a grasp on why trying to implement conditional code with asynchronous rendering is not a good idea. If the test writer cannot accurately predict the given state of the system, then neither can Cypress. Error handling offers no additional proof this can be done deterministically.
+如果您一直在阅读本文，那么您应该已经掌握了为什么尝试用异步呈现实现条件代码不是一个好主意。 如果测试编写人员不能准确地预测系统的给定状态，那么Cypress也不能. 错误处理没有提供任何额外的证据证明这可以确定地完成.
 
-You should think of failed commands in Cypress as akin to uncaught exceptions in server side code. It is not possible to try to recover in those scenarios because the system has transitioned to an unreliable state. Instead you generally always opt to crash and log. When Cypress fails the test - that is exactly what it is doing. Bailing out, skipping any remaining commands in the test, and logging out the failure.
+您应该将Cypress中的失败命令视为类似于服务器端代码中的未捕获异常. 在这些场景中不可能尝试恢复，因为系统已过渡到不可靠的状态. 相反，您通常会选择崩溃并记录日志. 当Cypress没有通过测试时——这就是它正在做的事情.退出，跳过测试中剩余的任何命令，并在日志中记录失败.
 
-But... for the sake of the argument, let's imagine for a moment you did have error handling in Cypress.
+但是…为了便于讨论，让我们想象一下在Cypress中确实有错误处理。
 
-Enabling this would mean that for every single command, it would recover from errors, but only after each applicable command timeout was reached. Since timeouts start at 4 seconds (and exceed from there), this means that it would only fail after a long, long time.
+启用此功能意味着，对于每一个命令，它都将从错误中恢复，但只有在达到每个适用的命令超时后才会恢复. 由于超时从4秒开始(并且超过4秒)，这意味着它只会在很长很长的时间之后失败。
 
-Let's reimagine our "Welcome Wizard" example from before.
+让我们重新想象一下前面的“欢迎向导”示例.
 
 <Alert type="danger">
 
-<Icon name="exclamation-triangle" color="red"></Icon> The following code is not valid.
+<Icon name="exclamation-triangle" color="red"></Icon> 以下代码是无效的.
 
 </Alert>
 
 ```js
-//! You cannot add error handling to Cypress commands.
-//! This code is just for demonstration purposes
+//! 不能在Cypress命令中添加错误处理。
+//! 此代码仅用于演示错误
 function keepCalmAndCarryOn () {
   cy.get(...).should(...).click()
 }
@@ -436,31 +421,31 @@ function keepCalmAndCarryOn () {
 cy
   .get('#wizard').contains('Close').click()
   .catch((err) => {
-    // no problem, i guess the wizard didn't exist
-    // or something... no worries
+    // 没问题，我猜那个向导根本不存在
+    // 或者其他不用担心的……东西
     keepCalmAndCarryOn()
   })
   .then(keepCalmAndCarryOn)
 ```
 
-In the **best** case scenario, we have wasted at LEAST 4 seconds waiting on the `<#wizard>` element to possibly exist before we errored and continued on.
+在最好的情况下，我们至少浪费了4秒等待`<#wizard>`元素可能存在，然后才出错并继续。
 
-But in the **worst** case scenario we have a situation where the `<#wizard>` **was** going to be rendered, but it didn't render within our given timeout. Let's assume this was due to a pending network request or WebSocket message or a queued timer, or anything else.
+但在最坏的情况下，我们有一个情况，`<#wizard>`将被渲染，但它没有在给定的超时内渲染. 让我们假设这是由于一个挂起的网络请求或WebSocket消息或队列计时器，或任何其他原因.
 
-In this situation, not only did we wait a long period of time, but when the `<#wizard>` element was eventually shown it's likely caused an error downstream on other commands.
+在这种情况下，我们不仅要等待很长一段时间，而且当`<#wizard>`元素最终被显示时，它可能会在其他命令上导致错误。
 
-If you cannot accurately know the state of your application then no matter what programming idioms you have available - **you cannot write 100% deterministic tests**.
+如果你不能准确地知道你的应用程序的状态，那么无论你有什么编程习惯- **你写的不是100%确定的测试**。
 
-Still not convinced?
+仍然不相信?
 
-Not only is this an anti-pattern, but it's an actual logical fallacy.
+这不仅是一个反模式，而且是一个实际的逻辑谬误。
 
-You may think to yourself... okay fine, but 4 seconds - man that's not enough. Network requests could be slow, let's bump it up to 1 minute!
+你可能会想…好吧，但4秒，这还不够。网络请求可能会很慢，让我们把它提高到1分钟!
 
-Even then, it's still possible a WebSocket message could come in... so 5 minutes!
+即便如此，还是有可能出现WebSocket消息……所以5分钟!
 
-Even then, not enough, it's possible a `setTimeout` could trigger... 60 minutes.
+即使这样，还不够，它可能是一个`setTimeout`可以触发…60分钟。
 
-As you approach infinity your confidence does continue to rise on the chances you could prove the desired state will be reached, but you can never prove it will. Instead you could theoretically be waiting for the heat death of the universe for a condition to come that is only a moment away from happening. There is no way to prove or disprove that it _may_ conditionally happen.
+当你接近无限时，你的信心会继续上升，因为你有机会证明你想要的状态会达到，但你永远无法证明它会达到。相反，从理论上讲，你可以等待到宇宙死亡，等待一种条件的到来，而这种条件离发生只有一瞬间的时间。没有办法证明或反驳它可能有条件地发生。
 
-You, the test writer, must know ahead of time what your application is programmed to do - or have 100% confidence that the state of a mutable object (like the DOM) has stabilized in order to write accurate conditional tests.
+作为测试编写人员，您必须提前知道您的应用程序要做什么——或者100%确信可变对象(如DOM)的状态已经稳定，以便编写准确的条件测试。
