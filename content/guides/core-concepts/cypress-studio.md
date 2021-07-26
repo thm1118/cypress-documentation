@@ -4,24 +4,24 @@ title: Cypress Studio
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- How to extend tests interactively using the Cypress Studio
-- How to add new tests interactively using the Cypress Studio
+- 如何使用Cypress Studio交互式地扩展测试
+- 如何使用Cypress Studio交互式地添加新的测试
 
 </Alert>
 
-## Overview
+## 概述
 
-Cypress Studio provides a visual way to generate tests within the Test Runner, by _recording interactions_ against the application under test.
+Cypress Studio通过记录与被测应用程序的交互，提供了在Test Runner中生成测试的可视化方法.
 
-The [`.click()`](/api/commands/click), [`.type()`](/api/commands/type), [`.check()`](/api/commands/check), [`.uncheck()`](/api/commands/uncheck), and [`.select()`](/api/commands/select) Cypress commands are supported and will generate test code when interacting with the DOM inside of the Cypress Studio.
+ 支持Cypress命令[`.click()`](/api/commands/click), [`.type()`](/api/commands/type), [`.check()`](/api/commands/check), [`.uncheck()`](/api/commands/uncheck), 以及 [`.select()`](/api/commands/select)，当与Cypress Studio中的DOM交互时将生成测试代码.
 
-## Using Cypress Studio
+## 使用Cypress Studio
 
 <Alert type="info">
 
-Cypress Studio is an experimental feature and can be enabled by adding the [experimentalStudio](/guides/references/experiments) attribute to your configuration file (`cypress.json` by default).
+Cypress Studio是一个实验性的特性，可以通过将[experimentalStudio](/guides/references/experiments)属性添加到您的配置文件(默认是`Cypress.json`)。
 
 </Alert>
 
@@ -31,120 +31,120 @@ Cypress Studio is an experimental feature and can be enabled by adding the [expe
 }
 ```
 
-The Cypress <Icon name="github"></Icon> [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) is an open source project implementing a payment application to demonstrate real-world usage of Cypress testing methods, patterns, and workflows. It will be used to demonstrate the functionality of Cypress Studio below.
+Cypress <Icon name="github"></Icon> [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) 是一个开源项目，实现了一个支付应用程序，演示了Cypress测试方法、模式和工作流的真实使用情况。下面将用它来演示Cypress Studio的功能。
 
-### Extending a Test
+### 扩展测试
 
-You can extend any preexisting test or start by creating a new test in your [integrationFolder](/guides/references/configuration#Folders-Files) (`cypress/integration` by default) with the following test scaffolding.
+你可以扩展任何已经存在的测试，或者在你的 [integrationFolder](/guides/references/configuration#Folders-Files) (默认是`cypress/integration` )中创建一个新的测试，使用下面的测试脚手架.
 
 ```js
-// Code from Real World App (RWA)
+// 来自Real World App (RWA)的代码
 describe('Cypress Studio Demo', () => {
   beforeEach(() => {
-    // Seed database with test data
+    // 生成测试数据
     cy.task('db:seed')
 
-    // Login test user
+    // 登录测试用户
     cy.database('find', 'users').then((user) => {
       cy.login(user.username, 's3cret', true)
     })
   })
 
-  it('create new transaction', () => {
-    // Extend test with Cypress Studio
+  it('创建新交易', () => {
+    // 使用Cypress Studio扩展测试
   })
 })
 ```
 
 <Alert type="info">
 
-##### <Icon name="graduation-cap"></Icon> Real World Example
+##### <Icon name="graduation-cap"></Icon> 真实世界的例子
 
-Clone the <Icon name="github"></Icon> [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) and refer to the [cypress/tests/demo/cypress-studio.spec.ts](https://github.com/cypress-io/cypress-realworld-app/blob/develop/cypress/tests/demo/cypress-studio.spec.ts) file.
+Clone <Icon name="github"></Icon> [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) 并参考文件 [cypress/tests/demo/cypress-studio.spec.ts](https://github.com/cypress-io/cypress-realworld-app/blob/develop/cypress/tests/demo/cypress-studio.spec.ts).
 
 </Alert>
 
-#### Step 1 - Run the spec
+#### 步骤 1 - 运行spec
 
-We will use Cypress Studio to perform a "New Transaction" user journey. First, launch the Test Runner and run the spec created in the previous step.
+我们将使用Cypress Studio执行一个“新交易”的用户旅程。首先，启动Test Runner并运行前一步中创建的spec。
 
 <DocsImage src="/img/guides/cypress-studio/run-spec-1.png" alt="Cypress Studio" no-border></DocsImage>
 
-Once the tests complete their run, hover over a test in the Command Log to reveal an "Add Commands to Test" button.
+测试完成运行后，将鼠标悬停在命令日志中的测试上方，以显示“添加命令到测试”按钮。
 
-Clicking on "Add Commands to Test" will launch the Cypress Studio.
+点击“添加命令到测试”将启动Cypress Studio。
 
 <Alert type="info">
 
-Cypress Studio is directly integrated with the [Command Log](/guides/core-concepts/test-runner#Command-Log).
+Cypress Studio直接与[命令日志](/guides/core-concepts/test-runner#Command-Log)集成.
 
 </Alert>
 
 <DocsImage src="/img/guides/cypress-studio/run-spec-2.png" alt="Cypress Studio" no-border></DocsImage>
 
-#### Step 2 - Launch Cypress Studio
+#### 步骤 2 - 启动Cypress Studio
 
 <Alert type="success">
 
-Cypress will automatically execute all hooks and currently present test code, and then the test can be extended from that point on (e.g. We are logged into the application inside the `beforeEach` block).
+Cypress将自动执行所有钩子和当前呈现的测试代码，然后测试可以从那一点上扩展(例如，我们登录到应用程序内部的`beforeEach`块).
 
 </Alert>
 
-Next, the Test Runner will execute the test in isolation and pause after the last command in the test.
+接下来，测试运行器将单独执行测试，并在测试中的最后一条命令之后暂停。
 
 <DocsImage src="/img/guides/cypress-studio/extend-new-transaction-ready.png" alt="Cypress Studio Ready" no-border></DocsImage>
 
-Now, we can begin updating the test to create a new transaction between users.
+现在，我们可以开始更新测试以创建用户之间的新交易。
 
-#### Step 3 - Interact with the Application
+#### 步骤 3 - 与应用程序交互
 
-To record actions, begin interacting with the application. Here we will click on the first name input and as a result we will see the click recorded in the Command Log.
+要记录操作，请开始与应用程序交互。在这里，我们将单击姓名输入，结果我们将看到在命令日志中记录的单击。
 
 <DocsImage src="/img/guides/cypress-studio/extend-new-transaction-user-list.png" alt="Cypress Studio Extend Test" no-border></DocsImage>
 
-Next, we can type the name of a user to pay and click on the user in the results.
+接下来，我们可以键入要支付的用户名，并在结果中单击该用户。
 
 <DocsImage src="/img/guides/cypress-studio/extend-new-transaction-click-user.png" alt="Cypress Studio Extend Test" no-border></DocsImage>
 
-We will complete the transaction form by clicking on and typing in the amount and description inputs.
+我们将通过点击并输入金额和描述输入来完成交易表格。
 
 <DocsImage src="/img/guides/cypress-studio/extend-new-transaction-form.png" alt="Cypress Studio Extend Test" no-border></DocsImage>
 
 <Alert type="success">
 
-Notice the commands generated in the Command Log.
+注意命令日志中生成的命令。
 
 </Alert>
 
-Finally, we will click the "Pay" button.
+最后，我们将点击“支付”按钮。
 
 <DocsImage src="/img/guides/cypress-studio/extend-new-transaction-pay.png" alt="Cypress Studio Extend Test" no-border></DocsImage>
 
-We are presented with a confirmation page of our new transaction.
+我们收到了新交易的确认页。
 
 <DocsImage src="/img/guides/cypress-studio/extend-new-transaction-confirmation.png" alt="Cypress Studio Extend Test Confirmation" no-border></DocsImage>
 
-To discard the interactions, click the "Cancel" button to exit Cypress Studio. If satisfied with the interactions with the application, click "Save Commands" and the test code will be saved to your spec file.
+若要放弃交互，请单击“取消”按钮退出Cypress Studio。如果满意与应用程序的交互，单击“Save Commands”，测试代码将被保存到您的规范文件中。
 
-#### Generated Test Code
+#### 生成测试代码
 
-Viewing our test code, we can see that the test is updated after clicking "Save Commands" with the actions we recorded in Cypress Studio.
+查看我们的测试代码，我们可以看到，在点击“Save Commands”后，我们在Cypress Studio中记录的操作更新了测试。
 
 ```js
-// Code from Real World App (RWA)
+//  Real World App (RWA)中的代码
 describe('Cypress Studio Demo', () => {
   beforeEach(() => {
-    // Seed database with test data
+    // 造数
     cy.task('db:seed')
 
-    // Login test user
+    // 登录测试用户
     cy.database('find', 'users').then((user) => {
       cy.login(user.username, 's3cret', true)
     })
   })
 
-  it('create new transaction', () => {
-    /* ==== Generated with Cypress Studio ==== */
+  it('创建新交易', () => {
+    /* ==== 由Cypress Studio生成 ==== */
     cy.get('[data-test=nav-top-new-transaction]').click()
     cy.get('[data-test=user-list-search-input]').click()
     cy.get('[data-test=user-list-search-input]').type('dev')
@@ -160,39 +160,39 @@ describe('Cypress Studio Demo', () => {
 })
 ```
 
-### Adding a New Test
+### 添加新测试
 
-You can add a new test to any existing `describe` or `context` block, by clicking "Add New Test" on our defined `describe` block.
+您可以添加一个新的测试到任何现有的`describe`或`context`块，通过点击我们定义的`describe`块上的`add new test`。
 
 <DocsImage src="/img/guides/cypress-studio/add-test-1.png" alt="Cypress Studio Add Test" no-border></DocsImage>
 
-We are launched into Cypress Studio and can begin interacting with our application to generate the test.
+我们进入Cypress Studio，可以开始与我们的应用程序进行交互以生成测试。
 
-For this test, we will add a new bank account. Our interactions are as follows:
+对于这个测试，我们将添加一个新的银行账户。我们的互动如下:
 
-1. Click "Bank Accounts" in left hand navigation
+1. 点击左边导航栏的“银行账户”
    <DocsImage src="/img/guides/cypress-studio/add-test-2.png" alt="Cypress Studio Begin Add Test" no-border></DocsImage>
-2. Click the "Create" button on Bank Accounts page
+2. 点击银行账户页面上的“创建”按钮
    <DocsImage src="/img/guides/cypress-studio/add-test-create.png" alt="Cypress Studio Add Test Create Bank Account" no-border></DocsImage>
-3. Fill out the bank account information
+3. 填写银行账户信息
    <DocsImage src="/img/guides/cypress-studio/add-test-form-complete.png" alt="Cypress Studio Add Test Complete Bank Account Form" no-border></DocsImage>
-4. Click the "Save" button
+4. 点击“保存”按钮
    <DocsImage src="/img/guides/cypress-studio/add-test-form-saving.png" alt="Cypress Studio Add Test Saving Bank Account" no-border></DocsImage>
 
-To discard the interactions, click the "Cancel" button to exit Cypress Studio.
+若要放弃交互，请单击“取消”按钮退出Cypress Studio。
 
-If satisfied with the interactions with the application, click "Save Commands" and prompt will ask for the name of the test. Click "Save Test" and the test will be saved to the file.
+如果对与应用程序的交互满意，单击“Save Commands”，提示符将询问测试的名称。点击“Save Test”，测试将被保存到文件中。
 
 <DocsImage src="/img/guides/cypress-studio/add-test-save-test.png" alt="Cypress Studio Add Test Completed Run" no-border></DocsImage>
 
-Once saved, the file will be run again in Cypress.
+一旦保存，文件将在Cypress中再次运行。
 
 <DocsImage src="/img/guides/cypress-studio/add-test-final.png" alt="Cypress Studio Add Test Completed Run" no-border></DocsImage>
 
-Finally, viewing our test code, we can see that the test is updated after clicking "Save Commands" with the actions we recorded in Cypress Studio.
+最后，查看我们的测试代码，我们可以看到，在点击“Save Commands”后，我们用在Cypress Studio中记录的动作更新了测试。
 
 ```js
-// Code from Real World App (RWA)
+// Real World App (RWA)的代码
 import { User } from 'models'
 
 describe('Cypress Studio Demo', () => {
@@ -205,12 +205,12 @@ describe('Cypress Studio Demo', () => {
   })
 
   it('create new transaction', () => {
-    // Extend test with Cypress Studio
+    // 使用Cypress Studio扩展测试
   })
 
-  /* === Test Created with Cypress Studio === */
+  /* === Cypress Studio 创建的测试=== */
   it('create bank account', function () {
-    /* ==== Generated with Cypress Studio ==== */
+    /* ==== 由Cypress Studio生成 ==== */
     cy.get('[data-test=sidenav-bankaccounts]').click()
     cy.get('[data-test=bankaccount-new] > .MuiButton-label').click()
     cy.get('#bankaccount-bankName-input').click()
@@ -227,14 +227,14 @@ describe('Cypress Studio Demo', () => {
 
 <Alert type="info">
 
-##### <Icon name="graduation-cap"></Icon> Real World Example
+##### <Icon name="graduation-cap"></Icon> 真实世界的例子
 
-Clone the <Icon name="github"></Icon> [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) and refer to the [cypress/tests/demo/cypress-studio.spec.ts](https://github.com/cypress-io/cypress-realworld-app/blob/develop/cypress/tests/demo/cypress-studio.spec.ts) file.
+Clone <Icon name="github"></Icon> [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) 并参考 [cypress/tests/demo/cypress-studio.spec.ts](https://github.com/cypress-io/cypress-realworld-app/blob/develop/cypress/tests/demo/cypress-studio.spec.ts) 文件.
 
 </Alert>
 
-## History
+## 历史
 
-| Version                                     | Changes                              |
+| 版本                                        | 变更                              |
 | ------------------------------------------- | ------------------------------------ |
 | [6.3.0](/guides/references/changelog#6-3-0) | Added Cypress Studio as experimental |
