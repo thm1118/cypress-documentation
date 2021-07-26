@@ -1,121 +1,89 @@
 ---
-title: The Test Runner
+title: 测试运行器
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon>你将学习
 
-- The names and purposes of the visual parts of the Cypress Test Runner
-- How to use the Selector Playground for targeting your page elements
+- Cypress测试运行器可视部分的名称和用途
+- 如何通过选择器Playground来定位页面元素
 
 </Alert>
 
-## Overview
+## 概述
 
-Cypress runs tests in a unique interactive runner that allows you to see
-commands as they execute while also viewing the application under test.
+Cypress在一个独特的交互式运行器中运行测试，该运行器允许您在执行命令时查看命令，同时还可以查看正在测试的应用程序。
 
 <DocsImage src="/img/guides/gui-diagram.png" alt="Cypress Test Runner"></DocsImage>
 
-## Command Log
+## 命令日志
 
-The lefthand side of the Test Runner is a visual representation of your test
-suite. Each test block is properly nested and each test, when clicked, displays
-every Cypress command and assertion executed within the test's block as well as
-any command or assertion executed in relevant `before`, `beforeEach`,
-`afterEach`, and `after` hooks.
+测试运行器的左边是测试套件的可视化表示. 每个测试块都被正确嵌套，当单击每个测试时，显示在测试块中执行的每个Cypress命令和断言，
+以及在相关的`before`， `beforeEach`， `afterEach`和`after`钩子中执行的所有命令或断言。
 
 <DocsImage src="/img/guides/command-log.png" alt="Cypress Test Runner" width-600 ></DocsImage>
 
-### Open files in your IDE
+### 在你的IDE中打开文件
 
-There are some places in the Command Log that display a link to the relevant
-file where the code is located. Clicking on this link will open the file in your
-[preferred file opener](/guides/tooling/IDE-integration#File-Opener-Preference).
+在命令日志中有一些地方显示代码所在文件的链接.点击此链接将在您的[首选文件打开器](/guides/tooling/IDE-integration#File-Opener-Preference) 中打开文件.
 
 <DocsImage src="/img/guides/open-file-in-IDE.gif" alt="Open file your IDE" ></DocsImage>
 
-### Hovering on Commands
+### 在命令上悬停鼠标
 
-Each command and assertion, when hovered over, restores the Application Under
-Test (righthand side) to the state it was in when that command executed. This
-allows you to 'time-travel' back to previous states of your application when
-testing.
+当鼠标悬停在每个命令和断言上时，会将Application Under Test(右侧)恢复到执行该命令时的状态。
+这允许您在测试时“时间旅行”到应用程序以前的状态。
 
 <Alert type="info">
 
-By default, Cypress keeps 50 tests worth of snapshots and command data for time
-traveling. If you are seeing extremely high memory consumption in your browser,
-you may want to lower the `numTestsKeptInMemory` in your
-[configuration](/guides/references/configuration#Global).
+默认情况下，Cypress为时间旅行保留50个测试值的快照和命令数据。
+如果你在浏览器中看到极高的内存消耗，你可能想要降低[配置](/guides/references/configuration#Global) 中的`numTestsKeptInMemory`.
 
 </Alert>
 
-### Clicking on Commands
+### 点击命令
 
-Each command, assertion, or error, when clicked on, displays extra information
-in the dev tools console. Clicking also 'pins' the Application Under Test
-(righthand side) to its previous state when the command executed.
+当单击每个命令、断言或错误时，会在开发工具控制台中显示额外的信息。当命令执行时，单击“将”待测试应用程序(右侧)“钉”到它以前的状态.
 
 <DocsImage src="/img/guides/clicking-commands.png" alt="Click to console.log and to pin" ></DocsImage>
 
-## Errors
+## 错误
 
-Cypress prints several pieces of information when an error occurs during a
-Cypress test.
+当Cypress测试期间发生错误时，Cypress打印的一些信息。
 
-1. **Error name**: This is the type of the error (e.g. AssertionError,
-   CypressError)
-1. **Error message**: This generally tells you what went wrong. It can vary in
-   length. Some are short like in the example, while some are long, and may tell
-   you exactly how to fix the error.
-1. **Learn more:** Some error messages contain a Learn more link that will take
-   you to relevant Cypress documentation.
-1. **Code frame file**: This is usually the top line of the stack trace and it
-   shows the file, line number, and column number that is highlighted in the
-   code frame below. Clicking on this link will open the file in your
-   [preferred file opener](https://on.cypress.io/IDE-integration#File-Opener-Preference)
-   and highlight the line and column in editors that support it.
-1. **Code frame**: This shows a snippet of code where the failure occurred, with
-   the relevant line and column highlighted.
-1. **View stack trace**: Clicking this toggles the visibility of the stack
-   trace. Stack traces vary in length. Clicking on a blue file path will open
-   the file in your
-   [preferred file opener](https://on.cypress.io/IDE-integration#File-Opener-Preference).
-1. **Print to console button**: Click this to print the full error to your
-   DevTools console. This will usually allow you to click on lines in the stack
-   trace and open files in your DevTools.
+1. **Error name**: 这是错误的类型(例如AssertionError, CypressError)
+1. **Error message**: 这通常会告诉你哪里出了问题。它的长度可以变化。有些是短的，如示例中所示，而有些是长的，并可能确切地告诉您如何修复错误.
+1. **Learn more:** 一些错误消息包含一个`Learn more`链接，将带您到相关的Cypress文档。
+1. **Code frame file**: 这通常是堆栈跟踪的最上面一行，它显示了文件、行号和列号，在下面的代码框架中高亮显示。点击这个链接将在你的[首选的文件编辑器](https://on.cypress.io/IDE-integration#File-Opener-Preference) 中打开文件，并在支持它的编辑器中突出显示行和列.
+1. **Code frame**: 这显示了发生故障的代码片段，并突出显示了相关的行和列。
+1. **View stack trace**: 单击此按钮将切换堆栈跟踪的可见性。堆栈跟踪的长度不同。点击一个蓝色的文件路径将在您的 [首选文件编辑器](https://on.cypress.io/IDE-integration#File-Opener-Preference) 中打开文件.
+1. **Print to console button**: 单击此以打印完整的错误到您的DevTools控制台。这通常允许您点击堆栈跟踪中的行，并在DevTools中打开文件。
 
 <DocsImage src="/img/guides/command-failure-error.png" alt="example command failure error" ></DocsImage>
 
-## Instrument Panel
+## 仪表盘
 
-For certain commands like [`cy.intercept()`](/api/commands/intercept),
-[`cy.stub()`](/api/commands/stub), and [`cy.spy()`](/api/commands/spy), an extra
-instrument panel is displayed above the test to give more information about the
-state of your tests.
+一些特定的命令，比如 [`cy.intercept()`](/api/commands/intercept),
+[`cy.stub()`](/api/commands/stub), 以及 [`cy.spy()`](/api/commands/spy), 测试上方会显示一个额外的仪表板，以提供有关测试状态的更多信息。
 
-### Routes
+###  路由
 
 <DocsImage src="/img/guides/instrument-panel-routes.png" alt="Routes Instrument Panel" ></DocsImage>
 
-### Stubs
+### 桩
 
 <DocsImage src="/img/guides/instrument-panel-stubs.png" alt="Stubs Instrument Panel" ></DocsImage>
 
-### Spies
+### 间谍
 
 <DocsImage src="/img/guides/instrument-panel-spies.png" alt="Spies Instrument Panel" ></DocsImage>
 
-## Application Under Test
+## 被测试应用程序
 
-The righthand side of the Test Runner is used to display the Application Under
-Test (AUT): the application that was navigated to using a
-[`cy.visit()`](/api/commands/visit) or any subsequent routing calls made from
-the visited application.
+测试运行器的右侧，是被测试应用程序(AUT):使用[`cy.visit()`](/api/commands/visit) 导航到的应用程序，或从所访问的应用程序发出的任何后续路由调用.
 
-In the example below, we wrote the following code in our test file:
+在下面的例子中，我们在测试文件中编写了以下代码:
 
 ```javascript
 cy.visit('https://example.cypress.io')
@@ -123,54 +91,42 @@ cy.visit('https://example.cypress.io')
 cy.title().should('include', 'Kitchen Sink')
 ```
 
-In the corresponding Application Preview below, you can see
-`https://example.cypress.io` is being displayed in the righthand side. Not only
-is the application visible, but it is fully interactable. You can open your
-developer tools to inspect elements as you would in your normal application. The
-DOM is completely available for debugging.
+在下面相应的应用预览中，你可以看到`https://example.cypress.io`显示在右侧。应用程序不仅是可见的，而且是完全可交互的。
+您可以打开开发人员工具来检查元素，就像在普通应用程序中那样。DOM完全可以用于调试。
 
 <DocsImage src="/img/guides/application-under-test.png" alt="Application Under Test" ></DocsImage>
 
-The AUT also displays in the size and orientation specified in your tests. You
-can change the size or orientation with the
-[`cy.viewport()`](/api/commands/viewport) command or in your
-[Cypress configuration](/guides/references/configuration#Viewport). If the AUT
-does not fit within the current browser window, it is scaled appropriately to
-fit within the window.
+AUT还以测试中指定的大小和方向显示。你可以使用[`cy.viewport()`](/api/commands/viewport) 命令或
+[Cypress configuration](/guides/references/configuration#Viewport)命令更改大小或方向。 
+如果AUT不适合当前浏览器窗口，则适当缩放以适应窗口。
 
-The current size and scale of the AUT is displayed in the top right corner of
-the window.
+AUT的当前大小和比例显示在窗口的右上角。
 
-The image below shows that our application is displaying at `1000px` width,
-`660px` height and scaled to `100%`.
+下图显示了我们的应用程序显示的宽度为`1000px`，高度为`660px`，缩放到`100%`。
 
 <DocsImage src="/img/guides/viewport-scaling.png" alt="Viewport Scaling" ></DocsImage>
 
-_Note: The righthand side may also be used to display syntax errors in your test
-file that prevent the tests from running._
+_注意:右边也可以用来显示测试文件中阻止测试运行的语法错误._
 
 <DocsImage src="/img/guides/errors.png" alt="Errors" ></DocsImage>
 
-_Note: Internally, the AUT renders within an iframe. This can sometimes cause
-unexpected behaviors
-[explained here.](/api/commands/window#Cypress-uses-2-different-windows)_
+_注意:在内部，AUT在是在iframe中渲染的。这有时会导致意想不到的行为,[此处解释](/api/commands/window#Cypress-uses-2-different-windows)_
 
-## Selector Playground
+## 选择器Playground
 
-The Selector Playground is an interactive feature that helps you:
+选择器游乐场是一个交互式功能，可以帮助您:
 
-- Determine a unique selector for an element.
-- See what elements match a given selector.
-- See what element matches a string of text.
+- 为一个元素确定唯一的选择器.
+- 查看哪些元素匹配给定的选择器.
+- 看看什么元素匹配一个文本字符串.
 
 <DocsVideo src="/img/snippets/selector-playground.mp4"></DocsVideo>
 
-### Uniqueness
+### 唯一性
 
-Cypress will automatically calculate a **unique selector** to use targeted
-element by running through a series of selector strategies.
+Cypress将通过运行一系列选择器策略自动计算一个**唯一选择器**来使用目标元素。
 
-By default Cypress will favor:
+默认情况下，Cypress将会支持:
 
 1. `data-cy`
 2. `data-test`
@@ -183,79 +139,62 @@ By default Cypress will favor:
 
 <Alert type="info">
 
-<strong class="alert-header">This is configurable</strong>
+<strong class="alert-header">这是可配置的</strong>
 
-Cypress allows you to control how a selector is determined.
+Cypress允许您控制如何确定选择器.
 
-Use the [Cypress.SelectorPlayground](/api/cypress-api/selector-playground-api)
-API to control the selectors you want returned.
+使用[Cypress.SelectorPlayground](/api/cypress-api/selector-playground-api) API来控制你想要返回的选择器。
 
 </Alert>
 
-### Best Practices
+### 最佳实践
 
-You may find yourself struggling to write good selectors because:
+您可能会发现自己很难写出好的选择器，因为:
 
-- Your application uses dynamic ID's and class names
-- Your tests break whenever there are CSS or content changes
+- 应用程序使用动态ID和类名
+- 只要有CSS或内容更改，测试就会中断
 
-To help with these common challenges, the Selector Playground automatically
-prefers certain `data-*` attributes when determining a unique selector.
+为了帮助解决这些常见的问题，选择器Playground在决定唯一选择器时自动选择某些`data-*`属性.
 
-Please read our
-[Best Practices guide](/guides/references/best-practices#Selecting-Elements) on
-helping you target elements and prevent tests from breaking on CSS or JS
-changes.
+请阅读我们的[最佳实践指南](/guides/references/best-practices#Selecting-Elements)，以帮助您定位元素，防止测试被CSS或JS的变化破坏。
 
-### Finding Selectors
+### 找到选择器
 
-To open the Selector Playground, click the <Icon name="crosshairs"></Icon>
-button next to the URL at the top of the runner. Hover over elements in your app
-to preview a unique selector for that element in the tooltip.
+要打开选择器playground，点击运行器的顶部URL旁边的<Icon name="crosshairs"></Icon>按钮。将鼠标悬停在应用程序中的元素上，可以在工具提示中预览该元素的唯一选择器。
 
-<DocsImage src="/img/guides/test-runner/open-selector-playground.gif" alt="Opening selector playground and hovering over elements" ></DocsImage>
+<DocsImage src="/img/guides/test-runner/open-selector-playground.gif" alt="打开选择器playground，并将鼠标悬停在元素上" ></DocsImage>
 
-Click on the element and its selector will appear at the top. From there, you
-can copy it to your clipboard ( <Icon name="copy"></Icon> ) or print it to the
-console ( <Icon name="terminal"></Icon> ).
+单击元素，它的选择器将出现在顶部。从那里，你可以复制它到剪贴板(<Icon name="copy"></Icon>)或打印到控制台( <Icon name="terminal"></Icon> ).
 
-<DocsImage src="/img/guides/test-runner/copy-selector-in-selector-playground.gif" alt="Clicking an element, copying its selector to clipboard, printing it to the console" ></DocsImage>
+<DocsImage src="/img/guides/test-runner/copy-selector-in-selector-playground.gif" alt="单击元素，将其选择器复制到剪贴板，并将其打印到控制台" ></DocsImage>
 
-### Running Experiments
+### 运行实验
 
-The box at the top that displays the selector is also a text input.
+顶部显示选择器的框也是一个文本输入.
 
-#### Editing a Selector
+#### 编辑选择器
 
-When you edit the selector, it will show you how many elements match and
-highlight those elements in your app.
+当你编辑选择器，它会显示你有多少元素匹配，并突出显示那些元素在你的应用程序。
 
-<DocsImage src="/img/guides/test-runner/typing-a-selector-to-find-in-playground.gif" alt="Type a selector to see what elements it matches" ></DocsImage>
+<DocsImage src="/img/guides/test-runner/typing-a-selector-to-find-in-playground.gif" alt="键入一个选择器以查看它匹配的元素" ></DocsImage>
 
-#### Switching to Contains
+#### 切换到contains
 
-You can also experiment with what [`cy.contains()`](/api/commands/contains)
-would yield given a string of text. Click on `cy.get` and switch to
-`cy.contains`.
+您还可以试验[`cy.contains()`](/api/commands/contains)会生成给定的文本字符串。点击`cy.get`并切换到`cy.contains`。
 
-Type in text to see which element it matches. Note that
-[`cy.contains()`](/api/commands/contains) only yields the first element that
-matches the text, even if multiple elements on the page contain the text.
+输入文本以查看匹配的元素。注意[`cy.contains()`](/api/commands/contains) 只生成与文本匹配的第一个元素，即使页面上有多个元素包含文本。
 
 <DocsImage src="/img/guides/test-runner/cy-contains-in-selector-playground.gif" alt="Experiment with cy.contains" ></DocsImage>
 
-#### Disabling Highlights
+#### 禁用高亮
 
-If you would like to interact with your app while the Selector Playground is
-open, the element highlighting might get in the way. Toggling the highlighting
-off will allow you to interact with your app more easily.
+如果你想在选择器 Playground打开时与你的应用程序交互，元素高亮可能会碍事。关闭高亮显示可以让你更轻松地与应用程序交互。
 
 <DocsImage src="/img/guides/test-runner/turn-off-highlight-in-selector-playground.gif" alt="Turn off highlighting" ></DocsImage>
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-There are keyboard shortcuts to quickly perform common actions from within the
-Test Runner.
+有键盘快捷键可以从测试运行器中快速执行常见操作。
 
 | Key | Action                        |
 | --- | ----------------------------- |
@@ -265,9 +204,9 @@ Test Runner.
 
 <DocsImage src="/img/guides/test-runner/keyboard-shortcuts.png" alt="Tooltips show keyboard shortcuts" ></DocsImage>
 
-## History
+## 历史
 
-| Version                                     | Changes                                 |
+| 版本                                        | 变更                                 |
 | ------------------------------------------- | --------------------------------------- |
 | [3.5.0](/guides/references/changelog#3-5-0) | Added keyboard shortcuts to Test Runner |
 | [1.3.0](/guides/references/changelog#1-3-0) | Added Selector Playground               |
