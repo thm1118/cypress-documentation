@@ -1,348 +1,331 @@
 ---
-title: Catalog of Events
+title: 事件目录
 ---
 
-Cypress emits a series of events as it runs in your browser.
+当Cypress在浏览器中运行时，它会发出一系列事件。
 
-These events are useful not only to control your application's behavior, but also for debugging purposes.
+这些事件不仅对控制应用程序的行为很有用，而且对调试也很有用。
 
-Here are some examples you can do with these events:
+下面是一些你可以用这些事件来做的例子:
 
-- Listen for `uncaught exceptions` and prevent Cypress from failing the test
-- Listen for `alert` or `confirm` calls and change the `confirm` behavior
-- Listen for `window:before:load` events and modify the `window` before any of your app code runs between page transitions
-- Listen for `command:retry` events to understand why Cypress is internally retrying for debugging purposes
+- 监听`uncaught exceptions`，防止Cypress测试失败
+- 留意`alert` or `confirm`的调用，改变`confirm`的行为
+- 监听`window:before:load`事件，并在你的任何应用代码在页面转换之间运行之前修改`window`
+- 监听`command:retry`事件，为了调试目的,了解为什么Cypress在内部重试
 
-## Event Types
+## 事件类型
 
-### App Events
+### 应用程序事件
 
-These events come from the application currently under test (your application). These are the most useful events for you to listen to.
+这些事件来自当前被测试的应用程序(您的应用程序)。这些都是你应该听的最有用的事件。
 
-| Event            | Details                                                                                                                                                                                                                                                                                                                                           |
+| 事件             | 详细说明                                                                                                                                                                                                                                                                                                                                           |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `uncaught:exception`                                                                                                                                                                                                                                                                                                                              |
-| **Yields:**      | the error **(Object)**, Mocha runnable **(Object)**                                                                                                                                                                                                                                                                                               |
-| **Description:** | Fires when an uncaught exception occurs in your application. Cypress will fail the test when this fires. Return `false` from this event and Cypress will not fail the test. Also useful for debugging purposes because the actual `error` instance is provided to you. See our recipe [Handling errors](/examples/examples/recipes#Fundamentals). |
+| **名称:**         | `uncaught:exception`                                                                                                                                                                                                                                                                                                                              |
+| **参数:**         | the error **(Object)**, Mocha runnable **(Object)**                                                                                                                                                                                                                                                                                               |
+| **描述:**         | 当应用程序中发生未捕获异常时触发。一旦触发，Cypress测试会失败. 从这个事件返回`false`， Cypress会阻止失败. 对于调试也很有用，因为实际上`error`实例已经提供给您了. 参见我们的配方[处理错误](/examples/examples/recipes#Fundamentals). |
 
-| Event            | Details                                                                                                                                                                       |
+| 事件             | 详细说明                                                                                                                                                                       |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `window:confirm`                                                                                                                                                              |
-| **Yields:**      | the confirmation text **(String)**                                                                                                                                            |
-| **Description:** | Fires when your app calls the global `window.confirm()` method. Cypress will auto accept confirmations. Return `false` from this event and the confirmation will be canceled. |
+| **名称:**        | `window:confirm`                                                                                                                                                              |
+| **参数:**        | 确认文本 **(String)**                                                                                                                                            |
+| **描述:**        | 当你的应用程序调用全局方法`window.confirm()`时触发. Cypress将自动接受确认.从这个事件返回`false`，确认将被取消. |
 
-| Event            | Details                                                                                                                         |
+| 事件             | 详细说明                                                                                                                         |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `window:alert`                                                                                                                  |
-| **Yields:**      | the alert text **(String)**                                                                                                     |
-| **Description:** | Fires when your app calls the global `window.alert()` method. Cypress will auto accept alerts. You cannot change this behavior. |
+| **名称:**        | `window:alert`                                                                                                                  |
+| **参数:**        | 警报的文本**(String)**                                                                                                     |
+| **描述:**        | 当应用程序调用全局的`window.alert()`方法时触发. 赛普拉斯将自动接受警报。你不能改变这种行为.                                      |
 
-| Event            | Details                                                                                                                                                                                                                     |
+| 事件             | 详细说明                                                                                                                                                                                                                     |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `window:before:load`                                                                                                                                                                                                        |
-| **Yields:**      | the remote window **(Object)**                                                                                                                                                                                              |
-| **Description:** | Fires as the page begins to load, but before any of your applications JavaScript has executed. This fires at the exact same time as `cy.visit()` `onBeforeLoad` callback. Useful to modify the window on a page transition. |
+| **名称:**        | `window:before:load`                                                                                                                                                                                                        |
+| **参数:**        | 远程 window **(Object)**                                                                                                                                                                                              |
+| **描述:**        | 在页面开始加载时触发，但在任何应用程序JavaScript执行之前触发. 这与`cy.visit()` `onBeforeLoad`的回调在同一时间触发. 用于在页面转换时修改window. |
 
-| Event            | Details                                                                                                                                              |
+| 事件             | 详细说明                                                                                                                                              |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `window:load`                                                                                                                                        |
-| **Yields:**      | the remote window **(Object)**                                                                                                                       |
-| **Description:** | Fires after all your resources have finished loading after a page transition. This fires at the exact same time as a `cy.visit()` `onLoad` callback. |
+| **名称:**        | `window:load`                                                                                                                                        |
+| **参数:**        | 远程 window **(Object)**                                                                                                                       |
+| **描述:**        | 在页面转换后，在所有资源完成加载后触发. 这与`cy.visit()` `onLoad` 回调函数在同一时间触发. |
 
-| Event            | Details                                                                                                                                                                            |
+| 事件             | 详细说明                                                                                                                                                                            |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `window:before:unload`                                                                                                                                                             |
-| **Yields:**      | the actual beforeunload event **(Object)**                                                                                                                                         |
-| **Description:** | Fires when your application is about to navigate away. The real event object is provided to you. Your app may have set a `returnValue` on the event, which is useful to assert on. |
+| **名称:**        | `window:before:unload`                                                                                                                                                             |
+| **参数:**        | 实际的 beforeunload 事件 **(Object)**                                                                                                                                         |
+| **描述:**        | 当应用程序要导航时触发. 将提供给您真实的事件对象. 你的应用程序可能已经在事件上设置了一个`returnValue`，这对断言是有用的. |
 
-| Event            | Details                                                                                                                                  |
+| 事件             | 详细说明                                                                                                                                  |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `window:unload`                                                                                                                          |
-| **Yields:**      | the actual unload event **(Object)**                                                                                                     |
-| **Description:** | Fires when your application has unloaded and is navigating away. The real event object is provided to you. This event is not cancelable. |
+| **名称:**        | `window:unload`                                                                                                                          |
+| **参数:**        | 实际的 unload 事件 **(Object)**                                                                                                     |
+| **描述:**        | 当您的应用程序已卸载并正在导航时触发. 真实的事件对象将提供给您. 此事件不可取消. |
 
-| Event            | Details                                                                 |
+| 事件             | 详细说明                                                                 |
 | ---------------- | ----------------------------------------------------------------------- |
-| **Name:**        | `url:changed`                                                           |
-| **Yields:**      | the new url **(String)**                                                |
-| **Description:** | Fires whenever Cypress detects that your application's URL has changed. |
+| **名称:**        | `url:changed`                                                           |
+| **参数:**        | 新 url **(String)**                                                |
+| **描述:**        | 当Cypress检测到您的应用程序的URL已更改时触发. |
 
-### Cypress Events
+### Cypress 事件
 
-These events come from Cypress as it issues commands and reacts to their state. These are all useful to listen to for debugging purposes.
+这些事件来自Cypress，因为它发出命令并对他们的状态作出反应。对于调试而言，这些都是非常有用的.
 
-| Event            | Details                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 事件             | 详细说明                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `fail`                                                                                                                                                                                                                                                                                                                                                                                                  |
-| **Yields:**      | the error **(Object)**, Mocha runnable **(Object)**                                                                                                                                                                                                                                                                                                                                                     |
-| **Description:** | Fires when the test has failed. It is technically possible to prevent the test from actually failing by binding to this event and invoking an async `done` callback. However this is **strongly discouraged**. Tests should never legitimately fail. This event exists because it's extremely useful for debugging purposes. See our recipe [Handling errors](/examples/examples/recipes#Fundamentals). |
+| **名称:**        | `fail`                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **参数:**        | the error **(Object)**, Mocha runnable **(Object)**                                                                                                                                                                                                                                                                                                                                                     |
+| **描述:**        | 当测试失败时发射. 通过绑定到此事件并调用一个异步`done`回调，在技术上可以防止测试实际失败. 然而，**强烈反对**这种做法. 测试永远不应该合法失败. 这个事件的存在是因为它对调试非常有用. 参见我们的配方[处理错误](/examples/examples/recipes#Fundamentals). |
 
-| Event            | Details                                                                                                                                                              |
+| 事件             | 详细说明                                                                                                                                                              |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `viewport:changed`                                                                                                                                                   |
-| **Yields:**      | the new viewport **(Object)**                                                                                                                                        |
-| **Description:** | Fires whenever the viewport changes via a `cy.viewport()` or naturally when Cypress resets the viewport to the default between tests. Useful for debugging purposes. |
+| **名称:**        | `viewport:changed`                                                                                                                                                   |
+| **参数:**        | 新viewport **(Object)**                                                                                                                                        |
+| **描述:**        | 当viewport通过 `cy.viewport()`改变时触发，或者当Cypress在测试之间将viewport重置为默认值时自然触发. 对调试有用. |
 
-| Event            | Details                                                                                                                                                                                                                                                                                                                                                |
+| 事件             | 详细说明                                                                                                                                                                                                                                                                                                                                                |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Name:**        | `scrolled`                                                                                                                                                                                                                                                                                                                                             |
-| **Yields:**      | the element or window being scrolled **(Object)**                                                                                                                                                                                                                                                                                                      |
-| **Description:** | Fires whenever **Cypress** is scrolling your application. This event is fired when Cypress is [waiting for and calculating actionability](/guides/core-concepts/interacting-with-elements). It will scroll to 'uncover' elements currently being covered. This event is extremely useful to debug why Cypress may think an element is not interactive. |
+| **名称:**        | `scrolled`                                                                                                                                                                                                                                                                                                                                             |
+| **参数:**        | 被滚动的元素或窗口 **(Object)**                                                                                                                                                                                                                                                                                                      |
+| **描述:**        | 每当**Cypress**滚动你的应用程序时都会触发. 当Cypress[等待并计算可操作性](/guides/core-concepts/interacting-with-elements)时触发此事件. 它会滚动“被覆盖”的元素到不被覆盖. 这个事件对于调试为什么Cypress认为一个元素不是交互式的非常有用. |
 
-| Event            | Details                                                                                                                                                                 |
+| 事件             | 详细说明                                                                                                                                                                 |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `command:enqueued`                                                                                                                                                      |
-| **Yields:**      | command properties and arguments **(Object)**                                                                                                                           |
-| **Description:** | Fires when a cy command is first invoked and enqueued to be run later. Useful for debugging purposes if you're confused about the order in which commands will execute. |
+| **名称:**        | `command:enqueued`                                                                                                                                                      |
+| **参数:**        | 命令属性和参数 **(Object)**                                                                                                                           |
+| **描述:**        | 在第一次调用cy命令并将其放入队列以便稍后运行时触发. 如果您对命令的执行顺序感到困惑，这对调试很有用。 |
 
-| Event            | Details                                                                                                                                  |
+| 事件             | 详细说明                                                                                                                                  |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `command:start`                                                                                                                          |
-| **Yields:**      | command instance **(Object)**                                                                                                            |
-| **Description:** | Fires when cy begins actually running and executing your command. Useful for debugging and understanding how the command queue is async. |
+| **名称:**        | `command:start`                                                                                                                          |
+| **参数:**        | 命令实例 **(Object)**                                                                                                            |
+| **描述:**        | 当cy开始实际运行并执行您的命令时触发. 用于调试和理解命令队列是异步的. |
 
-| Event            | Details                                                                                                                     |
+| 事件             | 详细说明                                                                                                                     |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `command:end`                                                                                                               |
-| **Yields:**      | command instance **(Object)**                                                                                               |
-| **Description:** | Fires when cy finishes running and executing your command. Useful for debugging and understanding how commands are handled. |
+| **名称:**        | `command:end`                                                                                                               |
+| **参数:**        | 命令实例 **(Object)**                                                                                               |
+| **描述:**        | 当cy完成运行并执行你的命令时触发. 对于调试和理解命令是如何处理的很有用. |
 
-| Event            | Details                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| 事件             | 详细说明                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `command:retry`                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **Yields:**      | retry options **(Object)**                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| **Description:** | Fires whenever a command begins its [retrying routines](/guides/core-concepts/retry-ability). This is called on the trailing edge after Cypress has internally waited for the retry interval. Useful to understand **why** a command is retrying, and generally includes the actual error causing the retry to happen. When commands fail the final error is the one that actually bubbles up to fail the test. This event is essentially to debug why Cypress is failing. |
+| **名称:**        | `command:retry`                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **参数:**        | 重试选项 **(Object)**                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **描述:**        | 每当命令开始它的[重试例程](/guides/core-concepts/retry-ability)时触发. 这在Cypress内部等待重试间隔后的后缘被调用. 有助于理解**为什么**命令正在重试, 通常包括导致重试发生的实际错误. 当命令失败时，最后一个错误实际上是导致测试失败的错误. 这个事件本质上是调试Cypress失败的原因. |
 
-| Event            | Details                                                                                                                                                                                         |
+| 事件             | 详细说明                                                                                                                                                                                         |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `log:added`                                                                                                                                                                                     |
-| **Yields:**      | log attributes **(Object)**, whether Cypress is in interactive mode (running via `cypress open`) **(Boolean)**                                                                                  |
-| **Description:** | Fires whenever a command emits this event so it can be displayed in the Command Log. Useful to see how internal cypress commands utilize the [Cypress.log()](/api/cypress-api/cypress-log) API. |
+| **名称:**        | `log:added`                                                                                                                                                                                     |
+| **参数:**        | 日志属性 **(Object)**, Cypress是否处于交互模式 (是否通过 `cypress open`运行) **(Boolean)**                                                                                  |
+| **描述:**        | 每当命令发出此事件时触发，以便它可以在命令日志中显示. 了解内部cypress命令如何利用[cypress .log()](/api/cypress-api/cypress-log)API非常有用. |
 
-| Event            | Details                                                                                                                                                                                                                                |
+| 事件             | 详细说明                                                                                                                                                                                                                                |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name:**        | `log:changed`                                                                                                                                                                                                                          |
-| **Yields:**      | log attributes **(Object)**, whether Cypress is in interactive mode (running via `cypress open`) **(Boolean)**                                                                                                                         |
-| **Description:** | Fires whenever a command's attributes changes. This event is debounced to prevent it from firing too quickly and too often. Useful to see how internal cypress commands utilize the [Cypress.log()](/api/cypress-api/cypress-log) API. |
+| **名称:**        | `log:changed`                                                                                                                                                                                                                          |
+| **参数:**        | 日志属性 **(Object)**,Cypress是否处于交互模式 (是否通过 `cypress open`运行) **(Boolean)**                                                                                                                           |
+| **描述:**        | 每当命令的属性更改时触发。 这个事件被防反跳（debounced），以防止它触发太快和太频繁. 了解内部cypress命令如何利用[Cypress.log()](/api/cypress-api/cypress-log) API非常有用。 |
 
-| Event            | Details                                                                |
+| 事件             | 详细说明                                                                |
 | ---------------- | ---------------------------------------------------------------------- |
-| **Name:**        | `test:before:run`                                                      |
-| **Yields:**      | test attributes **(Object)**, runnable instance **(Object)**           |
-| **Description:** | Fires before the test and all **before** and **beforeEach** hooks run. |
+| **名称:**        | `test:before:run`                                                      |
+| **参数:**        | 测试属性 **(Object)**, 可运行实例 **(Object)**           |
+| **描述:**        | 在测试和**before** 以及 **beforeEach**钩子前触发. |
 
-| Event            | Details                                                             |
+| 事件             | 详细说明                                                             |
 | ---------------- | ------------------------------------------------------------------- |
-| **Name:**        | `test:after:run`                                                    |
-| **Yields:**      | test attributes **(Object)**, runnable instance **(Object)**        |
-| **Description:** | Fires after the test and all **afterEach** and **after** hooks run. |
+| **名称:**        | `test:after:run`                                                    |
+| **参数:**        | 测试属性 **(Object)**, 可运行实例 **(Object)**          |
+| **描述:**        | 在测试和所有**afterEach** 和 **after** 之后触发. |
 
-### Other Events
+### 其他事件
 
-There are a myriad of other events Cypress fires to communicate with the Node server process, automation servers, mocha, the runner, and the reporter. They are strictly internal to the way Cypress works and not useful for users.
+在与Node服务器进程、自动化服务器、Mocha、运行器和报表通信时，Cypress还会触发无数其他事件。 它们严格按照Cypress的工作方式进行，对用户没有用处.
 
-## Binding to Events
+## 绑定事件
 
-Both the global `Cypress` and `cy` objects are standard Node event emitters. That means you can use the following methods to bind and unbind from events.
+全局的 `Cypress` and `cy`对象都是标准的Node事件发射器. 这意味着您可以使用以下方法绑定和解除绑定事件.
 
 - [on](https://nodejs.org/api/events.html#events_emitter_on_eventname_listener)
 - [once](https://nodejs.org/api/events.html#events_emitter_once_eventname_listener)
 - [removeListener](https://nodejs.org/api/events.html#events_emitter_removelistener_eventname_listener)
 - [removeAllListeners](https://nodejs.org/api/events.html#events_emitter_removealllisteners_eventname)
 
-It's important to understand why you'd want to bind to either `Cypress` or `cy`.
+理解为什么要绑定到 `Cypress` 和 `cy`是很重要的.
 
 ### Cypress
 
-Cypress is a global object that persists for the entirety of all of your tests. Any events you bind to Cypress will apply to all tests, and will not be unbound unless you manually unbind them.
+Cypress是一个全局对象，它在所有测试中都持续存在. 绑定到Cypress的任何事件将应用于所有测试，并且除非手动解除绑定，否则不会解除绑定.
 
-This is useful when you're debugging and want to add a single "catch-all" event to track down things like test failures, or uncaught exceptions from your application.
+当您正在调试并希望添加一个`全局捕获`事件来跟踪测试失败或应用程序中未捕获的异常时，这是非常有用的。
 
 ### cy
 
-The `cy` object is bound to each individual test. Events bound to `cy` will **automatically** be removed when the test ends. You don't have to worry about cleanup, and your event listeners will only be called for the duration of the single test.
+`cy`对象绑定到每个单独的测试. 当测试结束时，绑定到`cy`的事件将被自动删除. 您不必担心清理问题，并且您的事件监听器只会在单个测试期间被调用。
 
-## Examples
+## 例子
 
-### Uncaught Exceptions
+### 未捕获异常
 
-#### To turn off all uncaught exception handling
+#### 关闭所有未捕获的异常处理
 
 ```javascript
-// likely want to do this in a support file
-// so it's applied to all spec files
+//你可能想在 support文件中添加下面的代码
+// 这样就能应用到所有的spec文件
 // cypress/support/index.js
 
 Cypress.on('uncaught:exception', (err, runnable) => {
-  // returning false here prevents Cypress from
-  // failing the test
+  // 返回false可以防止Cypress测试失败
   return false
 })
 ```
 
-### To conditionally turn off uncaught exception handling for a certain error
+### 对某个错误有条件地关闭未捕获异常处理
 
 ```javascript
-// likely want to do this in a support file
-// so it's applied to all spec files
+//你可能想在 support文件中添加下面的代码
+// 这样就能应用到所有的spec文件
 // cypress/support/index.js
 Cypress.on('uncaught:exception', (err, runnable) => {
-  // we expect a 3rd party library error with message 'list not defined'
-  // and don't want to fail the test so we return false
-  if (err.message.includes('list not defined')) {
+  // 我们期望有对 '未定义清单'这个错误消息，返回false，让测试不失败
+  if (err.message.includes('未定义清单')) {
     return false
   }
-  // we still want to ensure there are no other unexpected
-  // errors, so we let them fail the test
+  //我们仍然希望确保没有其他意外的错误，所以我们让它们无法通过测试
 })
 ```
 
-### To conditionally turn off uncaught exception handling unhandled promise rejections
+### 有条件地关闭未捕获异常处理，一个未处理的被拒绝的promise
 
 ```javascript
-// likely want to do this in a support file
-// so it's applied to all spec files
+//你可能想在 support文件中添加下面的代码
+// 这样就能应用到所有的spec文件
 // cypress/support/index.js
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
-  // when the exception originated from an unhandled promise
-  // rejection, the promise is provided as a third argument
-  // you can turn off failing the test in this case
+  // 当异常源于未处理的被拒绝promise时，promise将作为第三个参数提供
+  // 在这种情况下，您可以阻止“测试失败”
   if (promise) {
     return false
   }
-  // we still want to ensure there are no other unexpected
-  // errors, so we let them fail the test
+  // 我们仍然希望确保没有其他意外的错误，所以我们让它们无法通过测试
 })
 ```
 
-#### To catch a single uncaught exception
+#### 捕获单个未捕获的异常
 
 ```javascript
 it('is doing something very important', (done) => {
-  // this event will automatically be unbound when this
-  // test ends because it's attached to 'cy'
+  //当测试结束时，该事件将自动解除绑定，因为它被附加到`cy`
   cy.on('uncaught:exception', (err, runnable) => {
     expect(err.message).to.include('something about the error')
 
-    // using mocha's async done callback to finish
-    // this test so we prove that an uncaught exception
-    // was thrown
+    // 使用mocha的async done回调来完成这个测试，这样我们就可以证明抛出了一个未捕获的异常
     done()
 
-    // return false to prevent the error from
-    // failing this test
+    // 返回false以防止这个错误导致测试失败
     return false
   })
 
-  // assume this causes an error
+  // 假设这会导致错误
   cy.get('button').click()
 })
 ```
 
-### Catching Test Failures
+### 捕捉测试失败
 
-#### Debug the moment a test fails
+#### 在测试失败时进行调试
 
 ```javascript
-// if you want to debug when any test fails
-// You likely want to put this in a support file,
-// or at the top of an individual spec file
+// 如果您想在任何测试失败时进行调试
+// 你可能想把它放在support文件中，
+// 或者放在单个spec文件的顶部
 Cypress.on('fail', (error, runnable) => {
   debugger
 
-  // we now have access to the err instance
-  // and the mocha runnable this failed on
+  // 现在，我们可以访问error 实例和发生故障的mocha可运行对象
 
-  throw error // throw error to have test still fail
+  throw error // 抛出错误使测试仍然失败
 })
 
-it('calls the "fail" callback when this test fails', () => {
-  // when this cy.get() fails the callback
-  // is invoked with the error
-  cy.get('element-that-does-not-exist')
+it('当测试失败时调用"fail"回调', () => {
+  // 当这个cyl .get()失败时，回调函数将被调用并产生错误
+  cy.get('一个不存在的元素')
 })
 ```
 
-Read [Cypress Metaprogramming](https://glebbahmutov.com/blog/cy-metaprogramming/) for more examples.
+阅读[Cypress 元编程](https://glebbahmutov.com/blog/cy-metaprogramming/) 以获得更多示例。
 
-### Page Navigation
+### 页面导航
 
-#### Test that your application was redirected
+#### 测试应用程序是否被重定向
 
 ```javascript
-// app code
+// 应用程序代码
 $('button').on('click', (e) => {
-  // change the page programmatically
+  // 以编程方式更改页面
   window.location.href = '/some/new/link'
 })
 
-// test code
-it('redirects to another page on click', (done) => {
-  // this event will automatically be unbound when this
-  // test ends because it's attached to 'cy'
+// 测试代码
+it('点击触发重定向到另一个页面', (done) => {
+  // 当测试结束时，该事件将自动解除绑定，因为它被附加到'cy'
   cy.on('window:before:unload', (e) => {
-    // no return value on the event
+    // 事件没有返回值
     expect(e.returnValue).to.be.undefined
   })
 
   cy.on('window:unload', (e) => {
-    // using mocha's async done callback to finish
-    // this test so we are guaranteed the application
-    // was unloaded while navigating to the new page
+    // 使用mocha的async done回调来完成这个测试，这样我们就可以保证在导航到新页面时应用程序被卸载了
     done()
   })
 
-  // click the button causing the page redirect
+  // 单击导致页面重定向的按钮
   cy.get('button').click()
 })
 ```
 
-### Window Before Load
+### 窗口加载之前
 
-#### Modify your Application before it loads after page transitions
+####在页面转换后加载应用程序之前修改它
 
 ```javascript
-it('can modify the window prior to page load on all pages', () => {
-  // create the stub here
+it('可以在页面加载之前修改窗口中的所有页面吗', () => {
+  // 在这里创建桩
   const ga = cy.stub().as('ga')
 
-  // prevent google analytics from loading
-  // and replace it with a stub before every
-  // single page load including all new page
-  // navigations
+  //防止加载谷歌分析，并在每个页面加载之前用桩替换它，包括所有新的页面导航
   cy.on('window:before:load', (win) => {
     Object.defineProperty(win, 'ga', {
       configurable: false,
-      get: () => ga, // always return the stub
-      set: () => {}, // don't allow actual google analytics to overwrite this property
+      get: () => ga, // 总是返回桩
+      set: () => {}, // 不允许实际的谷歌分析覆盖此属性
     })
   })
 
   cy
-    // window:before:load will be called here
+    // window:before:load 将在这里被调用
     .visit('/first/page')
 
     .then((win) => {
-      // and here
+      // 以及这里
       win.location.href = '/second/page'
     })
 
-    // and here
+    // 以及这里
     .get('a')
     .click()
 })
 ```
 
-### Window Confirm
+### 确认弹窗
 
-#### Control whether you accept or reject confirmations
+#### 控制是否接受或拒绝
 
-This enables you to test how your application reacts to accepted confirmations and rejected confirmations.
+这使您能够测试应用程序如何对接受的确认和拒绝的确认作出反应。
 
 <!-- textlint-disable -->
 
 ```javascript
-// app code
+// 应用程序代码
 $('button').on('click', (e) => {
   const one = confirm('first confirm')
 
@@ -357,54 +340,47 @@ $('button').on('click', (e) => {
   }
 })
 
-// test code
-it('can control application confirms', (done) => {
+// 测试代码
+it('能否控制应用程序的确认弹窗的确认', (done) => {
   let count = 0
 
-  // make sure you bind to this **before** the
-  // confirm method is called in your application
-  //
-  // this event will automatically be unbound when this
-  // test ends because it's attached to 'cy'
+  // 确保你在应用程序中调用confirm方法之前绑定到这个事件，
+  // 并将在测试结束时自动解除绑定，因为它被附加到'cy'
   cy.on('window:confirm', (str) => {
     count += 1
 
     switch (count) {
       case 1:
         expect(str).to.eq('first confirm')
-      // returning nothing here automatically
-      // accepts the confirmation
+      // 此处不返回任何内容，将自动接受确认
       case 2:
         expect(str).to.eq('second confirm')
 
-        // reject the confirmation
+        // 拒绝确认
         return false
 
       case 3:
         expect(str).to.eq('third confirm')
 
-        // don't have to return true but it works
-        // as well
+        // 不必返回true，但它工作得很好
         return true
 
       case 4:
         expect(str).to.eq('third confirm was true')
 
-        // using mocha's async done callback to finish
-        // this test so we are guaranteed everything
-        // got to this point okay without throwing an error
+        // 使用mocha的async done回调来完成这个测试，这样我们就可以保证一切顺利，不会抛出错误
         done()
     }
   })
 
-  // click the button causing the confirm to fire
+  // 点击按钮，导致触发确认弹窗
   cy.get('button').click()
 })
 
-it('could also use a stub instead of imperative code', () => {
+it('也可以使用桩而不是命令式代码', () => {
   const stub = cy.stub()
 
-  // not necessary but showing for clarity
+  // 没有必须的，但为了清晰起见
   stub.onFirstCall().returns(undefined)
   stub.onSecondCall().returns(false)
   stub.onThirdCall().returns(true)
@@ -424,21 +400,21 @@ it('could also use a stub instead of imperative code', () => {
 
 <!-- textlint-enable -->
 
-### Window Alert
+### 警告弹窗
 
-#### Assert on the alert text
+#### 断言警告文本
 
-Cypress automatically accepts alerts but you can still assert on the text content.
+Cypress自动接受提醒，但您仍然可以断言文本内容。
 
 ```javascript
-// app code
+// 应用程序代码
 $('button').on('click', (e) => {
   alert('hi')
   alert('there')
   alert('friend')
 })
 
-it('can assert on the alert text content', () => {
+it('能否断言警告文本内容', () => {
   const stub = cy.stub()
 
   cy.on('window:alert', stub)
@@ -453,18 +429,18 @@ it('can assert on the alert text content', () => {
 })
 ```
 
-## Notes
+## 注意
 
-### Logging All Events
+### 记录所有事件到日志
 
-Cypress uses the [`debug`](https://github.com/visionmedia/debug) node module for both the back end server process, and for everything running in the browser (called the driver).
+Cypress使用 [`debug`](https://github.com/visionmedia/debug) node模块用于后端服务器进程，以及在浏览器中运行的所有程序(称为驱动程序)。
 
-If you'd like to see (the huge) stream of events that Cypress emits you can pop open your Dev Tools and write this line in the console.
+如果你想看到Cypress发出的(巨大的)事件流，你可以打开你的Dev Tools并在控制台编写这一行。
 
 ```javascript
 localStorage.debug = 'cypress:*'
 ```
 
-Reload the browser and turn on 'Verbose' logs to see debug messages within the Developer Tools console.
+重新加载浏览器并打开“Verbose”日志以查看Developer Tools控制台中的调试消息。
 
 <DocsImage src="/img/api/catalog-of-events/console-log-events-debug.png" alt="console log events for debugging" ></DocsImage>
