@@ -1,140 +1,115 @@
 ---
 layout: toc-top
-title: Error Messages
+title: 错误信息
 ---
 
-## Test File Errors
+## 测试文件错误
 
-### <Icon name="exclamation-triangle" color="red"></Icon> No tests found
+### <Icon name="exclamation-triangle" color="red"></Icon> No tests found 没有找到测试
 
-This message means that Cypress was unable to find tests in the specified file.
-You'll likely get this message if you have an empty test file and have not yet
-written any tests.
+此消息意味着Cypress无法在指定文件中找到测试。如果您有一个空的测试文件，并且还没有编写任何测试，那么您可能会收到此消息。
 
 <DocsImage src="/img/guides/no-tests-found.png" alt="No tests found" ></DocsImage>
 
-### <Icon name="exclamation-triangle" color="red"></Icon> We found an error preparing your test file
+### <Icon name="exclamation-triangle" color="red"></Icon> We found an error preparing your test file 我们在准备测试文件时发现了一个错误
 
-This message means that Cypress encountered an error when compiling and/or
-bundling your test file. Cypress automatically compiles and bundles your test
-code so you can use ES2015, CoffeeScript, modules, etc.
+此消息意味着Cypress在编译或绑定您的测试文件时遇到了错误。Cypress会自动编译和打包你的测试代码，这样你就可以使用ES2015, CoffeeScript，模块等等。
 
-#### You’ll typically receive this message due to:
+#### 你收到这条消息，通常原因如下:
 
-- The file not existing
-- A syntax error in the file or one of its dependencies
-- A missing dependency
+- 文件不存在
+- 文件或其依赖项中的一个语法错误
+- 依赖缺失
 
-When the error is fixed in your test file, your tests will automatically re-run.
+当您的测试文件中的错误被修复后，您的测试将自动重新运行.
 
-## Support File Errors
+## 支持文件错误
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Support file missing or invalid
+### <Icon name="exclamation-triangle" color="red"></Icon> Support file missing or invalid 支持文件丢失或无效
 
-The `supportFolder` option was removed from Cypress in version
-[`0.18.0`](/guides/references/changelog#0-18-0) and was replaced by module
-support and the [`supportFile`](/guides/references/configuration#Folders-Files)
-configuration option.
+`supportFolder`选项已从Cypress版本[' 0.18.0 '](guidesreferenceschangelog0-18-0)中移除，
+并被模块支持和[`supportFile`](/guides/references/configuration#Folders-Files)配置选项替换。
 
-Cypress used to automatically include any scripts in the `supportFolder` before
-your test files. However, automatically including all the files in a certain
-directory is somewhat magical and unintuitive, and requires creating globals for
-the purpose of utility functions.
+Cypress习惯于在测试文件之前自动将任何脚本包含在`supportFolder`中。但是，自动包含某个目录中的所有文件有些不可思议，而且不直观，需要为实用程序函数创建全局变量。
 
-#### Use modules for utility functions
+#### 使用模块作为工具函数
 
-Cypress supports both ES2015 modules and CommonJS modules. You can
-import/require npm modules as well as local modules:
+Cypress同时支持ES2015模块和CommonJS模块。你可以导入npm模块和本地模块:
 
 ```javascript
 import _ from 'lodash'
 import util from './util'
 
-it('uses modules', () => {
+it('使用模块', () => {
   expect(_.kebabCase('FooBar')).to.equal('foo-bar')
   expect(util.secretCode()).to.equal('1-2-3-4')
 })
 ```
 
-#### Use supportFile to load scripts before your test code
+#### 使用supportFile在测试代码之前加载脚本
 
-It's still useful to load a setup file before your test code. If you are setting
-Cypress defaults or utilizing custom Cypress commands, instead of needing to
-import/require those defaults/commands in every test file, you can use the
-[`supportFile`](/guides/references/configuration#Folders-Files) configuration
-option.
+在测试代码之前加载安装文件仍然很有用。如果您正在设置Cypress默认值或使用自定义Cypress命令，
+而不需要在每个测试文件中导入这些命令，您可以使用[`supportFile`](/guides/references/configuration#Folders-Files)配置选项。
 
-To include code before your test files, set the
-[`supportFile`](/guides/references/configuration#Folders-Files) path. By
-default, [`supportFile`](/guides/references/configuration#Folders-Files) is set
-to look for one of the following files:
+要在测试文件之前包含代码，请设置[`supportFile`](/guides/references/configuration#Folders-Files)路径。
+默认情况下，[`supportFile`](/guides/references/configuration#Folders-Files)设置为查找以下文件之一:
 
 - `cypress/support/index.js`
 - `cypress/support/index.ts`
 - `cypress/support/index.coffee`
 
-Just like with your test files, the
-[`supportFile`](/guides/references/configuration#Folders-Files) can use ES2015+,
-[TypeScript](/guides/tooling/typescript-support) or CoffeeScript and modules, so
-you can import/require other files as needed.
+就像你的测试文件一样，[`supportFile`](/guides/references/configuration#Folders-Files)可以使用ES2015+， 
+[TypeScript](/guides/tooling/typescript-support)或CoffeeScript和模块，所以你可以`import`或`require`其他文件。
 
-## Command Errors
+## 命令错误
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress cannot execute commands outside a running test
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress cannot execute commands outside a running test. Cypress不能在正在运行的测试之外执行命令
 
 <DocsImage src="/img/guides/cypress-cannot-execute.png" alt="Cannot execute commands" ></DocsImage>
 
-This message means you tried to execute one or more Cypress commands outside of
-a currently running test. Cypress has to be able to associate commands to a
-specific test.
+此消息意味着您试图在当前运行的测试之外执行一个或多个Cypress命令。Cypress必须能够将命令与特定的测试关联起来。
 
-Typically this happens accidentally, like in the following situation.
+这通常是偶然发生的，就像下面的情况。
 
 ```javascript
-describe('Some Tests', () => {
-  it('is true', () => {
+describe('一些测试', () => {
+  it('是 true', () => {
     expect(true).to.be.true // yup, fine
   })
 
-  it('is false', () => {
+  it('是 false', () => {
     expect(false).to.be.false // yup, also fine
   })
 
-  context('some nested tests', () => {
-    // oops you forgot to write an it(...) here!
-    // these cypress commands below
-    // are running outside of a test and cypress
-    // throws an error
+  context('一些嵌套测试', () => {
+    // 哦，你忘记在这里写it了!
+    // 下面这些cypress命令在测试之外运行，cypress抛出一个错误
     cy.visit('http://localhost:8080')
     cy.get('h1').should('contain', 'todos')
   })
 })
 ```
 
-Move those Cypress commands into an `it(...)` block and everything will work
-correctly.
+将那些Cypress命令移到一个 `it(...)` 代码块中，一切都会正常。
 
-If you are purposefully writing commands outside of a test, there is probably a
-better way to accomplish what you're trying to do. Read through the
-[Examples](/examples/examples/recipes),
-[chat with someone in our chat](https://gitter.im/cypress-io/cypress), or
-[open an issue](https://github.com/cypress-io/cypress/issues/new/choose).
+如果您有意在测试之外编写命令，那么可能有更好的方法来完成您正在尝试做的事情。通读[示例](/examples/examples/recipes),
+[在我们的聊天室内沟通](https://gitter.im/cypress-io/cypress), or
+[打开一个问题](https://github.com/cypress-io/cypress/issues/new/choose).
 
-### <Icon name="exclamation-triangle" color="red"></Icon> `cy...()` failed because the element you are chaining off of has become detached or removed from the dom
+### <Icon name="exclamation-triangle" color="red"></Icon> `cy...()` failed because the element you are chaining off of has become detached or removed from the dom。失败原因是链接的元素已经从dom中分离或移除
 
-Getting this error means you've tried to interact with a "dead" DOM element -
-meaning it's been detached or completely removed from the DOM.
-
+得到这个错误意味着您试图与一个`死掉`的DOM元素交互——这意味着它已经从DOM中分离或完全移除。
+·
 <!--
-To reproduce the following screenshot:
-describe('detachment example', () => {
+重现对下面的截图
+describe('从dom分离的例子', () => {
   beforeEach(() => {
     cy.get('body').then(($body) => {
       const $outer = Cypress.$('<div />').appendTo($body)
       Cypress.$('<button />').on('click', () => { $outer[0].remove() }).appendTo($outer)
     })
   })
-  it('detaches from dom', () => {
+  it('从dom分离', () => {
     cy.get('button')
     .click()
     .parent()
@@ -163,18 +138,15 @@ describe('detachment example', () => {
 
 <DocsImage src="/img/guides/cy-method-failed-element-is-detached.png" alt="cy.method() failed because element is detached" ></DocsImage>
 
-Cypress errors because it can't interact with "dead" elements - much like a real
-user could not do this either. Understanding how this happens is very
-important - and it is often preventable.
+Cypress错误是因为它不能与`死掉`的元素交互——就像一个真正的用户也不能这样做。了解这是如何发生的非常重要——而且这通常是可以预防的。
+让我们看一下下面的例子。
 
-Let's take a look at an example below.
-
-#### Application HTML
+#### 应用程序的HTML
 
 ```html
 <body>
   <div id="parent">
-    <button>delete</button>
+    <button>删除</button>
   </div>
 </body>
 ```
@@ -183,89 +155,73 @@ Let's take a look at an example below.
 
 ```javascript
 $('button').click(() => {
-  // when the <button> is clicked
-  // we remove the button from the DOM
+  // 当<button>被单击时
+  // 我们从DOM中移除按钮
   $(this).remove()
 })
 ```
 
-#### Test Code causing error
+#### 导致错误的测试代码
 
 ```javascript
 cy.get('button').click().parent()
 ```
 
-We've programmed our application above so that as soon as the `click` event
-happens, the button is removed from the DOM. When Cypress begins processing the
-next command ([`.parent()`](/api/commands/parent)) in the test above, it detects
-that the yielded subject (the button) is detached from the DOM and throws the
-error.
+我们已经在上面对应用程序进行了编程，这样一旦`click`事件发生，按钮就会从DOM中删除。
+当Cypress开始处理上面测试中的下一个命令([`.parent()`](/api/commands/parent))时，它检测到输出的目标(按钮)与DOM分离，并抛出错误。
 
-We can prevent Cypress from throwing this error by rewriting our test code.
+我们可以通过重写测试代码来防止Cypress抛出这个错误。
 
-#### Fixed Test Code
+#### 修复测试代码
 
 ```javascript
 cy.get('button').click()
 cy.get('#parent')
 ```
 
-The above example is an oversimplification. Let's look at a more complex
-example.
+上面的例子过于简单化了。让我们看一个更复杂的例子。
 
-In modern JavaScript frameworks, DOM elements are regularly re-rendered -
-meaning that the old element is thrown away and a new one is put in its place.
-Because this happens so fast, it may _appear_ as if nothing has visibly changed
-to the user. But if you are in the middle of executing test commands, it's
-possible the element you're interacting with has become "dead". To deal with
-this situation you must:
+在现代JavaScript框架中，DOM元素经常被重新呈现——这意味着旧元素被丢弃，新元素被替换。
+因为这发生得太快了，用户可能会觉得好像什么都没有发生。
+但如果您正在执行测试命令，则可能与您交互的元素已经`死亡`。要处理这种情况，你必须:
 
-- Understand when your application re-renders
-- Re-query for newly added DOM elements
-- _Guard_ Cypress from running commands until a specific condition is met
+- 了解应用程序何时重新呈现
+- 重新查询新添加的DOM元素
+- 在满足特定条件之前，**阻止**Cypress运行命令
 
-When we say _guard_, this usually means:
+当我们说_阻止_时，这通常意味着:
 
-- Writing an assertion
-- Waiting on an XHR
+- 编写一个断言
+- 等待一个XHR完成
 
-#### More info
+#### 更多信息
 
-Read the blog post
-[Do Not Get Too Detached](https://www.cypress.io/blog/2020/07/22/do-not-get-too-detached/)
-for another example of this error, and how to solve it.
+阅读博客文章[Do Not Get Too Detached](https://www.cypress.io/blog/2020/07/22/do-not-get-too-detached/)，了解这个错误的另一个例子，以及如何解决它.
 
-### <Icon name="exclamation-triangle" color="red"></Icon> `cy....()` failed because the element cannot be interacted with
+### <Icon name="exclamation-triangle" color="red"></Icon> `cy....()` failed because the element cannot be interacted with 。失败是因为无法与元素交互
 
-You may see a variation of this message for 4 different reasons:
+你可能会看到这个消息的变体，有4个不同的原因:
 
-1. The element is not visible
-2. The element is being covered by another element
-3. The element's center is hidden from view
-4. The element is disabled
+1. 元素是不可见的
+2. 该元素被另一个元素覆盖
+3. 元素的中心隐藏在视图中
+4. 元素被禁用
 
-Cypress runs several calculations to ensure an element can _actually_ be
-interacted with like a real user would. If you're seeing this error, you may
-need to _guard_ your commands (due to a timing or an animation issue).
+Cypress进行了几次计算，以确保一个元素可以像真正的用户那样进行交互。如果您看到这个错误，可能需要阻止您的命令(由于时间或动画问题)。
 
-There have been situations where Cypress does not correctly allow you to
-interact with an element that should be interactable. If that's the case,
-[open an issue](https://github.com/cypress-io/cypress/issues/new/choose).
+在某些情况下，Cypress不允许您正确地与一个应该是可交互的元素进行交互。如果是这样，[提出一个问题](https://github.com/cypress-io/cypress/issues/new/choose).
 
-If you'd like to override these built-in checks, provide the `{force: true}`
-option to the action itself. Refer to each command for their available options,
-additional use cases, and argument usage.
+如果你想覆盖这些内置的检查，为动作本身提供`{force: true}`选项。请参阅每个命令以了解它们的可用选项、其他用例和参数用法。
 
-#### Ignore built-in error checking
+#### 忽略内置错误检查
 
 ```javascript
 cy.get('[disabled]').click({force: true}).
 ```
 
-_Be careful with this option. It's possible to force your tests to pass when the
-element is actually not interactable in your application._
+_小心这个选项。当元素在应用程序中实际上不可交互时，可以强制测试通过._
 
-### <Icon name="exclamation-triangle" color="red"></Icon> `cy....()` failed because the element is currently animating
+### <Icon name="exclamation-triangle" color="red"></Icon> `cy....()` failed because the element is currently animating.失败是因为元素当前正在动画
 
 <!--
 To reproduce the following screenshot:
@@ -285,31 +241,22 @@ describe('animating example', () => {
 
 <DocsImage src="/img/guides/cy-method-failed-element-is-animating.png" alt="cy.method() failed because element is animating" ></DocsImage>
 
-By default Cypress detects if an element you're trying to interact with is
-animating. This check ensures that an element is not animating too quickly for a
-real user to interact with the element. This also prevents some edge cases where
-actions, such as [`.type()`](/api/commands/type) or
-[`.click()`](/api/commands/click), happened too fast during a transition.
+默认情况下，Cypress会检测你想要交互的元素是否动画过程汇总。这个检查确保元素的动画速度不会太快，不会让真正的用户与元素交互。
+这也防止了一些边缘情况，例如[`.type()`](/api/commands/type)或[`.click()`](/api/commands/click)在动画过渡过程中发生得太快。
 
-Cypress will continuously attempt to interact with the element until it
-eventually times out. If you'd like to force Cypress to interact with the
-element there are a few options:
+Cypress将不断尝试与元素互动，直到它最终失效。如果你想强迫Cypress与元素交互，有几个选项:
 
-- Pass `{force: true}`. This disables _all_ error checking
-- Pass `{waitForAnimations: false}` to disable animation error checking
-- Pass `{animationDistanceThreshold: 20}` to decrease the sensitivity of
-  detecting if an element is animating. By increasing the threshold this enables
-  your element to move farther on the page without causing Cypress to
-  continuously retry.
+- 传参 `{force: true}`. 这将禁用 __所有__ 错误检查
+- 传参 `{waitForAnimations: false}` 禁用动画错误检查
+- 传参 `{animationDistanceThreshold: 20}` 降低检测一个元素是否动画的灵敏度。通过增加阈值，可以使元素在页面上移动得更远，而不会导致Cypress连续重试。
 
 ```javascript
 cy.get('#modal button').click({ waitForAnimations: false })
 ```
 
-You can globally disable animation error checking, or increase the threshold by
-modifying the [configuration](/guides/references/configuration).
+您可以全局禁用动画错误检查，或者通过修改[配置](/guides/references/configuration)来增加阈值。.
 
-#### Configuration file (`cypress.json` by default)
+####  配置文件(默认是`cypress.json` )
 
 ```json
 {
@@ -318,85 +265,73 @@ modifying the [configuration](/guides/references/configuration).
 }
 ```
 
-### <Icon name="exclamation-triangle" color="red"></Icon> The test has finished but Cypress still has commands in its queue
+### <Icon name="exclamation-triangle" color="red"></Icon> The test has finished but Cypress still has commands in its queue。测试已经完成，但Cypress的队列中仍然有命令
 
-Let's examine several different ways you may get this error message. In every
-situation, you'll need to change something in your test code to prevent the
-error.
+让我们检查几种可能得到此错误消息的方法。在每种情况下，您都需要更改测试代码中的某些内容，以防止出现错误.
 
 <DocsImage src="/img/guides/the-test-has-finished.png" alt="The test has finished but Cypress still has commands" ></DocsImage>
 
 <Alert type="warning">
 
-<strong class="alert-header">Flaky tests below!</strong>
+<strong class="alert-header">下面的脆弱测试!</strong>
 
-Several of these tests are dependent on race conditions. You may have to run
-these tests multiple times before they will actually fail. You can also try
-tweaking some of the delays.
+其中一些测试依赖于竞争条件。在这些测试实际失败之前，您可能必须多次运行这些测试。您还可以尝试调整一些延迟.
 
 </Alert>
 
-#### Short Example
+#### 简短的例子
 
-This first test below will pass and shows you that Cypress tries to prevent
-leaving commands behind in the queue in every test.
+下面的第一个测试将通过，并向您显示Cypress在每次测试中都试图防止在队列中留下命令。
 
-Even though we return a string in our test, Cypress automatically figures out
-that you've queued commands above and does not end the test until all cy
-commands have finished.
+即使我们在测试中返回一个字符串，Cypress也会自动计算出您已经对上面的命令进行了排队，并且直到所有的cy命令都完成后才会结束测试。
 
 ```javascript
-// This test passes!
-it('Cypress is smart and this does not fail', () => {
-  cy.get('body').children().should('not.contain', 'foo') // <- no return here
+// 这个测试会通过!
+it('Cypress是智能的，不会失败', () => {
+  cy.get('body').children().should('not.contain', 'foo') // <-这里没有返回
 
-  return 'foobarbaz' // <- return here
+  return 'foobarbaz' // <- 在这里返回
 })
 ```
 
-The example below will fail because you've forcibly terminated the test early
-with mocha's `done`.
+下面的示例将会失败，因为您已经使用mocha的`done`强制提前终止了测试。
 
 ```javascript
-// This test errors!
-it('but you can forcibly end the test early which does fail', (done) => {
+// 这个测试会错误!
+it('但是您可以强制提前结束测试，这会失败', (done) => {
   cy.get('body')
     .then(() => {
-      done() // forcibly end test even though there are commands below
+      done() // 强制结束测试，即使下面有命令
     })
     .children()
     .should('not.contain', 'foo')
 })
 ```
 
-#### Complex Async Example
+#### 复杂的异步例子
 
-What's happening in this example is that because we have _NOT_ told Mocha this
-is an asynchronous test, this test will pass _immediately_ then move onto the
-next test. Then, when the `setTimeout` callback function runs, new commands will
-get queued on the wrong test. Cypress will detect this and fail the _next_ test.
-
+在这个例子中，因为我们 __没有__ 告诉Mocha这是一个异步测试，所以这个测试会 __立即__ 通过，进入下一个测试。
+然后，当`setTimeout`回调函数运行时，新的命令将在错误的测试上排队。Cypress会察觉到这一点，并让下一次测试失败。
 ```javascript
-describe('a complex example with async code', function () {
-  it('you can cause commands to bleed into the next test', function () {
-    // This test passes...but...
+describe('一个复杂的异步代码示例', function () {
+  it('您可以使命令传入下一个测试', function () {
+    // 这个测试会通过。。。。。。但是。。。。。。
     setTimeout(() => {
       cy.get('body').children().should('not.contain', 'foo')
     }, 10)
   })
 
-  it('this test will fail due to the previous poorly written test', () => {
-    // This test errors!
+  it('由于之前的破测试，这个测试会失败', () => {
+    // 这个测试会错误!
     cy.wait(10)
   })
 })
 ```
 
-The correct way to write the above test code is using Mocha's `done` to signify
-it is asynchronous.
+编写上述测试代码的正确方法是使用Mocha的`done`来表示它是异步的。
 
 ```javascript
-it('does not cause commands to bleed into the next test', (done) => {
+it('不会导致命令渗入到下一个测试中', (done) => {
   setTimeout(() => {
     cy.get('body')
       .children()
@@ -408,372 +343,265 @@ it('does not cause commands to bleed into the next test', (done) => {
 })
 ```
 
-#### Complex Promise Example
+#### 复杂的Promise例子
 
-In the example below, we forget to return the `Promise` in our test. This means
-the test passes synchronously but our `Promise` resolves in the next test. This
-also causes the commands to be queued on the wrong test. We will get the error
-in the next test that Cypress detected it had commands in its command queue.
+在下面的例子中，我们忘记在测试中返回`Promise` 。这意味着测试同步通过，但是我们的`Promise` 会在下一次测试中解析。
+这也会导致命令在错误的测试上排队。我们将在下一次测试中得到错误，Cypress检测到它的命令队列中有命令。
 
 ```javascript
-describe('another complex example using a forgotten "return"', () => {
-  it('forgets to return a promise', () => {
-    // This test passes...but...
+describe('另一个使用被遗忘的“return”的复杂示例', () => {
+  it('忘记返回一个 promise', () => {
+    // 这个测试会通过。。。。。。但是。。。。。。
     Cypress.Promise.delay(10).then(() => {
       cy.get('body').children().should('not.contain', 'foo')
     })
   })
 
-  it('this test will fail due to the previous poorly written test', () => {
-    // This test errors!
+  it('由于之前的破测试，这个测试会失败', () => {
+    // 这个测试会错误!
     cy.wait(10)
   })
 })
 ```
 
-The correct way to write the above test code would be to return our `Promise`:
+编写上述测试代码的正确方法是返回我们的`Promise`:
 
 ```javascript
-it('does not forget to return a promise', () => {
+it('别忘了返回一个promise', () => {
   return Cypress.Promise.delay(10).then(() => {
     return cy.get('body').children().should('not.contain', 'foo')
   })
 })
 ```
 
-### <Icon name="exclamation-triangle" color="red"></Icon> `cy.visit()` failed because you are attempting to visit a second unique domain
+### <Icon name="exclamation-triangle" color="red"></Icon> `cy.visit()` failed because you are attempting to visit a second unique domain。失败是因为您正试图访问第二个唯一域
 
-See our [Web Security](/guides/guides/web-security#Limitations) documentation.
+请参阅我们的[Web安全](/guides/guides/web-security#Limitations)文档.
 
-### <Icon name="exclamation-triangle" color="red"></Icon> `cy.visit()` failed because you are attempting to visit a different origin domain
+### <Icon name="exclamation-triangle" color="red"></Icon> `cy.visit()` failed because you are attempting to visit a different origin domain。失败是因为您正在尝试访问一个不同的源域名
 
-Two URLs have the same origin if the `protocol`, `port` (if specified), and
-`host` are the same for both. You can only visit domains that are of the
-same-origin within a single test. You can read more about same-origin policy in
-general
-[here](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy).
+如果两个url的`protocol`, `port`(如果指定)和`host`都是相同的，那么这两个url就是相同的来源。
+您只能在单个测试中访问同源的域。您可以在[这里](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) 阅读更多关于同源策略的常规内容
 
-You can visit urls that are of different origin across different tests, so you
-may consider splitting your `cy.visit()` of different origin domains into
-separate tests.
 
-See our [Web Security](/guides/guides/web-security#Limitations) documentation
-for more information and workarounds.
+你可以在不同的测试中访问不同来源的url，所以你可以考虑将不同来源域的`cy.visit()` 分割成单独的测试。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> `Cypress.addParentCommand()` / `Cypress.addDualCommand()` / `Cypress.addChildCommand()` has been removed and replaced by `Cypress.Commands.add()`
+请参阅我们的[Web安全](/guides/guides/web-security#Limitations)文档
+获取更多信息和解决方法。
 
-In version [0.20.0](/guides/references/changelog), we removed the commands for
-adding custom commands and replaced them with, what we believe to be, a simpler
-interface.
+### <Icon name="exclamation-triangle" color="red"></Icon> `Cypress.addParentCommand()` / `Cypress.addDualCommand()` / `Cypress.addChildCommand()` has been removed and replaced by `Cypress.Commands.add()`。`Cypress.addParentCommand()` / `Cypress.addDualCommand()` / `Cypress.addChildCommand()` 已被删除并被`Cypress.Commands.add()`替换
 
-Now you can create parent, dual, and child commands using the same
-[Cypress.Commands.add()](/api/cypress-api/custom-commands) command.
+在[0.20.0](/guides/references/changelog)版本中，我们删除了用于添加自定义命令的命令，并将它们替换为我们认为更简单的界面。
 
-Please read our
-[new documentation on writing custom commands](/api/cypress-api/custom-commands).
+现在您可以使用同一个命令[Cypress.Commands.add()](/api/cypress-api/custom-commands)创建父命令、双命令和子命令。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you invoked one or more `cy` commands in a custom command but returned a different value.
+请阅读我们的[编写自定义命令的新文档](/api/cypress-api/custom-commands).
 
-Because `cy` commands are asynchronous and are queued to be run later, it
-doesn't make sense to return anything else.
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you invoked one or more `cy` commands in a custom command but returned a different value.  Cypress检测到您在自定义命令中调用了一个或多个`cy`命令，但返回了不同的值
 
-For convenience, you can also omit any return value or return `undefined` and
-Cypress will not error.
+因为`cy`命令是异步的，并且被排队等待稍后运行，所以返回任何其他命令都没有意义。
 
-In versions before [0.20.0](/guides/references/changelog) of Cypress we
-automatically detected this and forced the `cy` commands to be returned. To make
-things less magical and clearer, we are now throwing an error.
+为了方便，您还可以省略任何返回值或返回`undefined`，这样Cypress就不会出错。
+在Cypress [0.20.0](/guides/references/changelog)之前的版本中，我们自动检测到这一点，并强制返回`cy`命令。为了让事情变得不那么神奇和清晰，我们现在抛出一个错误。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you invoked one or more `cy` commands but returned a different value.
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you invoked one or more `cy` commands but returned a different value. Cypress检测到您调用了一个或多个`cy`命令，但返回了不同的值
 
-Because cy commands are asynchronous and are queued to be run later, it doesn't
-make sense to return anything else.
+因为`cy`命令是异步的，并且被排队等待稍后运行，所以返回任何其他命令都没有意义。
 
-For convenience, you can also omit any return value or return `undefined` and
-Cypress will not error.
+为了方便，您还可以省略任何返回值或返回 `undefined`，这样Cypress就不会出错。
+在Cypress [0.20.0](/guides/references/changelog)之前的版本中，我们自动检测到这一点，并强制返回`cy`命令。为了让事情变得不那么神奇和清晰，我们现在抛出一个错误。
 
-In versions before [0.20.0](/guides/references/changelog) of Cypress we
-automatically detected this and forced the `cy` commands to be returned. To make
-things less magical and clearer, we are now throwing an error.
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you returned a promise from a command while also invoking one or more cy commands in that promise. Cypress检测到您从一个命令中返回了一个promise，同时还在该promise中调用了一个或多个`cy`命令。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you returned a promise from a command while also invoking one or more cy commands in that promise.
+因为Cypress命令已经是类似promise，所以您不需要包装它们或返回您自己的promise。
 
-Because Cypress commands are already promise-like, you don't need to wrap them
-or return your own promise.
+Cypress会用最后的Cypress命令所产生的任何结果来解决你的命令。
 
-Cypress will resolve your command with whatever the final Cypress command
-yields.
+这是一个错误而不是警告的原因是，Cypress在内部连续地队列命令，而promise则在调用时立即执行。试图调和这一点将会阻止Cypress解决问题。
 
-The reason this is an error instead of a warning is because Cypress internally
-queues commands serially whereas Promises execute as soon as they are invoked.
-Attempting to reconcile this would prevent Cypress from ever resolving.
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you returned a promise in a test, but also invoked one or more `cy` commands inside of that promise. Cypress检测到您在测试中返回了一个promise，但也在该promise中调用了一个或多个`cy`命令。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you returned a promise in a test, but also invoked one or more `cy` commands inside of that promise.
+虽然这在实践中是可行的，但它通常表明是反模式。几乎不需要同时返回promise和调用`cy`命令。
 
-While this works in practice, it's often indicative of an anti-pattern. You
-almost never need to return both a promise and also invoke `cy` commands.
+`cy`命令本身就像promise一样，你可以避免使用单独的promise。
 
-`cy` commands themselves are already promise like, and you can likely avoid the
-use of the separate Promise.
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you returned a promise in a test, but also invoked a done callback.  Cypress检测到您在测试中返回了一个promise，但也调用了done回调。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that you returned a promise in a test, but also invoked a done callback.
+Mocha的版本是用Cypress 4.0升级的。Mocha 3+不再允许返回promise和调用done回调。更多信息请参阅[4.0迁移指南](/guides/references/migration-guide#Mocha-upgrade).
 
-The version of Mocha was upgraded with Cypress 4.0. Mocha 3+ no longer allows
-returning a promise and invoking a done callback. Read more about it in the
-[4.0 migration guide](/guides/references/migration-guide#Mocha-upgrade).
+### <Icon name="exclamation-triangle" color="red"></Icon> Passing `cy.route({stub: false})` or `cy.server({stub: false})` is now deprecated.  `cy.route({stub: false})` 或 `cy.server({stub: false})`的这个参数已经废弃
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Passing `cy.route({stub: false})` or `cy.server({stub: false})` is now deprecated.
+你可以安全地移除: `{stub: false}`.
 
-You can safely remove: `{stub: false}`.
+### <Icon name="exclamation-triangle" color="red"></Icon> CypressError: Timed out retrying: Expected to find element: ‘…’, but never found it. Queried from element: <…>  。CypressError: 重试超时: 期望找到匀速: '…'，但从未找到它。从元素:<…>查询
 
-### <Icon name="exclamation-triangle" color="red"></Icon> CypressError: Timed out retrying: Expected to find element: ‘…’, but never found it. Queried from element: <…>
+如果在元素在DOM中明确可见的情况下出现此错误，则文档可能包含格式错误的HTML。在这种情况下，`document.querySelector()`将找不到出现在HTML格式错误点之后的任何元素。即使您确信HTML在任何地方都没有变形，也要检查它(在开发工具中逐行检查)。尤其是当你已经穷尽了所有其他可能性的时候。
 
-If you get this error in a case where the element is definitely visible in the
-DOM, your document might contain malformed HTML. In such cases,
-`document.querySelector()` will not find any elements that appear after the
-point where the HTML is malformed. Even if you feel certain your HTML is not
-malformed anywhere, check it anyway (line by line in the dev tools). Especially
-if you've exhausted all other possibilities.
+## 命令行错误
 
-## CLI Errors
+### <Icon name="exclamation-triangle" color="red"></Icon> You passed the `--record` flag but did not provide us your Record Key. 您指定了 `--record`选项标志，但没有提供“记录密钥”
 
-### <Icon name="exclamation-triangle" color="red"></Icon> You passed the `--record` flag but did not provide us your Record Key.
+当尝试在[持续集成](/guides/continuous-integration/introduction)中运行Cypress测试时，可能会收到此错误. 
+这意味着您没有传递特定的记录秘钥:[cypress run -record](/guides/guides/command-line#cypress-run).
 
-You may receive this error when trying to run Cypress tests in
-[Continuous Integration](/guides/continuous-integration/introduction). This
-means that you did not pass a specific record key to:
-[cypress run --record](/guides/guides/command-line#cypress-run).
+由于没有传递记录秘钥，Cypress会检查名为`CYPRESS_RECORD_KEY`的任何环境变量。在这个案例中，也没有发现.
 
-Since no record key was passed, Cypress checks for any environment variable with
-the name `CYPRESS_RECORD_KEY`. In this case, that was also not found.
+你可以在测试运行器或[Dashboard服务](https://on.cypress.io/dashboard)的设置选项卡中找到你的项目的记录密钥。.
 
-You can get your project's record key by locating it in your settings tab in the
-Test Runner or in the [Dashboard Service](https://on.cypress.io/dashboard).
+然后，您需要[将密钥添加到配置文件或作为环境变量](/guides/continuous-integration/introduction#Record-tests).
 
-You will want to then
-[add the key to your config file or as an environment variable](/guides/continuous-integration/introduction#Record-tests).
+### <Icon name="exclamation-triangle" color="red"></Icon> The `cypress ci` command has been deprecated。`cypress ci`命令已被废弃
 
-### <Icon name="exclamation-triangle" color="red"></Icon> The `cypress ci` command has been deprecated
+从版本[`0.19.0`](/guides/references/changelog#0-19-0)和CLI版本`0.13.0`开始，`cypress ci`命令已弃用。我们这样做是为了更清楚地了解常规测试运行和记录测试运行之间的区别。
 
-As of version [`0.19.0`](/guides/references/changelog#0-19-0) and CLI versions
-`0.13.0`, the `cypress ci` command has been deprecated. We did this to make it
-clearer what the difference was between a _regular test run_ and a _recorded
-test run_.
-
-Previously to record runs you had the environment variable: `CYPRESS_CI_KEY` or
-you wrote:
+之前，要记录运行，你有环境变量:`CYPRESS_CI_KEY`或你写:
 
 ```shell
 cypress ci abc-key-123
 ```
 
-You need to rewrite this as:
+你需要将其重写为:
 
 ```shell
 cypress run --record --key abc-key-123
 ```
 
-If you were using the environment variable `CYPRESS_CI_KEY`, rename it
-to`CYPRESS_RECORD_KEY`.
+如果您正在使用环境变量`CYPRESS_CI_KEY`，将其重命名为`cypress_record_key`。
 
-You can now run and omit the `--key` flag:
+现在你可以运行并省略`--key`标志:
 
 ```shell
 cypress run --record
 ```
 
-We will automatically apply the record key environment variable.
+我们将自动应用记录密钥环境变量。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> A Cached Cypress Binary Could not be found
+### <Icon name="exclamation-triangle" color="red"></Icon> A Cached Cypress Binary Could not be found。找不到缓存的Cypress二进制文件
 
-This error occurs in CI when using `cypress run` without a valid Cypress binary
-cache installed on the system (on linux that's `~/.cache/Cypress`).
+当使用`cypress run`而系统上没有安装有效的cypress二进制缓存(在linux上是`~/. cachecypress`)时，此错误发生在CI中。
 
-To fix this error, follow instructions on
-[caching the cypress binary in CI](/guides/continuous-integration/introduction#Caching),
-then bump the version of your CI cache to ensure a clean build.
+要修复这个错误，请遵循关于[在CI中缓存柏树二进制文件](指南持续集成介绍缓存)的说明，然后检查您的CI缓存版本，以确保一个干净的构建.
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Incorrect usage of `--ci-build-id` flag
+### <Icon name="exclamation-triangle" color="red"></Icon> Incorrect usage of `--ci-build-id` flag 。错误使用了  `--ci-build-id`标志
 
-You passed the `--ci-build-id` flag but did not provide either a
-[--group](/guides/guides/command-line#cypress-run-group-lt-name-gt) or
-[--parallel](/guides/guides/command-line#cypress-run-parallel) flag.
+您传递了`--ci-build-id`标志，但没有提供[--group](/guides/guides/command-line#cypress-run-group-lt-name-gt) 或
+[--parallel](/guides/guides/command-line#cypress-run-parallel) 标志.
 
-The `--ci-build-id` flag is used to either group or parallelize multiple runs
-together.
+`--ci-build-id`标志用于并发运行进行分组或并行化。
 
-Check out our [guide on parallelizing runs](/guides/guides/parallelization) and
-when to use the
-[--ci-build-id](/guides/guides/command-line#cypress-run-ci-build-id-lt-id-gt)
-option.
+查看我们的[关于并行化运行的指南](/guides/guides/parallelization)和何时使用[--ci-build-id](/guides/guides/command-line#cypress-run-ci-build-id-lt-id-gt)选项.
 
-### <Icon name="exclamation-triangle" color="red"></Icon> The `--ci-build-id`, `--group`, or `--parallel` flags can only be used when recording
+### <Icon name="exclamation-triangle" color="red"></Icon> The `--ci-build-id`, `--group`, or `--parallel` flags can only be used when recording。`--ci-build-id`, `--group`, 或 `--parallel`标记只能在记录时使用
 
-You passed the `--ci-build-id`,
+传递了`--ci-build-id`,
 [--group](/guides/guides/command-line#cypress-run-group-lt-name-gt), or
-[--parallel](/guides/guides/command-line#cypress-run-parallel) flag without also
-passing the `--record` flag.
+[--parallel](/guides/guides/command-line#cypress-run-parallel) 标志，但没有传递`--record`标志。
 
-These flags can only be used when recording to the
-[Dashboard Service](/guides/dashboard/introduction).
+这些标志只能在记录到[Dashboard服务](/guides/dashboard/introduction)时使用.
 
-Please review our [parallelization](/guides/guides/parallelization)
-documentation to learn more.
+请查看我们的[并行化](/guides/guides/parallelization)文档以了解更多信息。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> We could not determine a unique CI build ID
+### <Icon name="exclamation-triangle" color="red"></Icon> We could not determine a unique CI build ID。我们无法确定唯一的CI构建ID
 
-You passed the
-[--group](/guides/guides/command-line#cypress-run-group-lt-name-gt) or
-[--parallel](/guides/guides/command-line#cypress-run-parallel) flag but we could
-not automatically determine or generate a `ciBuildId`.
+您传递了[--group](/guides/guides/command-line#cypress-run-group-lt-name-gt) 或
+[--parallel](/guides/guides/command-line#cypress-run-parallel) 标志，但我们无法自动确定或生成`ciBuildId`。
 
-In order to use either of these parameters a `ciBuildId` must be determined.
+为了使用这些参数中的任何一个，必须确定一个`ciBuildId`。
 
-The `ciBuildId` is automatically detected if you are running Cypress in most
-[CI providers](/guides/continuous-integration/introduction#Examples). Please
-review the
-[natively recognized environment variables](/guides/guides/parallelization#CI-Build-ID-environment-variables-by-provider)
-for your CI provider.
+如果您在主流[CI提供商](/guides/continuous-integration/introduction#Examples)中运行Cypress， `ciBuildId`将被自动检测到. 请查看[本地识别的环境变量](/guides/guides/parallelization#CI-Build-ID-environment-variables-by-provider)
+查看CI provider.
 
-You can avoid this check in the future by passing an ID to the
-[--ci-build-id](/guides/guides/command-line#cypress-run-ci-build-id-lt-id-gt)
-flag manually.
+您可以通过将ID手动传递给[--ci-build-id](/guides/guides/command-line#cypress-run-ci-build-id-lt-id-gt)标志来避免将来进行此检查。
 
-Please review our [parallelization](/guides/guides/parallelization)
-documentation to learn more.
+请查看我们的[并行化](/guides/guides/parallelization)文档以了解更多信息。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Group name has already been used for this run
+### <Icon name="exclamation-triangle" color="red"></Icon> Group name has already been used for this run。 此运行的组名已被使用了
 
-You passed the
-[--group](/guides/guides/command-line#cypress-run-group-lt-name-gt) flag, but
-this group name has already been used for this run.
+您传递了[--group](/guides/guides/command-line#cypress-run-group-lt-name-gt)标志，但是这个组名已经被用于这次运行。
 
-If you are trying to parallelize this run, then also pass the
-[--parallel](/guides/guides/command-line#cypress-run-parallel) flag, else pass a
-different group name.
+如果您试图并行执行此运行，则还需要传递[--parallel](/guides/guides/command-line#cypress-run-parallel)标志，并传递一个不同的组名。
 
-Please review
-[grouping test runs](/guides/guides/parallelization#Grouping-test-runs)
-documentation to learn more.
+请查看[分组运行测试](/guides/guides/parallelization#Grouping-test-runs)文档以了解更多信息。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cannot parallelize tests across environments
+### <Icon name="exclamation-triangle" color="red"></Icon> Cannot parallelize tests across environments。无法跨环境并行化测试
 
-You passed the [--parallel](/guides/guides/command-line#cypress-run-parallel)
-flag, but we do not parallelize tests across different environments.
+您通过了[--parallel](/guides/guides/command-line#cypress-run-parallel)标志，但我们没有跨不同环境并行测试。
 
-This machine is sending different environment parameters than the first machine
-that started this parallel run.
+这台机器发送的环境参数与启动并行运行的第一台机器不同。
 
-In order to run in parallel mode each machine must send identical environment
-parameters such as:
+为了以并行模式运行，每台机器必须发送相同的环境参数，如:
 
 - Specs
-- Operation system name
-- Operating system version
-- Browser name
-- Major browser version
+- 操作系统名称
+- 操作系统版本
+- 浏览器的名字
+- 浏览器主版本
 
-Please review our [parallelization](/guides/guides/parallelization)
-documentation to learn more.
+请查看我们的[并行化](/guides/guides/parallelization)文档以了解更多信息。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cannot parallelize tests in this group
+### <Icon name="exclamation-triangle" color="red"></Icon> Cannot parallelize tests in this group。无法并行化该组中的测试
 
-You passed the `--parallel` flag, but this run group was originally created
-without the `--parallel` flag.
+您传递了`--parallel`标志，但这个运行组最初创建时没有`--parallel`标志。
 
-You cannot use the
-[--parallel](/guides/guides/command-line#cypress-run-parallel) flag with this
-group.
+不能使用[--parallel](/guides/guides/command-line#cypress-run-parallel) 标志。
 
-Please review our
-[grouping test runs](/guides/guides/parallelization#Grouping-test-runs)
-documentation to learn more.
+请查看我们的[分组运行测试](/guides/guides/parallelization#Grouping-test-runs)文档以了解更多信息。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Run must pass `--parallel` flag
+### <Icon name="exclamation-triangle" color="red"></Icon> Run must pass `--parallel` flag 。运行必须传递`--parallel`标志
 
-You did not pass the `--parallel` flag, but this run's group was originally
-created with the `--parallel` flag.
+您传递了`--parallel`标志，但这个运行组最初创建时没有`--parallel`标志。
 
-You must use the [--parallel](/guides/guides/command-line#cypress-run-parallel)
-flag with this group.
+必须使用[--parallel](/guides/guides/command-line#cypress-run-parallel)标志。
 
-Please review our [parallelization](/guides/guides/parallelization)
-documentation to learn more.
+请查看我们的[并行化](/guides/guides/parallelization)文档以了解更多信息。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cannot parallelize tests on a stale run
+### <Icon name="exclamation-triangle" color="red"></Icon> Cannot parallelize tests on a stale run 无法在过期运行上并行化测试
 
-This error is thrown when you are attempting to pass the
-[--parallel](/guides/guides/command-line#cypress-run-parallel) flag to a run
-that Cypress detected was completed over 24 hours ago.
+当您试图将[--parallel](/guides/guides/command-line#cypress-run-parallel) 标志传递给Cypress检测到的超过24小时前已完成的运行时，会抛出此错误.
 
-In order to uniquely identify each run during `cypress run`, Cypress attempts to
-read a unique identifier from your CI provider as described in our
-[parallelization doc](/guides/guides/parallelization#CI-Build-ID-environment-variables-by-provider).
+为了在`cypress run`,期间唯一地标识每一次运行，cypress尝试从您的CI提供商读取一个唯一标识符，如我们的[并行化文档](/guides/guides/parallelization#CI-Build-ID-environment-variables-by-provider)所述。(/guides/guides/parallelization#CI-Build-ID-environment-variables-by-provider).
 
-You may encounter this error if Cypress is detecting the exact same CI Build ID
-matching a previous CI Build ID in a run that was completed over 24 hours ago.
-You cannot run tests on a run that has been complete for that long. ​ ​You can
-see the CI Build ID that is detected for each completed run by looking at the
-details section at the top of your run in the
-[Dashboard](https://on.cypress.io/dashboard). ​ ​You can generate and pass in
-your own unique CI Build ID per run as described
-[here](/guides/guides/command-line#cypress-run-ci-build-id-lt-id-gt).
+如果Cypress在超过24小时前完成的一次运行中检测到与之前的CI Build ID完全相同的CI Build ID，则可能会遇到此错误。您无法在已完成那么长时间的运行中运行测试.
+通过查看[Dashboard](https://on.cypress.io/dashboard)中运行顶部的详细信息部分，您可以看到为每次完成运行检测到的CI构建ID​ ​Y。. ​ ​您可以生成并传递您自己的惟一CI Build ID，如[此处](/guides/guides/command-line#cypress-run-ci-build-id-lt-id-gt)所述。.
 
-Please also review our [parallelization](/guides/guides/parallelization)
-documentation to learn more.
+请查看我们的[并行化](/guides/guides/parallelization)文档以了解更多信息。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Run is not accepting any new groups
+### <Icon name="exclamation-triangle" color="red"></Icon> Run is not accepting any new groups。Run不接受任意新组
 
-The run you are attempting access to is already complete and will not accept new
-groups.
+您正在尝试访问的运行已经完成，并且将不接受新组。
 
-When a run finishes all of its groups, it waits for a configurable set of time
-before finally completing. You must add more groups during that time period.
+当运行完成它的所有组时，它会等待一组可配置的时间，然后才最终完成。您必须在该时间段内添加更多的组。
 
-Please review our [parallelization](/guides/guides/parallelization)
-documentation to learn more.
+请查看我们的[并行化](/guides/guides/parallelization)文档以了解更多信息。
 
-## Page Load Errors
+## 页面加载错误
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected a cross-origin error happened on page load
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected a cross-origin error happened on page load。Cypress检测到页面加载时发生了一个跨站错误
 
 <Alert type="info">
 
-For a more thorough explanation of Cypress's Web Security model,
-[please read our dedicated guide to it](/guides/guides/web-security).
+对于Cypress的Web安全模型的更全面的解释，[请阅读我们的专门指南](/guides/guides/web-security).
 
 </Alert>
 
-This error means that your application navigated to a superdomain that Cypress
-was not bound to. Initially when you [`cy.visit()`](/api/commands/visit),
-Cypress changes the browser's URL to match the `url` passed to
-[`cy.visit()`](/api/commands/visit). This enables Cypress to communicate with
-your application to bypass all same-origin security policies among other things.
+此错误意味着您的应用程序导航到一个Cypress没有绑定到的超级域。最初当您[`cy.visit()`](/api/commands/visit)时，
+Cypress更改浏览器的URL以匹配传递给[`cy.visit()`](/api/commands/visit)的`URL`. 
+这使得Cypress能够与您的应用程序通信，从而绕过所有同源安全策略.
 
-When your application navigates to a superdomain outside of the current
-origin-policy, Cypress is unable to communicate with it, and thus fails.
+当您的应用程序导航到当前源策略之外的超级域时，Cypress无法与它通信，因此失败.
 
-#### There are a few workarounds to these common situations:
+#### 对于这些常见情况，有一些变通方法:
 
-1. Don't click `<a>` links in your tests that navigate outside of your
-   application. Likely this isn't worth testing anyway. You should ask yourself:
-   _What's the point of clicking and going to another app?_ Likely all you care
-   about is that the `href` attribute matches what you expect. So make an
-   assertion about that. You can see more strategies on testing anchor links
-   [in our "Tab Handling and Links" example recipe](/examples/examples/recipes#Testing-the-DOM).
+1. 不要在导航到应用程序之外的测试中单击`<a>`链接。这可能不值得测试。
+   你应该问问自己: _点击并切换到另一个应用程序有什么意义_?
+   可能您所关心的只是`href`属性是否与您所期望的匹配。所以对此做一个断言。
+   你可以看到更多测试锚点链接的策略[在我们的“标签处理和链接”示例配方中](/examples/examples/recipes#Testing-the-DOM).
 
-2. You are testing a page that uses Single sign-on (SSO). In this case your web
-   server is likely redirecting you between superdomains, so you receive this
-   error message. You can likely get around this redirect problem by using
-   [`cy.request()`](/api/commands/request) to manually handle the session
-   yourself.
+2. 您正在测试一个使用单点登录(SSO)的页面。在这种情况下，你的网络服务器可能会在超级域之间重定向你，所以你收到这个错误消息。
+   您可以通过使用[`cy.request()`](/api/commands/request) 手动处理会话来绕过这个重定向问题。
 
-If you find yourself stuck and can't work around these issues you can set
-`chromeWebSecurity` to `false` in your
-[configuration file (`cypress.json` by default)](/guides/references/configuration)
-when running in Chrome family browsers (this setting will not work in other
-browsers). Before doing so you should really understand and
-[read about the reasoning here](/guides/guides/web-security).
+如果你发现自己被困,无法解决这些问题.在Chrome家族浏览器中运行(这个设置不会工作在其他浏览器）时，你可以在你的[配置文件(默认是cypress.json)](/guides/references/configuration)中设置`chromeWebSecurity`为`false` 。
+在这样做之前，你应该真正理解和[阅读这里的推理](/guides/guides/web-security).
 
 ```json
 {
@@ -781,134 +609,97 @@ browsers). Before doing so you should really understand and
 }
 ```
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that an uncaught error was thrown from a cross-origin script.
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected that an uncaught error was thrown from a cross-origin script. Cypress检测到跨站脚本抛出一个未捕获的错误
 
-Check your Developer Tools Console for the actual error - it should be printed
-there.
+在开发人员工具控制台可以看到实际错误输出。
 
-It's possible to enable debugging these scripts by adding the `crossorigin`
-attribute and setting a `CORS` header.
+可以通过添加`crossorigin`属性和设置`CORS`头来启用调试这些脚本。
 
-## Browser Errors
+## 浏览器错误
 
 <!-- keep old hash -->
 
 <a name='The-Chromium-Renderer-process-just-crashed'></a>
 
-### <Icon name="exclamation-triangle" color="red"></Icon> The browser process running your tests just exited unexpectedly
+### <Icon name="exclamation-triangle" color="red"></Icon> The browser process running your tests just exited unexpectedly .运行测试的浏览器进程刚刚意外退出
 
-This error can occur whenever Cypress detects that the launched browser has
-exited or crashed before the tests could finish running.
+当Cypress检测到启动的浏览器在测试完成运行之前退出或崩溃时，就会发生此错误。
 
-This can happen for a number of reasons, including:
+出现这种情况的原因有很多，包括:
 
-- The browser was exited manually, by clicking the "Quit" button or otherwise
-- Your test suite or application under test is starving the browser of
-  resources, such as running an infinite loop
-- Cypress is running in a memory-starved environment
-- The browser is testing a memory-heavy application
-- Cypress is running within Docker (there is an easy fix for this: see
-  [this thread](https://github.com/cypress-io/cypress/issues/350))
-- There are problems with the GPU / GPU drivers
-- There is a bug in the browser involving memory management
-- There is a memory leak in Cypress
+- 通过点击“退出”按钮或其他方式手动退出浏览器
+- 您的测试套件或待测应用程序正在耗尽浏览器的资源，例如运行一个无限循环
+- Cypress是在内存匮乏的环境中运行的
+- 浏览器正在测试一个内存密集型应用程序
+- Cypress正在Docker中运行(有一个简单的修复方法:参见[此issue](https://github.com/cypress-io/cypress/issues/350))
+- GPU驱动程序有问题
+- 浏览器中有一个涉及内存管理的错误
+- Cypress有内存泄漏
 
-If the browser running Cypress tests crashes, currently, Cypress will abort any
-remaining tests and print out this error.
+如果运行Cypress测试的浏览器崩溃，目前，Cypress将中止任何剩余的测试并打印此错误.
 
-There is an [open issue](https://github.com/cypress-io/cypress/issues/349) to
-recover from browser crashes automatically, so tests can continue to run.
+有一个[打开的issue](https://github.com/cypress-io/cypress/issues/349),讨论从浏览器崩溃到自动恢复，让测试可以继续运行。
 
-## Test Runner errors
+## 测试运行器错误
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Whoops, we can't run your tests
+### <Icon name="exclamation-triangle" color="red"></Icon> Whoops, we can't run your tests。 我们无法运行你的测试
 
-This error happens when Cypress detects that the browser automation is not
-connected, or that Cypress's internal proxy is being bypassed. This is caused by
-one of the following:
+这个错误发生时，Cypress检测到浏览器自动化没有连接，或Cypress的内部代理被绕过。这是由下列原因之一引起的:
 
-**A policy setting blocks the Cypress proxy server or browser extension**
+**策略设置阻止Cypress代理服务器或浏览器扩展**
 
-- See
-  [Cypress detected policy settings on your computer that may cause issues](#Cypress-detected-policy-settings-on-your-computer-that-may-cause-issues).
+- 请参阅[Cypress在您的计算机上检测到可能导致问题的策略设置](#Cypress-detected-policy-settings-on-your-computer-that-may-cause-issues).
 
-**The `--proxy-server` or `--load-extension` arguments have been changed**
+**`--proxy-server` 或 `--load-extension` 参数已经更改**
 
-- When adding a plugin with the
-  [Browser Launch API](/api/plugins/browser-launch-api), it's possible for a
-  necessary command-line argument to be changed. If you're running into this
-  error, you can troubleshoot by inspecting `args` before and after the plugin
-  runs, either by using `console.log()` or by
-  [printing DEBUG logs](/guides/references/troubleshooting#Print-DEBUG-logs)
-  with `DEBUG=cypress:server:plugins,cypress:server:plugins:*`.
+- 当使用[浏览器启动API](/api/plugins/browser-launch-api)添加插件时, 可以修改必要的命令行参数. 
+  如果你遇到这个错误，你可以通过在插件运行之前和之后检查`args`来排除故障，
+  或者使用`console.log()`或者通过`DEBUG=cypress:server:plugins,cypress:server:plugins:*`[打印调试日志](/guides/references/troubleshooting#Print-DEBUG-logs)
 
-**You visit the Cypress proxy URL outside of a Cypress browser.**
+**您访问Cypress代理URL外的一个Cypress浏览器.**
 
-- Don't copy the URL you see when launching a Cypress browser from the Test
-  Runner and open it in a non-Cypress browser. If you want to run your tests in
-  a different browser, follow the instructions in the
-  [Cross Browser Testing](/guides/guides/cross-browser-testing) guide.
+- 不要复制从Test Runner启动Cypress浏览器并在非Cypress浏览器中打开它时看到的URL。
+  如果您想在不同的浏览器中运行测试，请遵循[跨浏览器测试](/guides/guides/cross-browser-testing)指南中的说明。
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cannot connect to API server
+### <Icon name="exclamation-triangle" color="red"></Icon> Cannot connect to API server. 无法连接到API服务
 
-Logging in, viewing runs, and setting up new projects to record requires
-connecting to an external API server. This error displays when we failed to
-connect to the API server.
+登录、查看运行和设置要记录的新项目都需要连接到外部API服务器。当我们无法连接到API服务器时，将显示此错误。
 
-This error likely appeared because:
+出现此错误可能是因为:
 
-1. You do not have internet. Please ensure you have connectivity then try again.
-2. You are a developer that has forked our codebase and do not have access to
-   run our API locally. Please read more about this in our
-   [contributing doc](https://on.cypress.io/contributing).
+1. 你没有互联网。请确保已连接，然后再试一次。
+2. 您是一个开发人员，已经fork了我们的代码库，并没有访问我们的本地API。请阅读我们的[贡献文档](https://on.cypress.io/contributing).
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected policy settings on your computer that may cause issues
+### <Icon name="exclamation-triangle" color="red"></Icon> Cypress detected policy settings on your computer that may cause issues。 Cypress在您的计算机上检测到可能导致问题的策略设置
 
-When Cypress launches Chrome, it attempts to launch it with a custom proxy
-server and browser extension. Certain group policies (GPOs) on Windows can
-prevent this from working as intended, which can cause tests to break.
+当Cypress启动Chrome时，它试图启动它与自定义代理服务器和浏览器扩展。Windows上的某些组策略(GPOs)可能会阻止此功能正常工作，从而导致测试中断。
 
-If your administrator has set any of the following Chrome GPOs, it can prevent
-your tests from running in Chrome:
+如果您的管理员设置了以下任何一个Chrome GPOs，它会阻止您的测试在Chrome中运行:
 
-- Proxy policies:
+- 代理策略:
   `ProxySettings, ProxyMode, ProxyServerMode, ProxyServer, ProxyPacUrl, ProxyBypassList`
-- Extension policies:
+- 扩展策略:
   `ExtensionInstallBlacklist, ExtensionInstallWhitelist, ExtensionInstallForcelist, ExtensionInstallSources, ExtensionAllowedTypes, ExtensionAllowInsecureUpdates, ExtensionSettings, UninstallBlacklistedExtensions`
 
-Here are some potential workarounds:
+以下是一些潜在的变通方法:
 
-1. Ask your administrator to disable these policies so that you can use Cypress
-   with Chrome.
-2. Use the built-in Electron browser for tests, since it is not affected by
-   these policies.
-   [See the guide to launching browsers for more information.](/guides/guides/launching-browsers#Electron-Browser)
-3. Try using Chromium instead of Google Chrome for your tests, since it may be
-   unaffected by GPO. You can
-   [download the latest Chromium build here.](https://download-chromium.appspot.com)
-4. If you have Local Administrator access to your computer, you may be able to
-   delete the registry keys that are affecting Chrome. Here are some
-   instructions:
-   1. Open up Registry Editor by pressing WinKey+R and typing `regedit.exe`
-   2. Look in the following locations for the policy settings listed above:
+1. 请您的管理员禁用这些策略，以便您可以在Chrome中使用Cypress。
+2. 使用内置的Electron浏览器进行测试，因为它不受这些策略的影响。[更多信息请参见启动浏览器指南。](/guides/guides/launching-browsers#Electron-Browser)
+3. 尝试使用Chromium代替谷歌Chrome进行测试，因为它可能不受GPO的影响。你可以[在这里下载最新的Chromium版本](https://download-chromium.appspot.com)
+4. 如果您有本地管理员访问您的计算机，您可能能够删除注册表项，这会影响Chrome。以下是一些说明:
+   1. 打开注册表编辑器：按WinKey+R和输入`regedit.exe`
+   2. 查看以下位置以获得上面列出的策略设置:
       - `HKEY_LOCAL_MACHINE\Software\Policies\Google\Chrome`
       - `HKEY_LOCAL_MACHINE\Software\Policies\Google\Chromium`
       - `HKEY_CURRENT_USER\Software\Policies\Google\Chrome`
       - `HKEY_CURRENT_USER\Software\Policies\Google\Chromium`
-   3. Delete or rename any policy keys found. _Make sure to back up your
-      registry before making any changes._
+   3. 删除或重命名找到的任何策略键. _在进行任何更改之前，请确保备份您的注册表._
 
-### <Icon name="exclamation-triangle" color="red"></Icon> Uncaught exceptions from your application
+### <Icon name="exclamation-triangle" color="red"></Icon> Uncaught exceptions from your application。应用程序未捕获的异常
 
-When Cypress detects an uncaught exception in your application, it will fail the
-currently running test.
+当Cypress在您的应用程序中检测到一个未捕获的异常时，它将使当前运行的测试失败。
 
-You can turn off this behavior globally or conditionally with the
-`uncaught:exception` event. Please see the
-[Catalog of Events](/api/events/catalog-of-events#Uncaught-Exceptions) for
-examples.
+你可以通过`uncaught:exception`事件全局或有条件地关闭此行为。请参阅[事件目录](/api/events/catalog-of-events#Uncaught-Exceptions) 的示例。
 
-On a technical note, Cypress considers uncaught exceptions to be any error that
-is uncaught by your application, whether they are "standard" errors or unhandled
-promise rejections. If the error triggers the window's global `error` handler or
-its `unhandledrejection` handler, Cypress will detect it and fail the test.
+从技术上讲，Cypress认为未捕获异常是应用程序未捕获的任何错误，无论它们是`标准`错误还是未处理的promise拒绝。
+如果错误触发了窗口的全局`error`处理器或其`unhandledrejection`处理器，Cypress将检测到它并失败测试.
