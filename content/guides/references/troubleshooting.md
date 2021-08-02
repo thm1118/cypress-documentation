@@ -1,117 +1,117 @@
 ---
-title: Troubleshooting
+title: 疑难解答
 ---
 
-There are times when you will encounter errors or unexpected behavior with Cypress itself. In this situation, we recommend checking these support resources **first**.
+有时您会遇到错误或Cypress本身的意外行为. 在这种情况下，我们建议**首先** 检查这些支持资源.
 
-## Support channels
+## 支持渠道
 
-- Connect with our community in [Gitter](https://gitter.im/cypress-io/cypress)
-- Search existing [GitHub issues](https://github.com/cypress-io/cypress/issues)
-- Search this documentation (search is in the top right) 😉
-- Search [Stack Overflow](https://stackoverflow.com/questions/tagged/cypress) for relevant answers
-- If your organization signs up for one of our [paid plans](https://www.cypress.io/pricing/), you can get dedicated email support, which gives you one-on-one help from our team.
-- If you still haven't found a solution, [open an issue](https://github.com/cypress-io/cypress/issues/new/choose) _with a reproducible example_.
+- 在[Gitter](https://gitter.im/cypress-io/cypress)中连接我们的社区
+- 搜索现有的[GitHub问题](https://github.com/cypress-io/cypress/issues)
+- 搜索这些文档 (搜索在右上角) 😉
+- 搜索[Stack Overflow](https://stackoverflow.com/questions/tagged/cypress) 获取相关答案
+- 如果您的组织注册了我们的[付费计划](https://www.cypress.io/pricing/)，您可以得到我们团队提供的专门的电子邮件支持。
+- 如果你仍然没有找到一个解决方案，[打开一个问题](https://github.com/cypress-io/cypress/issues/new/choose)，提供一个 **可重新问题** 的例子。
 
-### Common GitHub issues
+### 常见的GitHub问题
 
-Below are some of common problem topics users experience with a link to the main issue(s) and links to the open and closed issues in the topic. Maybe you can find an open or closed issue matching your problem. Even open issues might suggest a workaround or shed more information on the problem.
+下面是一些常见的问题主题，用户通过链接到主要问题，以及链接到主题中的开放和关闭问题。也许您可以找到一个开放或封闭的问题匹配您的问题。即使是公开的问题也可能暗示一个解决方法，或透露更多关于问题的信息。
 
-| Label                 | Description                                                       | Issues                                                                                                                                                                                                                                                               |
+| 标签                  | 描述                                                               | 问题                                                                                                                                                                                                                                                               |
 | --------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| browser detection     | Local browser is not detected                                     | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20browser%20detection), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+browser+detection%22+is%3Aclosed)                                                                   |
-| cross-origin          | Getting cross-origin error                                        | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20cross-origin%20%E2%A4%AD), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+cross-origin+%E2%A4%AD%22+is%3Aclosed)                                                         |
-| cy.request            | Issues related to [`cy.request()`](/api/commands/request) command | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20cy.request), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+cy.request%22+is%3Aclosed)                                                                                   |
-| fixtures              | Fixture loading and usage                                         | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20fixtures), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+fixtures%22+is%3Aclosed)                                                                                       |
-| hooks                 | Issues related to hooks                                           | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20hooks%20%E2%86%AA), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+hooks+%E2%86%AA%22+is%3Aclosed)                                                                       |
-| iframes               | Working with iframes                                              | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20iframes), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+iframes%22+is%3Aclosed)                                                                                         |
-| installation          | Cypress cannot be downloaded or installed                         | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20installation), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+installation%22+is%3Aclosed)                                                                               |
-| network               | Controlling network requests                                      | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20network), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+network%22+is%3Aclosed)                                                                                         |
-| performance           | Slow loading, slow network, etc                                   | [open](https://github.com/cypress-io/cypress/labels/type%3A%20performance%20%F0%9F%8F%83%E2%80%8D%E2%99%80%EF%B8%8F), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22type%3A+performance+%F0%9F%8F%83%E2%80%8D%E2%99%80%EF%B8%8F%22+is%3Aclosed) |
-| screenshots           | Taking image screenshots                                          | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20screenshots%20%F0%9F%93%B8), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+screenshots+%F0%9F%93%B8%22+is%3Aclosed)                                                     |
-| scrolling             | Scrolling elements into view                                      | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20scrolling%20%E2%86%95%EF%B8%8F), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+scrolling+%E2%86%95%EF%B8%8F%22+is%3Aclosed)                                             |
-| spec execution        | Running all or filtered specs                                     | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20spec%20execution), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+spec+execution%22+is%3Aclosed)                                                                         |
-| test execution        | Running tests inside a single spec                                | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20test%20execution), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+test+execution%22+is%3Aclosed)                                                                         |
-| TypeScript            | Transpiling or bundling TypeScript                                | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20typescript), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+typescript%22+is%3Aclosed)                                                                                   |
-| video                 | Problems with video recordings                                    | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20video%20%F0%9F%93%B9), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+video+%F0%9F%93%B9%22+is%3Aclosed)                                                                 |
-| file downloads        | File downloads are not working                                    | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20downloads%20%E2%AC%87%EF%B8%8F), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+downloads+%E2%AC%87%EF%B8%8F%22+is%3Aclosed)                                             |
-| intercept             | Network stubbing using [cy.intercept](/api/commands/intercept)    | [open](https://github.com/cypress-io/cypress/labels/pkg%2Fnet-stubbing), [closed](https://github.com/cypress-io/cypress/issues?q=label%3Apkg%2Fnet-stubbing+is%3Aclosed)                                                                                             |
-| SIG\* errors          | Crashes with errors like `SIGSEGV`                                | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20SIG%20errors), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+SIG+errors%22+is%3Aclosed)                                                                                 |
-| environment variables | Parsing and using environment variables                           | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20environment%20variables), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+environment+variables%22+is%3Aclosed)                                                           |
+| 浏览器检测             | 未检测到本地浏览器                                                  | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20browser%20detection), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+browser+detection%22+is%3Aclosed)                                                                   |
+| 跨域                  | 获得跨源误差                                                        | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20cross-origin%20%E2%A4%AD), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+cross-origin+%E2%A4%AD%22+is%3Aclosed)                                                         |
+| cy.request            | 与 [`cy.request()`](/api/commands/request)命令相关的问题            | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20cy.request), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+cy.request%22+is%3Aclosed)                                                                                   |
+| fixtures              | 夹具装载和使用                                                      | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20fixtures), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+fixtures%22+is%3Aclosed)                                                                                       |
+| 钩子                  | 钩子相关问题                                                        | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20hooks%20%E2%86%AA), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+hooks+%E2%86%AA%22+is%3Aclosed)                                                                       |
+| iframes               | 使用iframes                                                        | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20iframes), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+iframes%22+is%3Aclosed)                                                                                         |
+| 安装                  | 无法下载或安装Cypress                                               | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20installation), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+installation%22+is%3Aclosed)                                                                               |
+| 网络                  | 控制网络请求                                                        | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20network), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+network%22+is%3Aclosed)                                                                                         |
+| 性能                  | 加载慢，网络慢等等                                                   | [open](https://github.com/cypress-io/cypress/labels/type%3A%20performance%20%F0%9F%8F%83%E2%80%8D%E2%99%80%EF%B8%8F), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22type%3A+performance+%F0%9F%8F%83%E2%80%8D%E2%99%80%EF%B8%8F%22+is%3Aclosed) |
+| 截屏                  | 执行截屏                                                            | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20screenshots%20%F0%9F%93%B8), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+screenshots+%F0%9F%93%B8%22+is%3Aclosed)                                                     |
+| 滚动                  | 将元素滚动到视图中                                                   | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20scrolling%20%E2%86%95%EF%B8%8F), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+scrolling+%E2%86%95%EF%B8%8F%22+is%3Aclosed)                                             |
+| spec 执行             | 运行所有或过滤的spec                                                 | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20spec%20execution), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+spec+execution%22+is%3Aclosed)                                                                         |
+| test 执行             | 在单个spec中运行测试                                                 | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20test%20execution), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+test+execution%22+is%3Aclosed)                                                                         |
+| TypeScript            | 编译或绑定TypeScript                                                | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20typescript), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+typescript%22+is%3Aclosed)                                                                                   |
+| 视频                  |视频记录的问题                                                        | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20video%20%F0%9F%93%B9), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+video+%F0%9F%93%B9%22+is%3Aclosed)                                                                 |
+| 文件下载               | 文件下载无法工作                                                     | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20downloads%20%E2%AC%87%EF%B8%8F), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+downloads+%E2%AC%87%EF%B8%8F%22+is%3Aclosed)                                             |
+| 拦截                  | 使用[cy.intercept](/api/commands/intercept)进行网络模拟               | [open](https://github.com/cypress-io/cypress/labels/pkg%2Fnet-stubbing), [closed](https://github.com/cypress-io/cypress/issues?q=label%3Apkg%2Fnet-stubbing+is%3Aclosed)                                                                                             |
+| SIG\* 错误            | 崩溃时出现如下错误`SIGSEGV`                                          | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20SIG%20errors), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+SIG+errors%22+is%3Aclosed)                                                                                 |
+| 环境变量              | 解析和使用环境变量                                                   | [open](https://github.com/cypress-io/cypress/labels/topic%3A%20environment%20variables), [closed](https://github.com/cypress-io/cypress/issues?q=label%3A%22topic%3A+environment+variables%22+is%3Aclosed)                                                           |
 
-## Isolate the Problem
+## 隔离问题
 
-When debugging a failing test, follow these general principles to isolate the problem:
+在调试失败的测试时，遵循这些通用原则来隔离问题:
 
-- Look at the [video recordings and screenshots](/guides/guides/screenshots-and-videos).
-- Split large spec files into smaller ones.
-- Split long tests into smaller tests.
-- Run the same test using [--browser chrome](/guides/guides/command-line#cypress-run-browser-lt-browser-name-or-path-gt). The problem might be isolated to the Electron browser.
-- If isolated to the Electron browser. Run the same tests in both Electron and Chrome, then compare the screenshots/videos. Look for and isolate any differences in the Command Log.
+- 查看[视频记录和截图](/guides/guides/screenshots-and-videos).
+- 将大spec文件分割成小spec文件.
+- 将长测试分割成较小的测试.
+- 使用[--browser chrome](/guides/guides/command-line#cypress-run-browser-lt-browser-name-or-path-gt)运行相同的测试. 这个问题可能与Electron浏览器无关.
+- 如果孤立到Electron浏览器。在Electron和Chrome上运行相同的测试, 然后比较屏幕截图和视频. 查找并隔离命令日志中的任何差异。
 
-## Download specific Chrome version
+## 下载特定的Chrome版本
 
-The Chrome browser is evergreen - meaning it will automatically update itself, sometimes causing a breaking change in your automated tests. We host [chromium.cypress.io](https://chromium.cypress.io) with links to download a specific released version of Chrome (dev, Canary and stable) for every platform.
+Chrome浏览器是常青的——这意味着它会自动更新自己，有时会在你的自动化测试中造成破坏性的变化. 我们托管[chromium.cypress.io](https://chromium.cypress.io)，并为每个平台提供下载特定发布版本Chrome (dev、Canary和stable)的链接。
 
-## Clear Cypress cache
+## 清理 Cypress 缓存
 
-If you're having an issue during installation of Cypress, try removing the contents of the Cypress cache.
+如果您在安装Cypress期间遇到问题，请尝试删除Cypress缓存的内容。
 
-This will clear out all installed versions of Cypress that may be cached on your machine.
+这将清除所有已安装的Cypress版本，可能是缓存在您的机器上。
 
 ```shell
 cypress cache clear
 ```
 
-After running this command, you will need to run `cypress install` before running Cypress again.
+运行此命令后，您将需要运行`cypress install` ，然后再运行cypress.
 
 ```shell
 npm install cypress --save-dev
 ```
 
-## Launching browsers
+## 启动浏览器
 
-Cypress attempts to [automatically find installed Chrome versions for you](/guides/guides/launching-browsers). However, probing for browsers across different environments can be error-prone. If Cypress cannot find a browser but you know you have it installed, there are ways to ensure that Cypress can "see" it.
+Cypress试图[自动为您找到安装的Chrome版本](/guides/guides/launching-browsers). 然而，跨不同环境探测浏览器可能很容易出错. 如果Cypress找不到浏览器，但你知道你已经安装了它，有办法确保Cypress可以“看到”它.
 
 <Alert type="info">
 
-<strong class="alert-header">Using the `--browser` command line argument</strong>
+<strong class="alert-header">使用`--browser`命令行参数</strong>
 
-You can also supply the `--browser` command line argument to launch a browser from a known filesystem path to bypass browser auto detection. [See 'Launching Browsers' for more information](/guides/guides/launching-browsers#Launching-by-a-path)
+您还可以提供`--browser`命令行参数来从已知的文件系统路径启动浏览器，从而绕过浏览器的自动检测。 [更多信息请参见“启动浏览器”](/guides/guides/launching-browsers#Launching-by-a-path)
 
 </Alert>
 
-You can see the full list of found browsers and their properties within the [resolved configuration](/guides/references/configuration#Resolved-Configuration) in the **Settings** tab of the Test Runner.
+你可以在测试运行器的设置选项卡的[解析的配置](/guides/references/configuration#Resolved-Configuration)中看到找到的浏览器的完整列表和它们的属性。
 
-Another way to log what is found by Cypress is to run Cypress with the [DEBUG environment variable](#Print-DEBUG-logs) set to `cypress:launcher`. This will print information about the found browsers and their properties to the terminal.
+另一种记录Cypress发现的内容的方法是运行Cypress与[DEBUG环境变量](#Print-DEBUG-logs)设置为`cypress:launcher`. 这将把找到的浏览器及其属性的信息打印到终端。
 
-**Tip:** use the [cypress info](/guides/guides/command-line#cypress-info) command to see all locally detected browsers.
+**提示:**使用[cypress info](/guides/guides/command-line#cypress-info) 命令查看所有本地检测到的浏览器.
 
 ### Mac
 
-On Mac, Cypress attempts to find installed browsers by their bundle identifier. If this does not succeed, it will fall back to the Linux browser detection method.
+在Mac上，Cypress试图通过捆绑标识符找到已安装的浏览器。如果不成功，它将退回到Linux浏览器检测方法.
 
-| Browser Name    | Expected Bundle Identifier | Expected Executable                   |
+| 浏览器的名称     | 期望的包标识符               | 预计可执行文件                   |
 | --------------- | -------------------------- | ------------------------------------- |
 | `chrome`        | `com.google.Chrome`        | `Contents/MacOS/Google Chrome`        |
 | `chromium`      | `org.chromium.Chromium`    | `Contents/MacOS/Chromium`             |
 | `chrome:canary` | `com.google.Chrome.canary` | `Contents/MacOS/Google Chrome Canary` |
 
-For the current list, see [packages/launcher](https://github.com/cypress-io/cypress/blob/develop/packages/launcher/lib/darwin/index.ts) files.
+有关当前列表，请参见[packages/launcher](https://github.com/cypress-io/cypress/blob/develop/packages/launcher/lib/darwin/index.ts) 文件.
 
 ### Linux
 
-On Linux, Cypress scans your `PATH` for a number of different binary names. If the browser you are trying to use does not exist under one of the expected binary names, Cypress will not be able to find it.
+在Linux上，Cypress会扫描你的`PATH`，以找到许多不同的二进制名称.如果您试图使用的浏览器在预期的二进制名称下不存在，Cypress将无法找到它.
 
-| Browser Name    | Expected Binary Name(s)                              |
+| 浏览器的名称     | 期望的二进制的名字(s)                              |
 | --------------- | ---------------------------------------------------- |
 | `chrome`        | `google-chrome`, `chrome`, or `google-chrome-stable` |
 | `chromium`      | `chromium-browser` or `chromium`                     |
 | `chrome:canary` | `google-chrome-canary`                               |
 
-These binary names should work for most Linux distributions. If your distribution packages browsers under a different binary name, you can add a symlink using the expected binary name so that Cypress can detect it.
+这些二进制名称应该适用于大多数Linux发行版. 如果您的发行版包使用不同的二进制名称访问浏览器，您可以使用预期的二进制名称添加符号链接，以便Cypress能够检测到它。
 
-For example, if your distribution packages Google Chrome as `chrome`, you could add a symlink to `google-chrome` like this:
+例如，如果你的发行包谷歌Chrome作为“Chrome”，你可以添加一个符号链接到“google-chrome”，像这样:
 
 ```shell
 sudo ln `which chrome` /usr/local/bin/google-chrome
@@ -119,42 +119,41 @@ sudo ln `which chrome` /usr/local/bin/google-chrome
 
 ### Windows
 
-On Windows, Cypress scans the following locations to try to find each browser:
+在Windows上，Cypress扫描以下位置，试图找到每个浏览器:
 
-| Browser Name    | Expected Path                                                 |
+| 浏览器的名称     | 预期路径                                                |
 | --------------- | ------------------------------------------------------------- |
 | `chrome`        | `C:/Program Files (x86)/Google/Chrome/Application/chrome.exe` |
 | `chromium`      | `C:/Program Files (x86)/Google/chrome-win32/chrome.exe`       |
 | `chrome:canary` | `%APPDATA%/../Local/Google/Chrome SxS/Application/chrome.exe` |
 
-For the current list, see [packages/launcher](https://github.com/cypress-io/cypress/blob/develop/packages/launcher/lib/windows/index.ts) files.
+有关当前列表，请参见[packages/launcher](https://github.com/cypress-io/cypress/blob/develop/packages/launcher/lib/windows/index.ts) 文件.
 
-To make a browser installed at a different path be auto-detected, create a symbolic link using `mklink` in the location that Cypress expects to find your browser.
+为了使安装在不同路径的浏览器被自动检测，在Cypress希望找到你的浏览器的位置使用`mklink`创建一个符号链接。
 
-[Read more about creating symbolic links on Windows](https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/)
+[阅读更多关于在Windows上创建符号链接的信息](https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/)
 
-Occasionally Cypress will have issues detecting the type of browser in Windows environments. To manually
-detect the browser type, append the browser type to the end of the path:
+Cypress偶尔会在检测Windows环境中的浏览器类型时出现问题。若要手动检测浏览器类型，请将浏览器类型附加到路径的末尾:
 
 ```shell
 cypress open --browser C:/User/Application/browser.exe:chrome
 ```
 
-## Allow the Cypress Chrome extension
+## 允许Cypress Chrome扩展
 
-Cypress utilizes a Chrome extension within the Test Runner in order to run properly. If you or your company block specific Chrome extensions, this may cause problems with running Cypress. You will want to ask your administrator to allow the Cypress extension ID below:
+Cypress在测试运行器中利用了一个Chrome扩展，以便正确运行. 如果你或你的公司阻止特定的Chrome扩展，这可能会导致运行Cypress的问题。您需要请求管理员允许下面的Cypress扩展ID:
 
 ```sh
 caljajdfkjjjdehjdoimjkkakekklcck
 ```
 
-## Allow Cypress URLs on VPNs
+## 允许在vpn上使用cypress url
 
-To send the data and results of your tests to the [Dashboard](https://on.cypress.io/dashboard-introduction), Cypress needs free access to some URLs.
+将测试的数据和结果发送到[dashboard](https://on.cypress.io/dashboard-introduction), Cypress需要自由访问一些url.
 
-If you are running the tests from within a restrictive VPN you will need to allow some URLs so that Cypress can have effective communication with the Dashboard.
+如果您在一个受限的VPN中运行测试，则需要允许一些url，以便Cypress能够与Dashboard进行有效的通信。
 
-**The URLs are the following:**
+**需要通过的url如下所示:**
 
 - `https://api.cypress.io` - **Cypress API**
 - `https://assets.cypress.io` - **Asset CDN** (Org logos, icons, videos, screenshots, etc.)
@@ -164,15 +163,15 @@ If you are running the tests from within a restrictive VPN you will need to allo
 - `https://download.cypress.io` - **CDN download of Cypress binary**
 - `https://on.cypress.io` - **URL shortener for link redirects**
 
-## Clear App Data
+## 清理 应用数据
 
-Cypress maintains some local application data in order to save user preferences and more quickly start up. Sometimes this data can become corrupted. You may fix an issue you have by clearing this app data.
+Cypress维护一些本地应用程序数据，以保存用户首选项和更快地启动. 有时这些数据会被破坏。你可以通过清除这个应用程序数据来解决问题。
 
-### To clear App Data
+### 如何清理应用数据
 
-1. Open Cypress via `cypress open`
-2. Go to `File` -> `View App Data`
-3. This will take you to the directory in your file system where your App Data is stored. If you cannot open Cypress, search your file system for a directory named `cy` whose content should look something like this:
+1. 通过 `cypress open`打开Cypress
+2. 点击 `File` -> `View App Data`
+3. 这将把你带到文件系统中存放App Data的目录.如果不能打开Cypress，在文件系统中搜索名为`cy`的目录，其内容应该如下所示:
 
 ```text
 📂 production
@@ -185,89 +184,89 @@ Cypress maintains some local application data in order to save user preferences 
   📄 state.json
 ```
 
-4. Delete everything in the `cy` folder
-5. Close Cypress and open it up again
+4. 删除`cy`文件夹中的所有内容
+5. 关闭Cypress，再打开它
 
-## Print DEBUG logs
+## 打印调试日志
 
-Cypress is built using the [debug](https://github.com/visionmedia/debug) module. That means you can receive helpful debugging output by running Cypress with this turned on. **Note:** you will see a LOT of messages when running with `DEBUG=...` setting.
+Cypress是使用[debug](https://github.com/visionmedia/debug) 模块构建的. 这意味着您可以通过打开此开关运行Cypress来接收有用的调试输出. **注意:** 当运行`DEBUG=...` 的设置时，会看到大量日志信息.
 
-**On Mac or Linux:**
+**在Mac或Linux上:**
 
 ```shell
 DEBUG=cypress:* cypress run
 ```
 
-**On Windows:**
+**在Windows上:**
 
-On Windows, you'll need to run the command in a command prompt terminal (not Powershell).
+在Windows上，您需要在命令提示符终端(不是Powershell)中运行该命令。
 
 ```shell
 set DEBUG=cypress:*
 cypress run
 ```
 
-If you have issues with the logs not printing, it may be a permissions issue with setting the environment variable in your terminal. You may need to run your terminal in administrative mode or review your permission settings.
+如果日志无法打印，可能是在终端中设置环境变量的权限问题. 您可能需要在管理模式下运行终端或检查权限设置。
 
-Read more [about the CLI options here](/guides/guides/command-line#Debugging-commands) and [Good Logging](https://glebbahmutov.com/blog/good-logging/) blog post.
+阅读更多[关于CLI选项](/guides/guides/command-line#Debugging-commands) 以及 [良好的日志](https://glebbahmutov.com/blog/good-logging/) 的博客.
 
-### Detailed Logs
+### 详细的日志
 
-There are several levels of `DEBUG` messages
+有几个级别的`DEBUG`消息
 
 ```shell
-## prints very few top-level messages
+## 打印很少的顶级消息
 DEBUG=cypress:server ...
-## prints ALL messages from server package
+## 从服务包打印所有消息
 DEBUG=cypress:server* ...
-## prints messages only from config parsing
+## 仅从配置解析打印消息
 DEBUG=cypress:server:config ...
 ```
 
-This allows you to isolate the problem a little better
+这允许您更好地隔离问题
 
-### Log sources
+### 日志源
 
-Cypress is built from multiple packages, each responsible for its own logging: server, reporter, driver, command line, etc. Each package writes debug logs under a different source. Here are a few common log sources and when you might want to enable them
+Cypress由多个包构建而成，每个包负责自己的日志记录:服务、报告程序、驱动程序、命令行等等. 每个包在不同的源下写入调试日志。 下面是一些常见的日志源，以及您可能希望启用它们的时间
 
-| Set `DEBUG` to value            | To enable debugging                                                   |
+| 设置 `DEBUG` 的值                | 来启用调试                                                   |
 | ------------------------------- | --------------------------------------------------------------------- |
-| `cypress:cli`                   | The top-level command line parsing problems                           |
-| `cypress:server:args`           | Incorrect parsed command line arguments                               |
-| `cypress:server:specs`          | Not finding the expected specs                                        |
-| `cypress:server:project`        | Opening the project                                                   |
-| `cypress:server:browsers`       | Finding installed browsers                                            |
-| `cypress:launcher`              | Launching the found browser                                           |
-| `cypress:server:video`          | Video recording                                                       |
-| `cypress:network:*`             | Adding network interceptors                                           |
-| `cypress:net-stubbing*`         | Network interception in the proxy layer                               |
-| `cypress:server:reporter`       | Problems with test reporters                                          |
-| `cypress:server:preprocessor`   | Processing specs                                                      |
-| `cypress:server:plugins`        | Running the plugins file and bundling specs                           |
-| `cypress:server:socket-e2e`     | Watching spec files                                                   |
-| `cypress:server:task`           | Invoking the `cy.task()` command                                      |
-| `cypress:server:socket-base`    | Debugging `cy.request()` command                                      |
-| `cypress:webpack`               | Bundling specs using webpack                                          |
-| `cypress:server:fixture`        | Loading fixture files                                                 |
-| `cypress:server:record:ci-info` | Git commit and CI information when recording to the Cypress Dashboard |
+| `cypress:cli`                   | 顶层命令行解析问题                           |
+| `cypress:server:args`           | 解析的命令行参数不正确                              |
+| `cypress:server:specs`          | 没有找到预期的specs                                        |
+| `cypress:server:project`        | 打开项目                                                 |
+| `cypress:server:browsers`       | 找到安装浏览器                                            |
+| `cypress:launcher`              | 启动找到的浏览器                                           |
+| `cypress:server:video`          | 视频录制                                                     |
+| `cypress:network:*`             | 添加网络拦截器                                           |
+| `cypress:net-stubbing*`         | 代理层的网络拦截                               |
+| `cypress:server:reporter`       | 测试报告的问题                                          |
+| `cypress:server:preprocessor`   | 处理spec                                                    |
+| `cypress:server:plugins`        | 运行插件文件和绑定spec                           |
+| `cypress:server:socket-e2e`     | 看spec文件                                                 |
+| `cypress:server:task`           | 调用`cy.task()` c命令                                    |
+| `cypress:server:socket-base`    | 调试的`cy.request()`的命令                                    |
+| `cypress:webpack`               | 使用webpack捆绑spec                                        |
+| `cypress:server:fixture`        | 加载夹具文件                                                 |
+| `cypress:server:record:ci-info` | Git提交和CI信息时记录到Cypress Dashboard |
 
-You can combine several areas together using the comma character. For example, to debug specs not being found, use:
+可以使用逗号字符将几个区域组合在一起。例如，要调试未找到的spec，请使用:
 
 ```shell
-## see how CLI arguments were parsed
-## and how Cypress tried to locate spec files
+## 查看CLI参数是如何解析的
+## 以及Cypress如何定位spec文件
 DEBUG=cypress:cli,cypress:server:specs npx cypress run --spec ...
 ```
 
-You can also exclude a log source using `-` character. For example, to see all `cypress:server*` messages without noisy browser messages use:
+也可以使用`-`字符排除日志源. 例如，要查看所有的`cypress:server*`消息而不使用嘈杂的浏览器消息:
 
 ```shell
 DEBUG=cypress:server*,-cypress:server:browsers* npx cypress run
 ```
 
-#### Debug log depth
+#### 调试日志深度
 
-Sometimes the logged object has deeply nested properties and is shown as `[Object]` instead of the full serialization.
+有时记录的对象有深度嵌套的属性，并显示为`[Object]` 而不是完整的序列化.
 
 ```shell
 DEBUG=cypress:server:socket-base npx cypress run
@@ -279,7 +278,7 @@ cypress:server:socket-base backend:request { eventName: 'http:request', args:
   retryOnStatusCodeFailure: false } ] } +5ms
 ```
 
-You can increase the printed object depth using the `DEBUG_DEPTH` environment variable
+可以使用DEBUG_DEPTH`环境变量增加打印对象的深度
 
 ```shell
 DEBUG=cypress:server:socket-base DEBUG_DEPTH=3 npx cypress run
@@ -291,107 +290,107 @@ cypress:server:socket-base backend:request { eventName: 'http:request', args:
   retryOnNetworkFailure: true, retryOnStatusCodeFailure: false } ] } +4ms
 ```
 
-#### 3rd party modules
+#### 第三方模块
 
-Some 3rd party modules like [@cypress/request](https://github.com/cypress-io/request) output additional log messages by inspecting the `NODE_DEBUG` environment variable. For example to debug the network interception and the requests made by the `@cypress/request` use:
+一些第三方模块，如[@cypress/request](https://github.com/cypress-io/request)通过检查`NODE_DEBUG`环境变量输出额外的日志消息. 例如，调试网络拦截和`@cypress/request`发出的请求:
 
 ```shell
 DEBUG=cypress:net-stubbing:server:intercept-request \
   NODE_DEBUG=request npx cypress run
 ```
 
-### Debug logs in the browser
+### 浏览器中的调试日志
 
-If the problem is seen during `cypress open` you can print debug logs in the browser too. Open the browser's Developer Tools and set a `localStorage` property:
+如果问题是在`cypress open`期间看到的，你也可以在浏览器中打印调试日志.打开浏览器的开发工具，并设置一个`localStorage`属性:
 
 ```javascript
 localStorage.debug = 'cypress*'
 
-// to disable debug messages
+// 禁用调试消息
 delete localStorage.debug
 ```
 
-Reload the browser and turn on 'Verbose' logs to see debug messages within the Developer Tools console. You will only see the "cypress:driver" package logs that run in the browser, as you can see below.
+重新加载浏览器并打开'Verbose'日志以查看Developer Tools控制台中的调试消息. 你只会看到在浏览器中运行的"cypress:driver"包日志，如下所示。
 
 <DocsImage src="/img/api/debug/debug-driver.jpg" alt="Debug logs in browser" ></DocsImage>
 
-## Log memory and CPU usage
+## 输出内存和CPU使用率日志
 
-You can tell Cypress to log out a summary of the memory and CPU usage of itself and any subprocesses at a regular interval by enabling the `cypress:server:util:process_profiler` debug stream, like so:
+您可以通过启用`cypress:server:util:process_profiler` 调试流，让Cypress定期输出其自身和任何子进程的内存和CPU使用情况摘要，如下所示:
 
-**On Mac or Linux:**
+**在Mac或Linux上:**
 
 ```shell
 DEBUG=cypress:server:util:process_profiler cypress run
 ```
 
-**On Windows:**
+**在Windows上:**
 
 ```shell
 set DEBUG=cypress:server:util:process_profiler
 cypress run
 ```
 
-In the resulting output, processes are grouped by their name.
+在结果输出中，流按名称分组。
 
 <DocsImage src="/img/guides/troubleshooting-cypress-process-profiler-cli.jpg" alt="Process printout of Cypress in CLI" ></DocsImage>
 
-By default, process information is collected and summarized is printed once every 10 seconds. You can override this interval by setting the `CYPRESS_PROCESS_PROFILER_INTERVAL` environment variable to the desired interval in milliseconds.
+默认情况下，每10秒收集并打印一次进程信息汇总. 您可以通过将`CYPRESS_PROCESS_PROFILER_INTERVAL`环境变量设置为所需的间隔(以毫秒为单位)来覆盖这个间隔。
 
-You can also obtain more detailed per-process information by enabling the verbose `cypress-verbose:server:util:process_profiler` debug stream.
+您还可以通过启用详细的`cypress-verbose:server:util:process_profiler` 调试流来获取更详细的进程信息.
 
-## Disable the Command Log
+## 禁用命令日志
 
-In some cases the [Command Log](/guides/core-concepts/test-runner#Command-Log), responsible for displaying test commands, assertions, and statuses in the Test Runner, may cause performance issues resulting in slower tests or the browser crashing.
+在某些情况下，[命令日志](/guides/core-concepts/test-runner#Command-Log)负责在测试运行器中显示测试命令、断言和状态，可能会导致性能问题，导致测试变慢或浏览器崩溃。
 
-In order to isolate these issues, you can hide the Command Log by passing the environment variable below during `cypress open` or `cypress run`.
+为了隔离这些问题，你可以通过在`cypress open` 或 `cypress run`期间传递下面的环境变量来隐藏命令日志。
 
 ```shell
 CYPRESS_NO_COMMAND_LOG=1 cypress run
 ```
 
-## Additional information
+## 额外信息
 
-### Write command log to the terminal
+### 向终端写入命令日志
 
-You can include the plugin [cypress-failed-log](https://github.com/bahmutov/cypress-failed-log) in your tests. This plugin writes the list of Cypress commands to the terminal as well as a JSON file if a test fails.
+你可以在你的测试中包含插件[cypress-failed-log](https://github.com/bahmutov/cypress-failed-log). 如果测试失败，该插件将向终端写入Cypress命令列表以及JSON文件.
 
 <DocsImage src="/img/api/debug/failed-log.png" alt="cypress-failed-log terminal output" ></DocsImage>
 
-## Hacking on Cypress
+## 黑入Cypress
 
-If you want to dive into Cypress and edit the code yourself, you can do that. The Cypress code is open source and licensed under an [MIT license](https://github.com/cypress-io/cypress/blob/develop/LICENSE). There are a few tips on getting started that we've outlined below.
+如果您想深入Cypress并自己编辑代码，您可以这样做. Cypress代码是开源的，并根据[MIT许可证](https://github.com/cypress-io/cypress/blob/develop/LICENSE)进行许可。 下面列出了一些关于如何开始的建议.
 
-### Contribute
+### 贡献
 
-If you'd like to contribute directly to the Cypress code, we'd love to have your help! Please check out our [contributing guide](https://github.com/cypress-io/cypress/blob/develop/CONTRIBUTING.md) to learn about the many ways you can contribute.
+如果你想直接贡献到Cypress代码，我们很乐意得到你的帮助!请查看我们的[贡献指南](https://github.com/cypress-io/cypress/blob/develop/CONTRIBUTING.md)，了解你可以贡献的许多方式。
 
-### Run the Cypress app by itself
+### 运行Cypress应用程序自己
 
-Cypress comes with an npm CLI module that parses the arguments, starts the Xvfb server (if necessary), and then opens the Test Runner application built on top of [Electron](https://electronjs.org/).
+Cypress附带了一个npm CLI模块，用于解析参数，启动Xvfb服务器(如果需要)，然后打开构建在[Electron](https://electronjs.org/)之上的Test Runner应用程序。.
 
-Some common situations on why you would want to run the Cypress app by itself are to:
+为什么你想要运行Cypress应用程序本身的一些常见情况是:
 
-- debug Cypress not starting or hanging
-- debug problems related to the way CLI arguments are parsed by the npm CLI module
+- 调试Cypress未启动或挂起
+- 与npm CLI模块解析CLI参数的方式相关的调试问题
 
-Here is how you can launch Cypress application directly without the npm CLI module. First, find where the binary is installed using the [cypress cache path](/guides/guides/command-line#cypress-cache-path) command.
+下面是如何在没有npm CLI模块的情况下直接启动Cypress应用程序。首先，使用 [cypress缓存路径](/guides/guides/command-line#cypress-cache-path) 命令找到二进制文件的安装位置。
 
-For example, on a Linux machine:
+例如，在Linux机器上:
 
 ```shell
 npx cypress cache path
 /root/.cache/Cypress
 ```
 
-Second, try a smoke test that verifies that the application has all its required dependencies present on the host machine:
+其次，尝试冒烟测试，以验证应用程序在主机上有所有必需的依赖项:
 
 ```shell
 /root/.cache/Cypress/3.3.1/Cypress/Cypress --smoke-test --ping=101
 101
 ```
 
-If there is a missing dependency, the application should print an error message. You can see the Electron verbose log messages by setting an [environment variable ELECTRON_ENABLE_LOGGING](https://www.electronjs.org/docs/api/command-line-switches):
+如果缺少依赖项，应用程序应该打印一条错误消息.您可以通过设置[环境变量ELECTRON_ENABLE_LOGGING(https://www.electronjs.org/docs/api/command-line-switches)]来查看Electron详细日志消息。:
 
 ```shell
 ELECTRON_ENABLE_LOGGING=true DISPLAY=10.130.4.201:0 /root/.cache/Cypress/3.3.1/Cypress/Cypress --smoke-test --ping=101
@@ -399,7 +398,7 @@ ELECTRON_ENABLE_LOGGING=true DISPLAY=10.130.4.201:0 /root/.cache/Cypress/3.3.1/C
 101
 ```
 
-If the smoke test fails to execute, check if a shared library is missing (a common problem on Linux machines without all of the Cypress dependencies present).
+如果冒烟测试未能执行，请检查共享库是否缺失(在没有所有Cypress依赖项的Linux机器上，这是一个常见问题)。
 
 ```shell
 ldd /home/person/.cache/Cypress/3.3.1/Cypress/Cypress
@@ -411,9 +410,9 @@ ldd /home/person/.cache/Cypress/3.3.1/Cypress/Cypress
   ...
 ```
 
-**Tip:** use [Cypress Docker image](/examples/examples/docker) or install dependencies by copying them from one of our official Docker images.
+**提示:** 使用[Cypress Docker image](/examples/examples/docker) 或通过从我们的官方Docker映像复制它们来安装依赖项.
 
-**Note:** verbose Electron logging might show warnings that still allow Cypress to work normally. For example, the Cypress Test Runner opens normally despite the scary output below:
+**注意:** Electron日志可能显示警告，但仍然允许Cypress正常工作.例如，尽管下面有可怕的输出，Cypress Test Runner还是正常打开:
 
 ```shell
 ELECTRON_ENABLE_LOGGING=true DISPLAY=10.130.4.201:0 /root/.cache/Cypress/3.3.1/Cypress/Cypress
@@ -424,7 +423,7 @@ ELECTRON_ENABLE_LOGGING=true DISPLAY=10.130.4.201:0 /root/.cache/Cypress/3.3.1/C
 You might need to use a local HTTP server (instead of file://): https://fb.me/react-devtools-faq", source: file:///root/.cache/Cypress/3.3.1/Cypress/resources/app/packages/desktop-gui/dist/app.js (73292)
 ```
 
-You can also see verbose Cypress logs when running the Test Runner binary
+您还可以在运行Test Runner二进制文件时看到详细的Cypress日志
 
 ```shell
 DEBUG=cypress* DISPLAY=10.130.4.201:0 /root/.cache/Cypress/3.3.1/Cypress/Cypress --smoke-test --ping=101
@@ -440,7 +439,7 @@ cypress:server:cypress starting in mode smokeTest +356ms
 cypress:server:cypress about to exit with code 0 +4ms
 ```
 
-If the smoke test does not show a specific error yet fails, try printing the Electron crash stack to maybe pinpoint the problem better:
+如果冒烟测试没有显示特定的错误，尝试打印Electron崩溃堆栈，也许可以更好地查明问题:
 
 ```shell
 ELECTRON_ENABLE_STACK_DUMPING=1 npx cypress verify
@@ -457,21 +456,21 @@ trp: 000000000000000e msk: 0000000000000000 cr2: ffffffb27e8955bb
 Calling _exit(1). Core file will not be generated.
 ```
 
-### Patch Cypress
+### 给Cypress打补丁
 
-Cypress comes with an npm CLI module that parses the arguments, starts the Xvfb server (if necessary), and then opens the Test Runner application built on top of [Electron](https://electronjs.org/).
+Cypress附带了一个npm CLI模块，用于解析参数，启动Xvfb服务器(如果需要)，然后打开构建在[Electron](https://electronjs.org/)之上的Test Runner应用程序。.
 
-If you're encountering a bug in the current version of Cypress, you can implementing a temporary fix by patching Cypress in your own project. Here is an example of how to do this.
+如果您在Cypress的当前版本中遇到bug，您可以通过在您自己的项目中修补Cypress来实现临时修复. 下面是一个如何做到这一点的例子。
 
-1. Install [patch-package](https://github.com/ds300/patch-package).
-2. Add a patch step to your CI configuration after installing your npm packages.
+1. 安装 [patch-package](https://github.com/ds300/patch-package).
+2. 在安装npm包之后，向CI配置中添加一个补丁步骤.
 
 ```yaml
 - run: npm ci
 - run: npx patch-package
 ```
 
-Alternatively, you can apply the patch during a post-install phase. In your `package.json`, for example, you could add the following:
+或者，您可以在安装后阶段应用补丁。在你的`package.json`，例如，您可以添加以下内容:
 
 ```json
 {
@@ -481,8 +480,8 @@ Alternatively, you can apply the patch during a post-install phase. In your `pac
 }
 ```
 
-3. Edit the line causing the problem _in your local node_modules folder_ within `node_modules/cypress`.
-4. Run the `npx patch-package cypress` command. This command will create a new file `patches/cypress+3.4.1.patch`.
+3. 在`node_modules/cypress`中的本地node_modules文件夹中编辑导致问题的行.
+4. 执行`npx patch-package cypress` 命令。 这个命令将创建一个新文件'`patches/cypress+3.4.1.patch`.
 
 ```shell
 npx patch-package cypress
@@ -493,42 +492,42 @@ patch-package 6.1.2
 ✔ Created file patches/cypress+3.4.1.patch
 ```
 
-5. Commit the new `patches` folder to git.
+5. 提交新的`patches`文件夹到git。
 
 <Alert type="info">
 
-If you find a patch for an error, please add a comment explaining your workaround to the relevant Cypress GitHub issue. It will help us release an official fix faster.
+如果你发现一个错误的补丁，请添加评论，解释你的解决方案相关的Cypress GitHub问题.它将帮助我们更快地发布官方修复.
 
 </Alert>
 
-### Edit the installed Cypress code
+### 编辑已安装的Cypress代码
 
-The installed Test Runner comes with the fully transpiled, unobfuscated JavaScript source code that you can hack on. You might want to directly modify the installed Test Runner code to:
+安装的Test Runner附带了完整的、清晰的JavaScript源代码，您可以对其进行修改。 您可能希望直接将安装的Test Runner代码修改为:
 
-- investigate a hard to recreate bug that happens on your machine
-- change the run-time behavior of Cypress before opening a pull request
-- have fun 🎉
+- 调查发生在您的机器上的一个难以重新创建的错误
+- 在打开一个PR之前改变Cypress的运行时行为
+- 玩得开心 🎉
 
-First, print where the binary is installed using the [cypress cache path](/guides/guides/command-line#cypress-cache-path) command.
+首先，使用[cypress缓存路径](/guides/guides/command-line#cypress-cache-path)命令打印二进制文件安装的位置.
 
-For example, on a Mac:
+例如，在Mac上:
 
 ```shell
 npx cypress cache path
 /Users/jane/Library/Caches/Cypress
 ```
 
-Second, open the source code at the following path in any code editor. Make sure to substitute `3.3.1` for the desired version of the Test Runner you want to edit.
+其次，在任何代码编辑器中按以下路径打开源代码。确保用`3.3.1` 替换您想要编辑的测试运行器的期望版本.
 
 ```text
 /Users/jane/Library/Caches/Cypress/3.3.1/Cypress.app/Contents/Resources/app/packages/
 ```
 
-You can change anything in the JavaScript code:
+你可以修改JavaScript代码中的任何内容:
 
 <DocsImage src="/img/guides/source-code.png" alt="Source code of the Test Runner in a text editor" ></DocsImage>
 
-When finished, if necessary, remove the edited Test Runner version and reinstall the Cypress official version to get back to the official released code.
+完成后，如果有必要，删除编辑过的Test Runner版本并重新安装Cypress官方版本以返回官方发布的代码。
 
 ```shell
 rm -rf /Users/jane/Library/Caches/Cypress/3.3.1
