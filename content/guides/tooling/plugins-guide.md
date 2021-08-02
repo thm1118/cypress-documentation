@@ -1,128 +1,128 @@
 ---
-title: Plugins
+title: 插件
 ---
 
-Plugins enable you to tap into, modify, or extend the internal behavior of Cypress.
+插件可以让你进入，修改，或扩展Cypress的内部行为。
 
-Normally, as a user, all of your test code, your application, and Cypress commands are executed in the browser. But Cypress is also a Node process that plugins can use.
+通常，作为用户，您的所有测试代码、应用程序和Cypress命令都在浏览器中执行。但是Cypress也是一个可以使用插件的Node进程。
 
-> Plugins enable you to tap into the Node process running outside of the browser.
+> 插件使您能够进入浏览器外运行的Node进程。
 
-Plugins are a "seam" for you to write your own custom code that executes during particular stages of the Cypress lifecycle. It also allows you to execute code within your own Node version when the [nodeVersion](/guides/references/configuration#Node-version) is set in your configuration.
+插件是一个“接缝”，你可以编写自己的自定义代码，在Cypress生命周期的特定阶段执行. 当[nodeVersion](/guides/references/configuration#Node-version) 在配置中被设置时，它还允许你在自己的Node版本中执行代码。
 
 <Alert type="info">
 
 <strong class="alert-header">This is a brief overview</strong>
 
-If you want more details about how to write a plugin, we've written API docs that show you how to work with each plugin event.
+如果你想了解更多关于如何编写插件的细节，我们已经编写了API文档，告诉你如何处理每个插件事件.
 
-You can [check out the API docs here](/api/plugins/writing-a-plugin).
+你可以[在这里查看API文档](/api/plugins/writing-a-plugin).
 
 </Alert>
 
-## Use Cases
+## 使用案例
 
-### Configuration
+### 配置
 
-With plugins, you can programmatically alter the resolved configuration and environment variables that come from [your configuration file (`cypress.json` by default)](/guides/references/configuration), [`cypress.env.json`](/guides/guides/environment-variables#Option-2-cypress-env-json), the [command line](/guides/guides/command-line), or system environment variables.
+有了插件，你可以通过编程方式改变配置文件中的[配置(默认`cypress.json` )](/guides/references/configuration)和环境变量 ,如 [`cypress.env.json`](/guides/guides/environment-variables#Option-2-cypress-env-json),  [ 命令行](/guides/guides/command-line), 或系统环境变量.
 
-This enables you to do things like:
+这使你能够做如下事情:
 
-- Use multiple environments with their own configurations
-- Swap out environment variables based on an environment
-- Read in configuration files using the built in `fs` lib
-- Change the list of browsers used for testing
-- Write your configuration in `yml`
+- 使用具有自己配置的多个环境
+- 根据环境交换环境变量
+- 使用内置的 `fs` lib读取配置文件
+- 更改用于测试的浏览器列表
+- 在 `yml`中编写配置
 
-Check out our [Configuration API docs](/api/plugins/configuration-api) which describe how to use this event.
+请查看我们的[配置API文档](/api/plugins/configuration-api)，它描述了如何使用这个事件。
 
-### Preprocessors
+### 预处理
 
-The event `file:preprocessor` is used to customize how your test code is transpiled and sent to the browser. By default, Cypress handles ES2015+, TypeScript, and CoffeeScript, using webpack to package it for the browser.
+事件`file:preprocessor`用于自定义测试代码如何被编译并发送到浏览器. 默认情况下，Cypress会处理ES2015+、TypeScript和CoffeeScript，并使用webpack将其打包以供浏览器使用。
 
-You can use the `file:preprocessor` event to do things like:
+你可以使用`file:preprocessor`事件来做如下事情:
 
-- Add the latest ES\* support.
-- Write your test code in ClojureScript.
-- Customize the Babel settings to add your own plugins.
-- Customize the options for compiling TypeScript.
-- Swap out webpack for Browserify or anything else.
+- 添加最新的ES\*支持。
+- 用ClojureScript编写测试代码.
+- 自定义Babel设置以添加您自己的插件.
+- 定制编译TypeScript的选项.
+- 将webpack替换为Browserify或其他任何东西.
 
-Check out our [File Preprocessor API docs](/api/plugins/preprocessors-api) which describe how to use this event.
+请查看我们的[文件预处理器API文档](/api/plugins/preprocessors-api)，它描述了如何使用这个事件.
 
-### Run Lifecycle
+### 运行生命周期
 
-The events [`before:run`](/api/plugins/before-run-api) and [`after:run`](/api/plugins/after-run-api) occur before and after a run, respectively.
+事件[`before:run`](/api/plugins/before-run-api) 和 [`after:run`](/api/plugins/after-run-api) 分别在运行之前和之后发生。
 
-You can use [`before:run`](/api/plugins/before-run-api) to do things like:
+你可以使用[`before:run`](/api/plugins/before-run-api) 来做类似的事情:
 
-- Set up reporting on a run
-- Start a timer for the run to time how long it takes
+- 设置运行报告
+- 启动一个计时器来计算运行所需的时间
 
-You can use [`after:run`](/api/plugins/after-run-api) to do things like:
+你可以使用[`after:run`](/api/plugins/after-run-api) 来做类似的事情:
 
-- Finish up reporting on a run set up in `before:run`
-- Stop the timer for the run set up in `before:run`
+- 完成在`before:run`中设置的运行报告
+- 停止在`before:run`中设置的运行计时器
 
-### Spec Lifecycle
+### Spec 生命周期
 
-The events [`before:spec`](/api/plugins/before-spec-api) and [`after:spec`](/api/plugins/after-spec-api) run before and after a single spec is run, respectively.
+事件[`before:spec`](/api/plugins/before-spec-api) 和 [`after:spec`](/api/plugins/after-spec-api) 分别在单个spec运行之前和之后运行.
 
-You can use [`before:spec`](/api/plugins/before-spec-api) to do things like:
+你可以使用[`before:spec`](/api/plugins/before-spec-api)来做类似的事情:
 
-- Set up reporting on a spec running
-- Start a timer for the spec to time how long it takes
+- 建立spec运行的报告
+- 为spec启动一个计时器来计时所需的时间
 
-You can use [`after:spec`](/api/plugins/after-spec-api) to do things like:
+你可以使用[`after:spec`](/api/plugins/after-spec-api) 来做如下事情:
 
-- Finish up reporting set up in `before:spec`
-- Stop the timer for the spec set up in `before:spec`
-- Delete the video recorded for the spec. This prevents it from taking time and computing resources for compressing and uploading the video. You can do this conditionally based on the results of the spec, such as if it passes (so videos for failing tests are preserved for debugging purposes).
+- 在`before:spec`中完成报告设置
+- 停止在`before:spec`中设置的spec的计时器
+- 删除为spec录制的视频. 这可以防止压缩和上传视频所需的时间和计算资源。 您可以根据spec的结果有条件地这样做，比如如果它通过了(因此为调试目的保留失败测试的视频)。
 
-Check out the [Before Spec API doc](/api/plugins/before-spec-api) and [After Spec API doc](/api/plugins/after-spec-api) which describe how to use these events.
+查看[Before Spec API doc](/api/plugins/before-spec-api) 和 [After Spec API doc](/api/plugins/after-spec-api)，它们描述了如何使用这些事件。
 
-### Browser Launching
+### 浏览器启动
 
-The event `before:browser:launch` can be used to modify the launch arguments for each particular browser.
+事件`before:browser:launch`可用于修改每个特定浏览器的启动参数。
 
-You can use the `before:browser:launch` event to do things like:
+你可以使用`before:browser:launch`事件来做如下事情:
 
-- Load a Chrome extension
-- Enable or disable experimental chrome features
-- Control which Chrome components are loaded
+- 加载一个Chrome扩展
+- 启用或禁用实验性的chrome功能
+- 控件加载了哪些Chrome组件
 
-Check out our [Browser Launch API docs](/api/plugins/browser-launch-api) which describe how to use this event.
+看看我们的[浏览器启动API文档](/api/plugins/browser-launch-api) ，里面描述了如何使用这个事件.
 
-### Screenshot handling
+### 截屏处理
 
-The event `after:screenshot` is called after a screenshot is taken and saved to disk.
+事件`after:screenshot`在截图被获取并保存到磁盘后被调用.
 
-You can use the `after:screenshot` event to do things like:
+你可以使用`after:screenshot`事件来做如下事情:
 
-- Save details about the screenshot
-- Rename the screenshot
-- Manipulate the screenshot image by resizing or cropping it
+- 保存截图的详细信息
+- 重命名的截图
+- 通过调整大小或裁剪来操作截图图像
 
-Check out our [After Screenshot API docs](/api/plugins/after-screenshot-api) which describe how to use this event.
+查看我们的[After Screenshot API文档](/api/plugins/after-screenshot-api)，它描述了如何使用这个事件。
 
 ### cy.task
 
-The event `task` is used in conjunction with the [`cy.task()`](/api/commands/task) command. It allows you to write arbitrary code in Node to accomplish tasks that aren't possible in the browser. It also allows you to execute code within your own Node version when the [nodeVersion](/guides/references/configuration#Node-version) is set in your configuration.
+事件`task`与[`cy.task()`](/api/commands/task) 命令一起使用。 它允许您在Node中编写任意代码来完成在浏览器中不可能完成的任务. 当[nodeVersion](/guides/references/configuration#Node-version) 在配置中被设置时，它还允许你在自己的Node版本中执行代码。
 
-You can use the `task` event to do things like:
+你可以使用`task`事件来做如下事情:
 
-- Manipulating a database (seeding, reading, writing, etc.)
-- Storing state in Node that you want persisted (since the driver is fully refreshed on visits)
-- Performing parallel tasks (like making multiple http requests outside of Cypress)
-- Running an external process (like spinning up a Webdriver instance of another browser like Safari or puppeteer)
+- 操作数据库(播种、读取、写入等)
+- 在Node中存储想要持久化的状态(因为驱动程序在访问时完全刷新)
+- 执行并行任务(比如在Cypress外发出多个http请求)
+- 运行外部进程(比如旋转另一个浏览器(如Safari或puppeteer)的Webdriver实例)
 
-##### <Icon name="graduation-cap"></Icon> Real World Example
+##### <Icon name="graduation-cap"></Icon> 真实世界的例子
 
-The [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) uses [tasks](/api/commands/task) to re-seed its database, and to filter/find test data for various testing scenarios.
+[Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) 使用[tasks](/api/commands/task) 重新种子它的数据库，并为各种测试场景过滤找到测试数据。
 
 <Alert type="warning">
 
-⚠️ This code is part of the [plugins file](/guides/core-concepts/writing-and-organizing-tests.html#Plugin-files) and thus executes in the Node environment. You cannot call `Cypress` or `cy` commands in this file, but you do have the direct access to the file system and the rest of the operating system.
+⚠️ 此代码是[plugins文件](/guides/core-concepts/writing-and-organizing-tests.html#Plugin-files) 的一部分，因此在Node环境中执行. 您不能在这个文件中调用`Cypress` 或 `cy`命令，但您可以直接访问文件系统和操作系统的其余部分。
 
 </Alert>
 
@@ -131,12 +131,12 @@ The [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) 
 
   on("task", {
     async "db:seed"() {
-      // seed database with test data
+      // 用测试数据填充数据库
       const { data } = await axios.post(`${testDataApiEndpoint}/seed`);
       return data;
     },
 
-    // fetch test data from a database (MySQL, PostgreSQL, etc...)
+    // 从数据库中获取测试数据(MySQL, PostgreSQL, etc...)
     "filter:database"(queryPayload) {
       return queryDatabase(queryPayload, (data, attrs) => _.filter(data.results, attrs));
     },
@@ -148,29 +148,29 @@ The [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) 
 };
 ```
 
-> _<Icon name="github"></Icon> Source: [cypress/plugins/index.ts](https://github.com/cypress-io/cypress-realworld-app/blob/develop/cypress/plugins/index.ts)_
+> _<Icon name="github"></Icon> 源码: [cypress/plugins/index.ts](https://github.com/cypress-io/cypress-realworld-app/blob/develop/cypress/plugins/index.ts)_
 
-Check out the [Real World App test suites](https://github.com/cypress-io/cypress-realworld-app/tree/develop/cypress/tests/ui) to see these tasks in action.
+查看[Real World App test suites](https://github.com/cypress-io/cypress-realworld-app/tree/develop/cypress/tests/ui)，查看这些任务的运行情况.
 
-## List of plugins
+## 插件列表
 
-Cypress maintains a curated list of plugins created by us and the community. You can `npm install` any of the plugins listed below:
+Cypress维护了一个由我们和社区创建的插件列表。你可以`npm install`下面列出的任何插件:
 
-[Our curated list of Cypress plugins.](/plugins/directory)
+[我们的展示的Cypress插件列表。](/plugins/directory)
 
-## Installing plugins
+## 安装插件
 
-Plugins from our [official list](/plugins/directory) are npm modules. This enables them to be versioned and updated separately without needing to update Cypress itself.
+来自我们[官方列表](/plugins/directory)的插件都是npm模块. 这使得它们可以单独进行版本控制和更新，而不需要更新Cypress本身。
 
-You can install any published plugin using NPM:
+你可以使用NPM安装任何已发布的插件:
 
 ```shell
 npm install <plugin name> --save-dev
 ```
 
-## Using a plugin
+## 使用一个插件
 
-Whether you install an npm module, or want to write your own code - you should do all of that in this file:
+无论你是安装一个npm模块，还是想要编写自己的代码，你都应该在这个文件中完成:
 
 ```text
 cypress/plugins/index.js
@@ -178,11 +178,11 @@ cypress/plugins/index.js
 
 <Alert type="info">
 
-By default Cypress seeds this file for new projects, but if you have an existing project create this file yourself.
+默认情况下，Cypress为新项目创建该文件，但如果您有一个现有的项目，则自己创建该文件。
 
 </Alert>
 
-Inside of this file, you will export a function. Cypress will call this function, pass you the project's configuration, and enable you to bind to the events exposed.
+在这个文件中，您将导出一个函数。Cypress将调用这个函数，将项目的配置传递给您，并使您能够绑定到公开的事件。
 
 ```javascript
 // cypress/plugins/index.js
@@ -196,4 +196,4 @@ module.exports = (on, config) => {
 }
 ```
 
-For more information on writing plugins, please [check out our API docs here](/api/plugins/writing-a-plugin).
+有关编写插件的更多信息，请[查看我们的API文档这里](/api/plugins/writing-a-plugin).
