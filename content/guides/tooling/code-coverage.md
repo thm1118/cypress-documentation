@@ -1,14 +1,14 @@
 ---
-title: Code Coverage
+title: 代码覆盖率
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- How to instrument your application code
-- How to save the coverage information collected during end-to-end and unit tests
-- How to use the code coverage reports to guide writing tests
+- 如何插装应用程序代码----可被检测
+- 如何保存端到端测试和单元测试期间收集的覆盖率信息
+- 如何使用代码覆盖报告来指导编写测试
 
 </Alert>
 
@@ -18,11 +18,11 @@ title: Code Coverage
 
 <!-- textlint-enable -->
 
-## Introduction
+## 介绍
 
-As you write more and more end-to-end tests, you will find yourself wondering - do I need to write more tests? Are there parts of the application still untested? Are there parts of the application that perhaps are tested too much? One answer to those questions is to find out which lines of the application's source code were executed during end-to-end tests. If there are important sections of the application's logic that **were not** executed from the tests, then a new test should be added to ensure that part of our application logic is tested.
+当您编写越来越多的端到端测试时，您会发现自己在想——我是否需要编写更多的测试? 应用程序中还有未测试的部分吗? 应用程序的某些部分是否测试过多?这些问题的一个答案是找出在端到端测试期间执行了应用程序源代码的哪些行. 如果有应用程序逻辑的重要部分没有从测试中执行，那么应该添加一个新的测试，以确保测试了应用程序逻辑的一部分。
 
-Computing the source code lines that were executed during the test is done through **code coverage**. Code coverage requires inserting additional counters into your source code before running it. This step is called **instrumentation**. Instrumentation takes code that looks like this...
+通过**代码覆盖率**来计算在测试期间执行的源代码行. 代码覆盖要求在运行源代码之前插入额外的计数器.这个步骤称为**插装**.插装采用如下代码...
 
 ```javascript
 // add.js
@@ -32,52 +32,46 @@ function add(a, b) {
 module.exports = { add }
 ```
 
-...and parses it to find all functions, statements, and branches and then inserts **counters** into the code. For the above code it might look like this:
+...并对其进行解析以找到所有函数、语句和分支，然后将计数器插入代码中. 对于上面的代码，它可能是这样的:
 
 ```javascript
-// this object counts the number of times each
-// function and each statement is executed
+// 该对象计算每个函数和每个语句执行的次数
 const c = (window.__coverage__ = {
-  // "f" counts the number of times each function is called
-  // we only have a single function in the source code
-  // thus it starts with [0]
+  // "f"表示每个函数被调用的次数，我们在源代码中只有一个函数，因此它从[0]开始
   f: [0],
-  // "s" counts the number of times each statement is called
-  // we have 3 statements and they all start with 0
+  // "s"表示每条语句被调用的次数
+  // 我们有三条语句，它们都是从0开始的
   s: [0, 0, 0],
 })
 
-// the original code + increment statements
-// uses "c" alias to "window.__coverage__" object
-// the first statement defines the function,
-// let's increment it
+// 原代码+ 增量语句使用“c”别名"window.__coverage__"。对象的第一个语句定义了函数,
+// 让我们增加它
 c.s[0]++
 function add(a, b) {
-  // function is called and then the 2nd statement
+  // 函数被调用，然后执行第二条语句
   c.f[0]++
   c.s[1]++
 
   return a + b
 }
-// 3rd statement is about to be called
+// 第三个语句即将被调用
 c.s[2]++
 module.exports = { add }
 ```
 
-Imagine we load the above instrumented source file from our test spec file. Immediately some counters will be incremented!
+想象一下，我们从测试spec文件中加载了上面测试过的源文件. 一些计数器将立即增加!
 
 ```javascript
 // add.spec.js
 const { add } = require('./add')
-// JavaScript engine has parsed and evaluated "add.js" source code
-// which ran some of the increment statements
-// __coverage__ has now
-// f: [0] - function "add" was NOT executed
-// s: [1, 0, 1] - first and third counters were incremented
-// but the statement inside function "add" was NOT executed
+// JavaScript引擎已经分析和评估了“add.js”源代码，运行了一些增量语句
+// __coverage__ 现在已经
+// f: [0] - 函数add没有执行
+// s: [1, 0, 1] - 第一和第三个计数器增加1
+// 但是函数“add”中的语句还没有执行
 ```
 
-We want to make sure every statement and function in the file `add.js` has been executed by our tests at least once. Thus we write a test:
+我们希望确保文件`add.js`中的每个语句和函数至少被我们的测试执行过一次. 因此，我们编写了一个测试:
 
 ```javascript
 // add.spec.js
@@ -88,58 +82,58 @@ it('adds numbers', () => {
 })
 ```
 
-When the test calls `add(2, 3)`, the counter increments inside the "add" function are executed, and the coverage object becomes:
+当测试调用`add(2, 3)`时, 执行“add”函数中的计数器增量，覆盖对象变成:
 
 ```javascript
 {
-  // "f" keeps count of times each function was called
-  // we only have a single function in the source code
-  // thus it starts with [0]
+  // "f"记录每个函数被调用的次数
+  // 我们在源代码中只有一个函数
+  // 因此它从[0]开始
   f: [1],
-  // "s" keeps count of times each statement was called
-  // we have 3 statements, and they all start with 0
+  // "s"记录每条语句被调用的次数
+  // 我们有三个表述，它们都是从0开始的
   s: [1, 1, 1]
 }
 ```
 
-This single test has achieved 100% code coverage - every function and every statement has been executed at least once. But, in real world applications, achieving 100% code coverage requires multiple tests.
+这个测试已经实现了100%的代码覆盖率——每个函数和每个语句都至少执行了一次. 但是，在实际应用程序中，实现100%的代码覆盖率需要多次测试.
 
-Once the tests finish, the coverage object can be serialized and saved to disk so that a human-friendly report can be generated. The collected coverage information can also be sent to external services and help during pull request reviews.
-
-<Alert type="info">
-
-If you are unfamiliar with code coverage or want to learn more, take a look at the "Understanding JavaScript Code Coverage" blog post [Part 1](https://www.semantics3.com/blog/understanding-code-coverage-1074e8fccce0/) and [Part 2](https://www.semantics3.com/blog/understanding-javascript-code-coverage-part-2-9aedaa5119e5/).
-
-</Alert>
-
-This guide explains how to instrument the application source code using common tools. Then we show how to save the coverage information and generate reports using the [`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) Cypress plugin. After reading this guide you should be able to better target your tests using the code coverage information.
-
-This guide explains how to find what parts of your application code are covered by Cypress tests so you can have 100% confidence that your tests aren't missing crucial parts of your application. The collected information can be sent to external services, automatically run during pull request reviews, and integrated into CI.
+一旦测试完成，覆盖对象就可以被序列化并保存到磁盘，这样就可以生成一个人性化的报告。 收集的覆盖信息也可以发送给外部服务，并在PR代码评审期间提供帮助.
 
 <Alert type="info">
 
-The full source code for this guide can be found in the [cypress-io/cypress-example-todomvc-redux](https://github.com/cypress-io/cypress-example-todomvc-redux) repository.
+如果你对代码覆盖不熟悉，或者想了解更多，请查看“理解JavaScript代码覆盖”博客文章[第1部分](https://www.semantics3.com/blog/understanding-code-coverage-1074e8fccce0/) 和 [第2部分](https://www.semantics3.com/blog/understanding-javascript-code-coverage-part-2-9aedaa5119e5/).
 
 </Alert>
 
-## Instrumenting code
+本指南解释如何使用常用工具插装应用程序源代码.然后，我们将展示如何使用[`@cypresscode-coverage`](https://github.com/cypress-io/code-coverage) Cypress 插件保存覆盖率信息并生成报告。在阅读了本指南之后，您应该能够使用代码覆盖信息更好地精准您的测试。
 
-Cypress does not instrument your code - you need to do it yourself. The golden standard for JavaScript code instrumentation is the battle-hardened [Istanbul](https://istanbul.js.org) and, luckily, it plays very nicely with the Cypress Test Runner. You can instrument the code as a build step through one of two ways:
+本指南解释了如何找到Cypress测试覆盖了应用程序代码的哪些部分，以便您可以100%确信测试没有遗漏应用程序的关键部分. 收集的信息可以发送到外部服务，在pull请求审查期间自动运行，并集成到CI中。
 
-- Using the [nyc](https://github.com/istanbuljs/nyc) module - a command-line interface for the [Istanbul](https://istanbul.js.org) library
-- As part of your code transpilation pipeline using the [`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) tool.
+<Alert type="info">
 
-### Using NYC
+本指南的完整源代码可以在[cypress-iocypress-example-todomvc-redux](https://github.com/cypress-io/cypress-example-todomvc-redux) 代码库中找到。
 
-To instrument the application code located in your `src` folder and save it in an `instrumented` folder use the following command:
+</Alert>
+
+## 插装代码
+
+Cypress不插装你的代码——你需要自己做. JavaScript代码插装的黄金标准是久经沙场的[Istanbul](https://istanbul.js.org)，幸运的是，它与Cypress Test Runner配合得非常好. 您可以通过以下两种方法中的一种将代码作为构建步骤来插装:
+
+- 使用[nyc](https://github.com/istanbuljs/nyc) 模块 - [Istanbul](https://istanbul.js.org)库的命令行界面
+- 使用[`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) 工具作为代码转译管道的一部分。
+
+### 使用 NYC
+
+要插装位于`src`文件夹中的应用程序代码，并将其保存在`instrumented`文件夹中，使用以下命令:
 
 ```shell
 npx nyc instrument --compact=false src instrumented
 ```
 
-We are passing the `--compact=false` flag to generate human-friendly output.
+我们传递了`--compact=false`标志以生成人类友好的输出。
 
-The instrumentation takes your original code like this fragment...
+该插装工具采用如下代码片段的原始代码。..
 
 ```js
 const store = createStore(reducer)
@@ -152,7 +146,7 @@ render(
 )
 ```
 
-...and wraps each statement with additional counters that keep track of how many times each source line has been executed by the JavaScript runtime.
+...并用额外的计数器包装每个语句，这些计数器跟踪JavaScript运行时执行每个源行的次数.
 
 ```javascript
 const store = (cov_18hmhptych.s[0]++, createStore(reducer))
@@ -165,19 +159,19 @@ render(
 )
 ```
 
-Notice the calls to `cov_18hmhptych.s[0]++` and `cov_18hmhptych.s[1]++` that increment the statement counters. All counters and additional book-keeping information is stored in a single object attached to the browser's `window` object. We can see the counters if we serve the `instrumented` folder instead of `src` and open the application.
+注意对`cov_18hmhptych.s[0]++` 和 `cov_18hmhptych.s[1]++`的调用使语句计数器增加. 所有计数器和其他簿记信息都存储在一个附加到浏览器的`window`对象的对象中。 如果我们使用`instrumented`文件夹而不是`src`，然后打开应用程序，就可以看到计数器.
 
 <DocsImage src="/img/guides/code-coverage/coverage-object.png" alt="Code coverage object" ></DocsImage>
 
-If we drill into the coverage object we can see the statements executed in each file. For example the file `src/index.js` has the following information:
+如果我们深入到覆盖率对象中，我们可以看到每个文件中执行的语句. 例如，文件`src/index.js`包含以下信息:
 
 <DocsImage src="/img/guides/code-coverage/coverage-statements.png" alt="Covered statements counters in a from the index file" ></DocsImage>
 
-In green, we highlighted the 4 statements present in that file. The first three statements were each executed once and the last statement was never executed (it probably was inside an `if` statement). By using the application, we can both increment the counters and flip some of the zero counters into positive numbers.
+我们用绿色突出显示了该文件中的4条语句. 前三条语句各执行一次，最后一条语句从未执行 (它可能在`if`语句中). 通过使用该应用程序，我们既可以增加计数器，也可以将一些零计数器转换为正数.
 
-### Using code transpilation pipeline
+### 使用代码转译管道
 
-Instead of using the `npx instrument` command, we can use [`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) to instrument the code as part of its transpilation. Add this plugin to the `.babelrc` file.
+代替使用`npx instrument`命令，我们可以使用[`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul)来插装代码，作为其转译的一部分。将这个插件添加到`.babelrc`文件。
 
 ```json
 {
@@ -186,33 +180,33 @@ Instead of using the `npx instrument` command, we can use [`babel-plugin-istanbu
 }
 ```
 
-We can now serve the application and get instrumented code without an intermediate folder, but the result is the same instrumented code loaded by the browser, with the same `window.__coverage__` object keeping track of the original statements.
+我们现在可以在没有中间文件夹的情况下为应用程序提供服务，并获得插装代码，但结果是浏览器加载相同的插装代码，使用相同的`window.__coverage__` 跟踪原始语句的对象。
 
 <Alert type="info">
 
-Check out [`@cypress/code-coverage#examples`](https://github.com/cypress-io/code-coverage#examples) for full example projects showing different code coverage setups.
+查看[`@cypress/code-coverage#examples`](https://github.com/cypress-io/code-coverage#examples) ，了解显示不同代码覆盖设置的完整示例项目。
 
 </Alert>
 
 <DocsImage src="/img/guides/code-coverage/source-map.png" alt="Bundled code and source mapped originals" ></DocsImage>
 
-A really nice feature of both [nyc](https://github.com/istanbuljs/nyc) and [`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) is that the source maps are generated automatically, allowing us to collect code coverage information, but also interact with the original, non-instrumented code in the Developer Tools. In the screenshot above the bundle (green arrow) has coverage counters, but the source mapped files in the green rectangle show the original code.
+[nyc](https://github.com/istanbuljs/nyc) 和 [`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) 有一个共同棒的功能是自动生成 source maps, 允许我们收集代码覆盖率信息，但也可以在开发人员工具中与原始的、非插装的代码交互. 在上面的截图中，bundle(绿色箭头)有覆盖计数器, 同时在绿框内的 source mapped files 显示原始代码.
 
 <Alert type="info">
 
-The `nyc` and `babel-plugin-istanbul` only instrument the application code and not 3rd party dependencies from `node_modules`.
+`nyc` and `babel-plugin-istanbul`只插装应用程序代码，而不会对`node_modules`内的第三方依赖库插装。
 
 </Alert>
 
-## E2E code coverage
+## E2E代码覆盖率
 
-To handle code coverage collected during each test, we created a [`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) Cypress plugin. It merges coverage from each test and saves the combined result. It also calls `nyc` (its peer dependency) to generate static HTML reports for human consumption.
+为了处理在每次测试期间收集的代码覆盖率，我们创建了一个[`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) Cypress插件. 它合并每个测试的覆盖率并保存合并的结果. 它还调用`nyc`(它的对等依赖)来生成供人类使用的静态HTML报告。
 
-### Install the plugin
+### 安装插件
 
 <Alert type="info">
 
-Please consult the [`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) documentation for up-to-date installation instructions.
+请参考[`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) 文档获取最新的安装说明.
 
 </Alert>
 
@@ -220,7 +214,7 @@ Please consult the [`@cypress/code-coverage`](https://github.com/cypress-io/code
 npm install -D @cypress/code-coverage
 ```
 
-Then add the code below to your [supportFile](/guides/references/configuration#Folders-Files) and [pluginsFile](/guides/references/configuration#Folders-Files).
+然后将下面的代码添加到[supportFile](/guides/references/configuration#Folders-Files) 以及 [pluginsFile](/guides/references/configuration#Folders-Files) 中.
 
 ```js
 // cypress/support/index.js
@@ -239,15 +233,15 @@ module.exports = (on, config) => {
 }
 ```
 
-When you run the Cypress tests now, you should see a few commands after the tests finish. We have highlighted these commands using a green rectangle below.
+当您现在运行Cypress测试时，您应该会在测试完成后看到一些命令。我们用下面的绿色矩形突出显示了这些命令。
 
 <DocsImage src="/img/guides/code-coverage/coverage-plugin-commands.png" alt="coverage plugin commands" ></DocsImage>
 
-After the tests complete, the final code coverage is saved to a `.nyc_output` folder. It is a JSON file from which we can generate a report in a variety of formats. The [`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) plugin generates the HTML report automatically - you can open the `coverage/index.html` page locally after the tests finish. You can also call `nyc report` to generate other reports, for example, sending the coverage information to 3rd party services.
+测试完成后，最终的代码覆盖被保存到`.nyc_output` 文件夹中。 它是一个JSON文件，我们可以从中生成各种格式的报告. [`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) 插件自动生成HTML报告 - 测试完成后，您可以在本地打开`coverage/index.html`页面. 您还可以调用 `nyc report`来生成其他报告, 比如，将覆盖信息发送给第三方服务.
 
-### See code coverage summary
+### 参见代码覆盖摘要
 
-To see the summary of the code coverage after tests run, run the command below.
+要查看测试运行后的代码覆盖率摘要，请运行下面的命令。
 
 ```shell
 npx nyc report --reporter=text-summary
@@ -262,18 +256,18 @@ Lines        : 81.42% ( 92/113 )
 
 <Alert type="info">
 
-**Tip:** store the `coverage` folder as a build artifact on your continuous integration server. Because the report is a static HTML page, some CIs can show it right from their web applications. The screenshot below shows the coverage report stored on CircleCI. Clicking on `index.html` shows the report right in the browser.
+**提示:** 将`coverage`文件夹作为构建工件存储在持续集成服务器上. 因为报告是一个静态的HTML页面，一些CI可以直接在他们的web应用程序中显示它. 下面的截图显示了存储在circlici上的覆盖率报告. 点击`index.html`就会在浏览器中显示报告.
 
 </Alert>
 
 <DocsImage src="/img/guides/code-coverage/circleci-coverage-report.png" alt="coverage HTML report on CircleCI" ></DocsImage>
 
-## Code coverage as a guide
+## 以代码覆盖率为指导
 
-Even a single end-to-end test can cover a lot of the application code. For example, let's run the following test that adds a few items, then marks one of them as completed.
+即使是一个单一的端到端测试也可以涵盖大量的应用程序代码. 例如，让我们运行下面的测试，添加一些项目，然后将其中一个标记为已完成。
 
 ```javascript
-it('adds and completes todos', () => {
+it('添加和完成待办事项', () => {
   cy.visit('/')
   cy.get('.new-todo')
     .type('write code{enter}')
@@ -288,57 +282,57 @@ it('adds and completes todos', () => {
 })
 ```
 
-After running the test and opening the HTML report, we see 76% code coverage in our application.
+在运行测试并打开HTML报告之后，我们看到应用程序的代码覆盖率达到了76%。
 
 <DocsImage src="/img/guides/code-coverage/single-test.png" alt="Coverage report after a single test" ></DocsImage>
 
-Even better, we can drill down into the individual source files to see what code we missed. In our example application, the main state logic is in the `src/reducers/todos.js` file. Let's see the code coverage in this file:
+更好的是，我们可以深入到各个源文件中，查看我们遗漏了哪些代码。 在我们的示例应用程序中，主要的状态逻辑在`src/reducers/todos.js` 文件中。 让我们看看这个文件中的代码覆盖率:
 
 <DocsImage src="/img/guides/code-coverage/todos-coverage.png" alt="Main application logic coverage" ></DocsImage>
 
-Notice how the **ADD_TODO** action was executed 3 times - because our test has added 3 todo items, and the **COMPLETE_TODO** action was executed just once - because our test has marked 1 todo item as completed.
+注意**ADD_TODO**动作是如何执行3次的- 因为我们的测试添加了3个todo项，并且COMPLETE_TODO操作只执行了一次 - 因为我们的测试把1 todo项目标记为已完成.
 
-The source lines not covered marked in yellow (the switch cases the test missed) and red (regular statements) are a great guide for writing more end-to-end tests. We need tests that delete todo items, edit them, mark all of them as completed at once and clear completed items. When we cover every switch statement in `src/reducers/todos.js` we probably will achieve close to 100% code coverage. Even more importantly, we will cover the main features of the application the user is expected to use.
+用黄色(测试错过的切换用例)和红色(常规语句)标记的未覆盖的源代码行是编写更多端到端测试的很好的指南. 我们需要删除待办事项的测试, 编辑它们，将它们全部标记为已完成，并清除已完成的项目. 当我们覆盖`src/reducers/todos.js`中的每个switch语句时，我们可能会达到接近100%的代码覆盖率. 更重要的是，我们将介绍用户期望使用的应用程序的主要特性.
 
-We can write more E2E tests.
+我们可以编写更多的端到端测试。
 
 <DocsImage src="/img/guides/code-coverage/more-tests.png" alt="Cypress Test Runner passed more tests" ></DocsImage>
 
-The produced HTML report shows 99% code coverage
+生成的HTML报告显示代码覆盖率为99%
 
 <DocsImage src="/img/guides/code-coverage/almost-100.png" alt="99 percent code coverage" ></DocsImage>
 
-Every source file but 1 is covered at 100%. We can have great confidence in our application, and safely refactor the code knowing that we have a robust set of end-to-end tests.
+除1外的所有源文件都被100%覆盖。我们可以对我们的应用程序有很大的信心，并且在知道我们有一组健壮的端到端测试的情况下安全地重构代码。
 
-If possible, we advise implementing [visual testing](/guides/tooling/visual-testing) in addition to Cypress functional tests to avoid CSS and visual regressions.
+如果可能的话，我们建议在Cypress功能测试之外实施[视觉测试][visual testing](/guides/tooling/visual-testing) ，以避免CSS和视觉回归.
 
-## Combining code coverage from parallel tests
+## 合并来自并行测试的代码覆盖
 
-If you execute Cypress tests in [parallel](/guides/guides/parallelization), each machine ends up with a code coverage report that only shows a portion of the code exercised. Typically an external code coverage service would merge such partial reports for you. If you do want to merge the reports yourself:
+如果[并行](/guides/guides/parallelization)执行Cypress测试, 每台机器最后都有一个代码覆盖报告，该报告只显示执行的代码的一部分. 通常，外部代码覆盖服务会为您合并这些部分报告。如果你想自己合并报表:
 
-- on every machine running Cypress tests, copy the produced code coverage report into a common folder under a unique name to avoid overwriting it
-- after all E2E tests finish, combine the reports yourself using `nyc merge` command
+- 在每台运行Cypress测试的机器上，将生成的代码覆盖报告以唯一名称复制到一个通用文件夹中，以避免覆盖它
+- 在所有端到端测试完成后，使用`nyc merge`命令合并报表
 
-You can find an example of merging partial reports in our [cypress-io/cypress-example-conduit-app](https://github.com/cypress-io/cypress-example-conduit-app)
+你可以在我们的[cypress-iocypress-example-conduit-app](https://github.com/cypress-io/cypress-example-conduit-app) 中找到合并部分报告的示例。
 
-## E2E and unit code coverage
+## 端到端加密和单元代码覆盖
 
-Let's look at the one file that has a "missed" line. It is the `src/selectors/index.js` file shown below.
+让我们看看一个有“遗漏”行的文件。它是`src/selectors/index.js`文件，如下所示。
 
 <DocsImage src="/img/guides/code-coverage/selectors.png" alt="Selectors file with a line not covered by end-to-end tests" ></DocsImage>
 
-The source line not covered by the end-to-end tests shows an edge case NOT reachable from the UI. Yet this switch case is definitely worth testing - at least to avoid accidentally changing its behavior during future refactoring.
+未被端到端测试覆盖的源代码行显示了从UI不可达的边缘情况. 然而，这种开关案例绝对值得检验 - 至少可以避免在将来的重构过程中意外地改变其行为。
 
-We can directly test this piece of code by importing the `getVisibleTodos` function from the Cypress spec file. In essense we are using the Cypress Test Runner as a unit testing tool (find more unit testing recipes [here](https://github.com/cypress-io/cypress-example-recipes#unit-testing)).
+我们可以直接从Cypress spec文件中导入`getVisibleTodos`函数来测试这段代码. 从本质上说，我们使用Cypress Test Runner作为单元测试工具(在[这里](https://github.com/cypress-io/cypress-example-recipes#unit-testing) 找到更多的单元测试配方).
 
-Here is our test to confirm that the error is thrown.
+下面是我们用来确认抛出错误的测试。
 
 ```javascript
 // cypress/integration/selectors-spec.js
 import { getVisibleTodos } from '../../src/selectors'
 
 describe('getVisibleTodos', () => {
-  it('throws an error for unknown visibility filter', () => {
+  it('为未知的可见性过滤器抛出一个错误', () => {
     expect(() => {
       getVisibleTodos({
         todos: [],
@@ -349,29 +343,29 @@ describe('getVisibleTodos', () => {
 })
 ```
 
-The test passes, even if there is no web application visited.
+即使没有访问web应用程序，测试也会通过.
 
 <DocsImage src="/img/guides/code-coverage/unit-test.png" alt="Unit test for selector" ></DocsImage>
 
-Previously we instrumented the application code (either using a build step or inserting a plugin into the Babel pipeline). In the example above, we are NOT loading an application, instead we are only running the test files by themselves.
+之前我们插装了应用程序代码(使用构建步骤或在Babel管道中插入插件).在上面的例子中，我们没有加载应用程序，相反，我们只是运行测试文件本身.
 
-If we want to collect the code coverage from the unit tests, we need to instrument the source code of _our spec files_. The simplest way to do this is to use the same `.babelrc` with [`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) and tell the Cypress built-in bundler to use `.babelrc` when bundling specs. One can use the [`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) plugin again to do this by adding the code below to your [pluginsFile](/guides/references/configuration#Folders-Files).
+如果我们想从单元测试中收集代码覆盖率，我们需要插装spec文件的源代码. 最简单的方法就是用一样的 `.babelrc`与[`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) ，并告诉Cypress内置bundle使用`.babelrc` 绑定 spec . 你可以使用[`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage)  插件通过将下面的代码添加到你的[pluginsFile](/guides/references/configuration#Folders-Files)来再次做到这一点。
 
 ```javascript
 // cypress/plugins/index.js
 module.exports = (on, config) => {
   require('@cypress/code-coverage/task')(on, config)
-  // tell Cypress to use .babelrc file
-  // and instrument the specs files
-  // only the extra application files will be instrumented
-  // not the spec files themselves
+  // 告诉Cypress使用.babelrc文件
+  // 并插装 spec 文件
+  // 只有额外的应用程序文件将被 插装
+  // 而不是spec 文件本身
   on('file:preprocessor', require('@cypress/code-coverage/use-babelrc'))
 
   return config
 }
 ```
 
-For reference, the `.babelrc` file is shared between the example application and the spec files, thus Cypress tests are transpiled the same way the application code is transpiled.
+作为参考，`.babelrc`文件在示例应用程序和spec 文件之间共享，因此Cypress测试的编译方式与应用程序代码的编译方式相同。
 
 ```json
 {
@@ -380,33 +374,33 @@ For reference, the `.babelrc` file is shared between the example application and
 }
 ```
 
-When we run Cypress with [`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) included and inspect the `window.__coverage__` object in the **spec iframe**, we should see the coverage information for the application source files.
+当我们运行Cypress [`babel-plugin-istanbul`](https://github.com/istanbuljs/babel-plugin-istanbul) ，并在**spec iframe**中检查 `window.__coverage__` 对象，我们应该看到应用程序源文件的覆盖率信息。
 
 <DocsImage src="/img/guides/code-coverage/code-coverage-in-unit-test.png" alt="Code coverage in the unit test" ></DocsImage>
 
-The code coverage information in unit tests and end-to-end tests has the same format; the [`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage) plugin automatically grabs both and saves the combined report. Thus we can see the code coverage from the `cypress/integration/selectors-spec.js` file after running the test.
+单元测试和端到端测试中的代码覆盖信息具有相同的格式; [`@cypress/code-coverage`](https://github.com/cypress-io/code-coverage)插件自动抓取两者并保存合并的报告. 因此，我们可以在运行测试后从`cypress/integration/selectors-spec.js` 文件中看到代码覆盖率.
 
 <DocsImage src="/img/guides/code-coverage/unit-test-coverage.png" alt="Selectors code coverage" ></DocsImage>
 
-Our unit test is hitting the line we could not reach from the end-to-end tests, and if we execute all spec files - we will get 100% code coverage.
+我们的单元测试达到了端到端测试无法达到的水平，如果我们执行所有的spec文件——我们将获得100%的代码覆盖率。
 
 <DocsImage src="/img/guides/code-coverage/100percent.png" alt="Full code coverage" ></DocsImage>
 
-## Full stack code coverage
+## 全堆栈代码覆盖
 
-A complex application might have a Node back end with its own complex logic. From the front end web application, the calls to the API go through layers of code. It would be nice to track what back end code has been exercised during Cypress end-to-end tests.
+一个复杂的应用程序可能有一个具有自己复杂逻辑的Node后端. 在前端web应用程序中，对API的调用要经过几层代码. 跟踪在Cypress端到端测试期间执行的后端代码是很好的.
 
-Are our end-to-end tests that are so effective at covering the web application code also covering the back end server code?
+我们的端到端测试在覆盖web应用程序代码的同时也覆盖了后端服务器代码吗?
 
-**Long story short: yes.** You can collect the code coverage from the back end, and let the `@cypress/code-coverage` plugin merge it with the front end coverage, creating a single full stack report.
+**长话短说: 是.** 你可以从后端收集代码覆盖率，并让`@cypress/code-coverage`插件将其与前端覆盖率合并，创建一个完整的堆栈报告。
 
 <Alert type="info">
 
-The full source code for this section can be found in the [cypress-io/cypress-example-conduit-app](https://github.com/cypress-io/cypress-example-conduit-app) repository.
+这个部分的完整源代码可以在[cypress-io/cypress-example-conduit-app](https://github.com/cypress-io/cypress-example-conduit-app) 存储库中找到。
 
 </Alert>
 
-You can run your Node server and instrument it using nyc on the fly. Instead of the "normal" server start command, you can run the command `npm run start:coverage` defined in the `package.json` like this:
+您可以运行您的Node服务器并使用nyc实时检测它。 除了使用"常规的"服务器启动命令，你还可以使用`package.json`中定义的命令`npm run start:coverage`:
 
 ```json
 {
@@ -417,7 +411,7 @@ You can run your Node server and instrument it using nyc on the fly. Instead of 
 }
 ```
 
-In your server, insert another middleware from `@cypress/code-coverage`. If you use an Express server, include `middleware/express`:
+在你的服务器，从`@cypress/code-coverage`插入另一个中间件。 如果您使用Express服务，请包含`middleware/express`:
 
 ```javascript
 const express = require('express')
@@ -426,7 +420,7 @@ const app = express()
 require('@cypress/code-coverage/middleware/express')(app)
 ```
 
-If your server uses hapi, include `middleware/hapi`
+如果你的服务使用hapi，包括' middlewarehapi '
 
 ```javascript
 if (global.__coverage__) {
@@ -434,7 +428,7 @@ if (global.__coverage__) {
 }
 ```
 
-**Tip:** you can conditionally register the endpoint only if there is a global code coverage object, and you can [exclude the middleware code from the coverage numbers](https://github.com/gotwarlost/istanbul/blob/master/ignoring-code-for-coverage.md):
+**提示:** 只有当存在全局代码覆盖对象时，才可以有条件地注册端点，并且可以[从覆盖号中排除中间件代码](https://github.com/gotwarlost/istanbul/blob/master/ignoring-code-for-coverage.md):
 
 ```javascript
 /* istanbul ignore next */
@@ -443,7 +437,7 @@ if (global.__coverage__) {
 }
 ```
 
-For any other server type, define a `GET /__coverage__` endpoint and return the `global.__coverage__` object.
+对于任何其他服务器类型，定义一个 `GET /__coverage__`端点并返回`global.__coverage__`对象。
 
 ```javascript
 if (global.__coverage__) {
@@ -454,7 +448,7 @@ if (global.__coverage__) {
 }
 ```
 
-In order for the `@cypress/code-coverage` plugin to know that it should request the back end coverage, add the new endpoint to the `cypress.json` environment settings under `env.codeCoverage.url` key. For example, if the application back end is running at port 3000 and we are using the default "GET /**coverage**" endpoint, set the following:
+为了让`@cypress/code-coverage`插件知道它应该请求后端覆盖数据，请将新端点添加到`cypress.json`的环境设置 `env.codeCoverage.url`。例如，如果应用程序的后端运行在端口3000，并且我们使用默认的"GET /**coverage**"端点，设置如下:
 
 ```json
 {
@@ -466,77 +460,77 @@ In order for the `@cypress/code-coverage` plugin to know that it should request 
 }
 ```
 
-From now on, the front end code coverage collected during end-to-end tests will be merged with the code coverage from the instrumented back end code and saved in a single report. Here is an example report from the [cypress-io/cypress-example-conduit-app](https://github.com/cypress-io/cypress-example-conduit-app) example:
+从现在开始，在端到端测试期间收集的前端代码覆盖率将与测试后端的代码覆盖率合并，并保存在单个报告中。以下是来自[cypress-iocypress-example-conduit-app](https://github.com/cypress-io/cypress-example-conduit-app) 的示例报告:
 
 <DocsImage src="/img/guides/code-coverage/full-coverage.png" alt="Combined code coverage report from front and back end code" ></DocsImage>
 
-You can explore the above combined full stack coverage report at the [coveralls.io/github/cypress-io/cypress-example-conduit-app](https://coveralls.io/github/cypress-io/cypress-example-conduit-app) dashboard. You can also find full stack code coverage in our [RealWorld App](https://github.com/cypress-io/cypress-realworld-app).
+您可以在[coveralls.iogithubcypress-iocypress-example-conduit-app](https://coveralls.io/github/cypress-io/cypress-example-conduit-app) dashboard中探索上述组合的全堆栈覆盖报告。 你也可以在我们的[RealWorld App](https://github.com/cypress-io/cypress-realworld-app) 中找到全栈代码覆盖。.
 
-Even if you only want to measure the back end code coverage Cypress can help. Read the blog post [Back end Code Coverage from Cypress API tests](https://glebbahmutov.com/blog/backend-coverage/) for the full tutorial.
+即使您只想测量后端代码覆盖率，Cypress也可以提供帮助。阅读博客文章[Cypress API测试的后端代码覆盖](https://glebbahmutov.com/blog/backend-coverage/) 获得完整的教程.
 
-## Future work
+## 未来的工作
 
-We are currently exploring two additional features for code coverage during end-to-end tests. First, we would like to avoid the "manual" instrumentation step using the Istanbul.js library and instead capture the native code coverage that can be collected by the Chrome browser's V8 engine. You can find a proof-of-concept example in [bahmutov/cypress-native-chrome-code-coverage-example](https://github.com/bahmutov/cypress-native-chrome-code-coverage-example) repository.
+我们目前正在探索两个在端到端测试期间用于代码覆盖的额外特性。 首先，我们希望避免使用`istanbull.js`库的“手动”检测步骤，而是捕获可以由Chrome浏览器的V8引擎收集的本地代码覆盖率. 你可以在[bahmutovcypress-native-chrome-code-coverage-example](https://github.com/bahmutov/cypress-native-chrome-code-coverage-example) 代码库中找到一个概念证明示例。
 
-Second, we would like to capture the code coverage from _the locally running back end server_ that is serving the front end web application and handles the API requests from the web application under test. We believe that E2E tests with additional [API tests](https://www.cypress.io/blog/2017/11/07/add-gui-to-your-e2e-api-tests/) that Cypress can perform can effectively cover a lot of back end code.
+其次，我们希望从本地运行的后端服务器获取代码覆盖率，该后端服务器服务于前端web应用程序，并处理来自测试中的web应用程序的API请求。 我们相信，Cypress能够执行的带有附加[API测试](https://www.cypress.io/blog/2017/11/07/add-gui-to-your-e2e-api-tests/) 的端到端测试能够有效地覆盖大量后端代码。
 
-## Videos
+## 视频
 
-There is a series of videos we have recorded showing code coverage in Cypress
+我们录制了一系列视频，展示了Cypress的代码覆盖率
 
-#### How to instrument react-scripts web application for code coverage
+#### 如何插装react 脚本web应用程序，以获得代码覆盖率
 
 <!-- textlint-disable terminology -->
 
 <DocsVideo src="https://youtube.com/embed/edgeQZ8UpD0"></DocsVideo>
 
-#### Get code coverage reports from Cypress tests
+#### 从Cypress测试获得代码覆盖率报告
 
 <DocsVideo src="https://youtube.com/embed/y8StkffYra0"></DocsVideo>
 
-#### Excluding code from code coverage reports
+#### 从代码覆盖报告中排除代码
 
 <DocsVideo src="https://youtube.com/embed/DlceMpRpbAw"></DocsVideo>
 
-#### Check code coverage robustly using 3rd party tool
+#### 使用第三方工具检查代码覆盖率
 
 <DocsVideo src="https://youtube.com/embed/dwU5gUG2"></DocsVideo>
 
-#### Adding code coverage badge to your project
+#### 向项目中添加代码覆盖标记
 
 <DocsVideo src="https://youtube.com/embed/bNVRxb-MKGo"></DocsVideo>
 
-#### Show code coverage in commit status check
+#### 在提交状态检查中显示代码覆盖率
 
 <DocsVideo src="https://youtube.com/embed/AAl4HmJ3YuM"></DocsVideo>
 
-#### Checking code coverage on pull request
+#### 检查PR的代码覆盖范围
 
 <DocsVideo src="https://youtube.com/embed/9Eq_gIshK0o"></DocsVideo>
 
 <!-- textlint-enable -->
 
-## Examples
+## 例子
 
-You can find full examples showing different code coverage setups in the following repositories:
+您可以在以下存储库中找到显示不同代码覆盖设置的完整示例:
 
-- [cypress-io/cypress-realworld-app](https://github.com/cypress-io/cypress-realworld-app) or RWA is a full stack example application that demonstrates **best practices and scalable strategies with Cypress in practical and realistic scenarios**. The RWA achieves full code coverage with end-to-end tests [across multiple browsers](/guides/guides/cross-browser-testing) and [device sizes](/api/commands/viewport).
-- [cypress-io/cypress-example-todomvc-redux](https://github.com/cypress-io/cypress-example-todomvc-redux) is the example code used in this guide.
-- [cypress-io/cypress-example-conduit-app](https://github.com/cypress-io/cypress-example-conduit-app) shows how to collect the coverage information from both back and front end code and merge it into a single report.
-- [bahmutov/code-coverage-webpack-dev-server](https://github.com/bahmutov/code-coverage-webpack-dev-server) shows how to collect code coverage from an application that uses webpack-dev-server.
-- [bahmutov/code-coverage-vue-example](https://github.com/bahmutov/code-coverage-vue-example) collects code coverage for Vue.js single file components.
-- [lluia/cypress-typescript-coverage-example](https://github.com/lluia/cypress-typescript-coverage-example) shows coverage for a React App that uses TypeScript.
-- [bahmutov/cypress-and-jest](https://github.com/bahmutov/cypress-and-jest) shows how to run Jest unit tests and Cypress unit tests, collecting code coverage from both test runners, and then produce a merged report.
-- [rootstrap/react-redux-base](https://github.com/rootstrap/react-redux-base) shows an example with a realistic webpack config. Instruments the source code using `babel-plugin-istanbul` during tests.
-- [skylock/cypress-angular-coverage-example](https://github.com/skylock/cypress-angular-coverage-example) shows an Angular 8 + TypeScript application with instrumentation done using `ngx-build-plus`.
-- [bahmutov/testing-react](https://github.com/bahmutov/testing-react) shows how to get code coverage for a React application created using `CRA v3` without ejecting `react-scripts`.
-- [bahmutov/next-and-cypress-example](https://github.com/bahmutov/next-and-cypress-example) shows how to get back end and front end coverage for a Next.js project. `middleware/nextjs.js`.
+- [cypress-io/cypress-realworld-app](https://github.com/cypress-io/cypress-realworld-app) 即 RWA是一个全栈示例应用程序，演示了在实际和现实的场景中使用Cypress的最佳实践和可伸缩策略. RWA通过[跨多个浏览器](/guides/guides/cross-browser-testing)以及[多设备尺寸](/api/commands/viewport)的端到端测试实现了完整的代码覆盖。
+- [cypress-io/cypress-example-todomvc-redux](https://github.com/cypress-io/cypress-example-todomvc-redux) 本指南中使用了示例代码.
+- [cypress-io/cypress-example-conduit-app](https://github.com/cypress-io/cypress-example-conduit-app) 演示如何从后台和前端代码收集覆盖率信息并将其合并到单个报告中.
+- [bahmutov/code-coverage-webpack-dev-server](https://github.com/bahmutov/code-coverage-webpack-dev-server) 演示如何从使用webpack-dev-server的应用程序中收集代码覆盖率。
+- [bahmutov/code-coverage-vue-example](https://github.com/bahmutov/code-coverage-vue-example) 为Vue.js单文件组件收集代码覆盖率.
+- [lluia/cypress-typescript-coverage-example](https://github.com/lluia/cypress-typescript-coverage-example) 显示了使用TypeScript的React应用的覆盖率。
+- [bahmutov/cypress-and-jest](https://github.com/bahmutov/cypress-and-jest) 演示如何运行Jest单元测试和Cypress单元测试，从两个测试运行程序收集代码覆盖率，然后生成合并报告。
+- [rootstrap/react-redux-base](https://github.com/rootstrap/react-redux-base) 展示了一个真实的webpack配置的例子。在测试期间使用`babel-plugin-istanbul`插装源代码。
+- [skylock/cypress-angular-coverage-example](https://github.com/skylock/cypress-angular-coverage-example) 展示了一个Angular 8 + TypeScript应用，它使用`ngx-build-plus`完成插装。
+- [bahmutov/testing-react](https://github.com/bahmutov/testing-react) 演示了如何在不弹出`react-scripts`的情况下获得使用`CRA v3`创建的React应用程序的代码覆盖率。
+- [bahmutov/next-and-cypress-example](https://github.com/bahmutov/next-and-cypress-example) 演示了如何获取Next.js项目的后端和前端覆盖。`middleware/nextjs.js`。
 
-Find the full list of examples linked in [cypress-io/code-coverage#external-examples](https://github.com/cypress-io/code-coverage#external-examples).
+找到[cypress-iocode-coverageexternal-examples](https://github.com/cypress-io/code-coverage#external-examples) 中链接的完整示例列表
 
-## See also
+## 另请参阅
 
-- The official [@cypress/code-coverage](https://github.com/cypress-io/code-coverage) plugin
-- [Combined End-to-end and Unit Test Coverage](https://glebbahmutov.com/blog/combined-end-to-end-and-unit-test-coverage/)
-- [Code Coverage by Parcel Bundler](https://glebbahmutov.com/blog/code-coverage-by-parcel/)
-- [Code Coverage for End-to-end Tests](https://glebbahmutov.com/blog/code-coverage-for-e2e-tests/)
+- 官方 [@cypress/code-coverage](https://github.com/cypress-io/code-coverage) 插件
+- [结合端到端和单元测试覆盖率](https://glebbahmutov.com/blog/combined-end-to-end-and-unit-test-coverage/)
+- [打包绑定的代码覆盖](https://glebbahmutov.com/blog/code-coverage-by-parcel/)
+- [端到端测试的代码覆盖率](https://glebbahmutov.com/blog/code-coverage-for-e2e-tests/)
