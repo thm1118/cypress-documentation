@@ -1,20 +1,20 @@
 ---
 layout: toc-top
-title: Using Cypress
+title: 使用Cypress
 containerClass: faq
 ---
 
-## <Icon name="angle-right"></Icon> How do I get an element's text contents?
+## <Icon name="angle-right"></Icon> 如何获取元素的文本内容?
 
-Cypress commands yield jQuery objects, so you can call methods on them.
+Cypress命令生成jQuery对象，因此您可以调用它们的方法。
 
-If you're trying to assert on an element's text content:
+如果你试图断言一个元素的文本内容:
 
 ```javascript
 cy.get('div').should('have.text', 'foobarbaz')
 ```
 
-If the text contains a [non-breaking space](https://en.wikipedia.org/wiki/Non-breaking_space) entity `&nbsp;` then use the Unicode character `\u00a0` instead of `&nbsp;`.
+如果文本包含[非间断空格](https://en.wikipedia.org/wiki/Non-breaking_space) 实体`&nbsp;`，那么使用Unicode字符`\u00a0`而不是`&nbsp;`。
 
 ```html
 <div>Hello&nbsp;world</div>
@@ -24,15 +24,15 @@ If the text contains a [non-breaking space](https://en.wikipedia.org/wiki/Non-br
 cy.get('div').should('have.text', 'Hello\u00a0world')
 ```
 
-You can also use the [cy.contains](/api/commands/contains) command which handles the non-breaking space entities
+您还可以使用[cy.contains](/api/commands/contains) 命令来处理非间断空格实体
 
 ```javascript
 cy.contains('div', 'Hello world')
 ```
 
-**Tip:** watch the [Confirming the text with non breaking space entity](https://youtu.be/6CxZuolWlYM) video.
+**提示:** 观看[用非间断空格实体确认文本](https://youtu.be/6CxZuolWlYM) 视频。
 
-If you'd like to work with the text prior to an assertion:
+如果你想在断言之前处理文本:
 
 ```javascript
 cy.get('div').should(($div) => {
@@ -44,25 +44,24 @@ cy.get('div').should(($div) => {
 })
 ```
 
-If you need to convert text to a number before checking if it is greater than 10:
+如果您需要在检查文本是否大于10之前将其转换为数字:
 
 ```javascript
 cy.get('div').invoke('text').then(parseFloat).should('be.gt', 10)
 ```
 
-If you need to hold a reference or compare values of text:
+如果需要保存文本的引用或比较值:
 
 ```javascript
 cy.get('div')
   .invoke('text')
   .then((text1) => {
-    // do more work here
+    // 在这里做更多的事情
 
-    // click the button which changes the div's text
+    // 单击更改div文本的按钮
     cy.get('button').click()
 
-    // grab the div again and compare its previous text
-    // to the current text
+    // 再次抓取这个div并将其前面的文本与当前的文本进行比较
     cy.get('div')
       .invoke('text')
       .should((text2) => {
@@ -71,29 +70,29 @@ cy.get('div')
   })
 ```
 
-jQuery's `.text()` method automatically calls `elem.textContent` under the hood. If you'd like to instead use `innerText` you can do the following:
+jQuery的`.text()`方法会自动调用底层`elem.textContent`.如果你想使用`innerText`，你可以做以下操作:
 
 ```javascript
 cy.get('div').should(($div) => {
-  // access the native DOM element
+  // 访问原生DOM元素
   expect($div.get(0).innerText).to.eq('foobarbaz')
 })
 ```
 
-This is the equivalent of Selenium's `getText()` method, which returns the innerText of a visible element.
+这相当于Selenium的 `getText()`方法，它返回可见元素的innerText。
 
-## <Icon name="angle-right"></Icon> How do I get an input's value?
+## <Icon name="angle-right"></Icon> 我如何得到一个输入值?
 
-Cypress yields you jQuery objects, so you can call methods on them.
+Cypress会生成jQuery对象，因此您可以对它们调用方法。
 
-If you're trying to assert on an input's value:
+如果你试图断言输入的值:
 
 ```javascript
-// make an assertion on the value
+// 对值进行断言
 cy.get('input').should('have.value', 'abc')
 ```
 
-If you'd like to massage or work with the text prior to an assertion:
+如果你想在断言之前修改或处理文本:
 
 ```javascript
 cy.get('input').should(($input) => {
@@ -105,7 +104,7 @@ cy.get('input').should(($input) => {
 })
 ```
 
-If you need to hold a reference or compare values of text:
+如果需要保存文本的引用或比较值:
 
 ```javascript
 cy.get('input')
@@ -113,11 +112,10 @@ cy.get('input')
   .then((val1) => {
     // do more work here
 
-    // click the button which changes the input's value
+    // 单击更改输入框的按钮
     cy.get('button').click()
 
-    // grab the input again and compare its previous value
-    // to the current value
+    // 再次获取输入并将其以前的值与当前值进行比较
     cy.get('input')
       .invoke('val')
       .should((val2) => {
@@ -126,20 +124,20 @@ cy.get('input')
   })
 ```
 
-## <Icon name="angle-right"></Icon> How do I compare the value or state of one thing to another?
+## <Icon name="angle-right"></Icon> 我如何比较一个事物与另一个事物的值或状态?
 
-Our [Variables and Aliases guide](/guides/core-concepts/variables-and-aliases) gives you examples of doing exactly that.
+我们的[变量和别名指南](/guides/core-concepts/variables-and-aliases)给出了这样做的例子.
 
-## <Icon name="angle-right"></Icon> Can I store an attribute's value in a constant or a variable for later use?
+## <Icon name="angle-right"></Icon> 我可以将属性的值存储在常量或变量中以供以后使用吗?
 
-Yes, and there are a couple of ways to do this. One way to hold a value or reference is with [closures](/guides/core-concepts/variables-and-aliases#Closures).
-Commonly, users believe they have a need to store a value in a `const`, `var`, or `let`. Cypress recommends doing this only when dealing with mutable objects (that change state).
+是的，有几种方法可以做到这一点。保存值或引用的一种方法是使用[闭包](/guides/core-concepts/variables-and-aliases#Closures).
+通常，用户认为他们需要在`const`, `var`, 或 `let`.中存储值。 Cypress建议只在处理可变对象(改变状态)时这样做.
 
-For examples how to do this, please read our [Variables and Aliases guide](/guides/core-concepts/variables-and-aliases).
+例如如何做到这一点，请阅读我们的[变量和别名指南](/guides/core-concepts/variables-and-aliases).
 
-## <Icon name="angle-right"></Icon> How do I get the native DOM reference of an element found using Cypress?
+## <Icon name="angle-right"></Icon> 如何获得使用Cypress找到的元素的原生DOM引用?
 
-Cypress wraps elements in jQuery so you'd get the native element from there within a [.then()](/api/commands/then) command.
+Cypress用jQuery包装元素，这样你就可以在[.then()](/api/commands/then)命令中获取本地元素.
 
 ```javascript
 cy.get('button').then(($el) => {
@@ -147,52 +145,52 @@ cy.get('button').then(($el) => {
 })
 ```
 
-## <Icon name="angle-right"></Icon> How do I do something different if an element doesn't exist?
+## <Icon name="angle-right"></Icon> 如果元素不存在，我怎么做不同的事情?
 
-What you're asking about is conditional testing and control flow.
+你问的是条件测试和控制流。
 
-Please read our extensive [Conditional Testing Guide](/guides/core-concepts/conditional-testing) which explains this in detail.
+请阅读我们广泛的[条件测试指南](/guides/core-concepts/conditional-testing)，其中详细解释了这一点。
 
-## <Icon name="angle-right"></Icon> How can I make Cypress wait until something is visible in the DOM?
+## <Icon name="angle-right"></Icon> 我如何让Cypress等待直到某些东西在DOM中可见?
 
 <Alert type="info">
 
-<strong class="alert-header">Remember</strong>
+<strong class="alert-header">牢记</strong>
 
-DOM based commands will automatically [retry](/guides/core-concepts/retry-ability) and wait for their corresponding elements to exist before failing.
+基于DOM的命令会自动[retry](/guides/core-concepts/retry-ability) ，并在失败之前等待它们相应的元素存在。
 
 </Alert>
 
-Cypress offers you many robust ways to [query the DOM](/guides/core-concepts/introduction-to-cypress#Querying-Elements), all wrapped with retry-and-timeout logic.
+Cypress为您提供了许多健壮的方法来[查询DOM](/guides/core-concepts/introduction-to-cypress#Querying-Elements)，所有这些都用重试和超时逻辑包装.
 
-Other ways to wait for an element's presence in the DOM is through `timeouts`. Cypress commands have a default timeout of 4 seconds, however, most Cypress commands have [customizable timeout options](/guides/references/configuration#Timeouts). Timeouts can be configured globally or on a per-command basis.
+等待元素在DOM中出现的其他方法是通过`timeouts`。 Cypress命令默认超时4秒，然而，大多数Cypress命令有[可定制的超时选项](/guides/references/configuration#Timeouts). 超时可以全局配置，也可以按每个命令配置.
 
-In [some cases](/guides/core-concepts/interacting-with-elements#Visibility), your DOM element will not be actionable. Cypress gives you a powerful [`{force:true}`](/guides/core-concepts/interacting-with-elements#Forcing) option you can pass to most action commands.
+在 [某些场景](/guides/core-concepts/interacting-with-elements#Visibility)下, 您的DOM元素将不可操作. Cypress给你一个强大的[`{force:true}`](/guides/core-concepts/interacting-with-elements#Forcing) 选项，你可以传递给大多数操作命令。
 
-**Please read** our [Core Concepts Introduction to Cypress](/guides/core-concepts/introduction-to-cypress). This is the single most important guide for understanding how to test with Cypress.
+**请阅读**我们的[Cypress核心概念简介](/guides/core-concepts/introduction-to-cypress). 这是理解如何使用Cypress进行测试的最重要的指南.
 
-## <Icon name="angle-right"></Icon> How do I wait for my application to load?
+## <Icon name="angle-right"></Icon> 我如何等待我的应用程序加载?
 
-We have seen many different iterations of this question. The answers can be varied depending on how your application behaves and the circumstances under which you are testing it. Here are a few of the most common versions of this question.
+我们已经看到了这个问题的许多不同版本。根据应用程序的行为方式和测试环境的不同，答案可能会有所不同。下面是这个问题最常见的几个版本。
 
-**_How do I know if my page is done loading?_**
+**_我如何知道我的页面是否已经加载完毕?_**
 
-When you load your application using `cy.visit()`, Cypress will wait for the `load` event to fire. The [cy.visit()](/api/commands/visit#Usage) command loads a remote page and does not resolve until all of the external resources complete their loading phase. Because we expect your applications to observe differing load times, this command's default timeout is set to 60000ms. If you visit an invalid url or a [second unique domain](/guides/guides/web-security#Same-superdomain-per-test), Cypress will log a verbose yet friendly error message.
+当您使用`cy.visit()`加载应用程序时, Cypress将等待`load`事件触发. [cy.visit()](/api/commands/visit#Usage)命令加载一个远程页面，直到所有外部资源完成加载阶段才解析. 因为我们希望您的应用程序观察不同的加载时间, 该命令的默认超时设置为60000ms. 如果您访问一个无效的url或[第二唯一域](/guides/guides/web-security#Same-superdomain-per-test), Cypress将记录一个详细但友好的错误消息.
 
-**_In CI, how do I make sure my server has started?_**
+**_在CI中，我如何确保我的服务已经启动?_**
 
-We recommend these great modules for this use case:
+对于这个用例，我们推荐这些很棒的模块:
 
 - [`wait-on`](https://www.npmjs.com/package/wait-on)
 - [`start-server-and-test`](https://github.com/bahmutov/start-server-and-test)
 
-**_How can I wait for my requests to be complete?_**
+**_我如何等待我的请求完成?_**
 
-The prescribed way to do this is to define your routes using [cy.intercept()](/api/commands/intercept), create [aliases](/guides/core-concepts/variables-and-aliases#Aliases) for these routes prior to the visit, and _then_ you can explicitly tell Cypress which routes you want to wait on using [cy.wait()](/api/commands/wait#Syntax). **There is no magical way to wait for all of your XHRs or Ajax requests.** Because of the asynchronous nature of these requests, Cypress cannot intuitively know to wait for them. You must define these routes and be able to unambiguously tell Cypress which requests you want to wait on.
+指定的方法是使用[cy.intercept()](/api/commands/intercept)来定义您的路由。在访问之前为这些路由创建[aliases](/guides/core-concepts/variables-and-aliases#Aliases), 然后您可以使用[cy.wait()](/api/commands/wait#Syntax)显式地告诉Cypress您希望等待哪些路由。. **没有什么神奇的方法可以等待所有的XHRs或Ajax请求完成**。 由于这些请求的异步性质，Cypress不能直观地知道要等待它们。您必须定义这些路由，并能够明确地告诉Cypress您希望等待哪些请求。
 
-## <Icon name="angle-right"></Icon> Can I test the HTML `<head>` element?
+## <Icon name="angle-right"></Icon> 我可以测试HTML `<head>`元素吗?
 
-Yes, you sure can. While executing tests in the Test Runner, you can view the entire `window.document` object in your open console using [cy.document()](/api/commands/document). You can even make assertions on the `<head>` element. Check out this example.
+是的，你当然可以。在测试运行程序中执行测试时, 你可以看到整个`window.document`。使用[cy.document()](/api/commands/document)打开控制台中的 `window.document`对象. 您甚至可以在`<head>`元素上进行断言。看看这个例子.
 
 ```html
 <!DOCTYPE html>
@@ -209,25 +207,25 @@ Yes, you sure can. While executing tests in the Test Runner, you can view the en
 ```
 
 ```js
-describe('The Document Metadata', () => {
+describe('document元数据', () => {
   beforeEach(() => {
     cy.visit('/')
   })
 
-  it('looks inside the head content using `cy.document()`', () => {
-    // this will yield the entire window.document object
-    // if you click on DOCUMENT from the command log,
-    // it will output the entire #document to the console
+  it('使用 `cy.document()`查看里面的head内容', () => {
+    // 这将生成整个window.document对象
+    // 如果您从命令日志中单击DOCUMENT,
+    // 它将把整个document输出到控制台
     cy.document()
   })
 
-  // or make assertions on any of the metadata in the head element
+  // 或者对head元素中的任何元数据进行断言
 
-  it('looks inside <title> tag', () => {
+  it('查看<title>标签内部', () => {
     cy.get('head title').should('contain', 'Test the HEAD content')
   })
 
-  it('looks inside <meta> tag for description', () => {
+  it('查看<meta>标签内部的description', () => {
     cy.get('head meta[name="description"]').should(
       'have.attr',
       'content',
@@ -237,16 +235,16 @@ describe('The Document Metadata', () => {
 })
 ```
 
-## <Icon name="angle-right"></Icon> Can I check that a form's HTML form validation is shown when an input is invalid?
+## <Icon name="angle-right"></Icon> 当输入无效时，我可以检查表单的HTML表单验证是否显示?
 
-You certainly can.
+你当然可以。
 
-**Test default validation error**
+**测试默认验证错误r**
 
 ```html
 <form>
   <input type="text" id="name" name="name" required />
-  <button type="submit">Submit</button>
+  <button type="submit">提交</button>
 </form>
 ```
 
@@ -258,20 +256,20 @@ cy.get('#name').then(($input) => {
 })
 ```
 
-**Test custom validation error**
+**测试自定义验证错误**
 
 ```html
 <body>
   <form>
     <input type="email" id="email" name="email" />
-    <button type="submit">Submit</button>
+    <button type="submit">提交</button>
   </form>
   <script>
     const email = document.getElementById('email')
 
     email.addEventListener('input', function (event) {
       if (email.validity.typeMismatch) {
-        email.setCustomValidity('I expect an email!')
+        email.setCustomValidity('请输入邮件地址!')
       } else {
         email.setCustomValidity('')
       }
@@ -286,84 +284,84 @@ cy.get('[type="email"]').type('not_an_email')
 cy.get('[type="submit"]').click()
 cy.get('input:invalid').should('have.length', 1)
 cy.get('[type="email"]').then(($input) => {
-  expect($input[0].validationMessage).to.eq('I expect an email!')
+  expect($input[0].validationMessage).to.eq('请输入邮件地址!')
 })
 ```
 
-For more examples, read the blog post [HTML Form Validation in Cypress](https://glebbahmutov.com/blog/form-validation-in-cypress/).
+更多的例子，请阅读博客文章[Cypress中的HTML表单验证](https://glebbahmutov.com/blog/form-validation-in-cypress/).
 
-## <Icon name="angle-right"></Icon> Can I throttle network speeds using Cypress?
+## <Icon name="angle-right"></Icon> 我可以使用Cypress降低网络速度吗?
 
-You can throttle your network connection by accessing your Developer Tools Network panel. Additionally, you can add your own custom presets by selecting **Custom > Add** from the Network Conditions drawer.
+您可以通过访问Developer Tools network面板来限制网络连接. Additionally, 您可以在网络条件内通过选择 **custom > add **添加自己的自定义预设。
 
-We do not currently offer any options to simulate this during `cypress run`.
+我们目前在`cypress run `时不提供选项来模拟网速.
 
-## <Icon name="angle-right"></Icon> Can I use the new ES7 async / await syntax?
+## <Icon name="angle-right"></Icon> 我可以使用新的 ES7 async / await语法吗?
 
-No. The Command API is not designed in a way that makes this possible. This is not a limitation of Cypress - it is a very conscious and important design decision.
+不。Command API的设计方式并不能实现这一点. 这并不是Cypress的限制 - 这是一个非常有意识和重要的设计决策.
 
-Async / await is sugar around promises and Cypress commands are a mixture of both promises and streams.
+Async / await是围绕promise的语法糖，而Cypress命令是promise和流的混合。
 
-If you're curious please read:
+如果你好奇，请阅读:
 
-- Our [Introduction to Cypress guide](/guides/core-concepts/introduction-to-cypress#Commands-Are-Asynchronous) which explains how the Commands are designed
-- Our [Variables and Aliases guide](/guides/core-concepts/variables-and-aliases) which talks about patterns dealing with async code
+- 我们的[介绍Cypress指南](/guides/core-concepts/introduction-to-cypress#Commands-Are-Asynchronous) 解释了如何设计命令
+- 我们的[变量和别名指南](/guides/core-concepts/variables-and-aliases)讨论了处理异步代码的模式
 
-## <Icon name="angle-right"></Icon> How do I select or query for elements if my application uses dynamic classes or dynamic IDs?
+## <Icon name="angle-right"></Icon> 如果我的应用程序使用动态class或动态id，我如何选择或查询元素?
 
-Don't use classes or ID's. You add `data-*` attributes to your elements and target them that way.
+不要使用class或id。您可以向元素添加'`data-*`属性并以这种方式定位它们.
 
-Read more about the [best practices for selecting elements here](/guides/references/best-practices#Selecting-Elements).
+阅读更多关于[选择元素的最佳实践](/guides/references/best-practices#Selecting-Elements)的内容.
 
-## <Icon name="angle-right"></Icon> I want to run tests only within one specific folder. How do I do this?
+## <Icon name="angle-right"></Icon> 我只想在一个特定的文件夹中运行测试。我该怎么做呢?
 
-You can specify which test files to run during [cypress run](/guides/guides/command-line#cypress-run) by [passing a glob to the `--spec` flag](/guides/guides/command-line#cypress-run-spec-lt-spec-gt) matching the files you want to run. You should be able to pass a glob matching the specific folder where the tests are you want to run.
+您可以指定在[cypress run](/guides/guides/command-line#cypress-run)运行过程中要运行的测试文件，方法是[向`--spec`标志传递一个glob](/guides/guides/command-line#cypress-run-spec-lt-spec-gt)匹配您想要运行的文件. 您应该能够通过与要运行测试的特定文件夹相匹配的全局变量。
 
-This feature is not available when using [cypress open](/guides/guides/command-line#cypress-open) however.
+然而，当使用[cypress open](/guides/guides/command-line#cypress-open)时，该功能不可用.
 
-## <Icon name="angle-right"></Icon> Is there a suggested way or best practice for how I should target elements or write element selectors?
+## <Icon name="angle-right"></Icon> 对于如何定位元素或编写元素选择器，是否有建议的方法或最佳实践?
 
-Yes. Read more about the [best practices for selecting elements here](/guides/references/best-practices#Selecting-Elements).
+是的。阅读更多关于[选择元素的最佳实践](/guides/references/best-practices#Selecting-Elements)内容.
 
-## <Icon name="angle-right"></Icon> Can I prevent Cypress from failing my test when my application throws an uncaught exception error?
+## <Icon name="angle-right"></Icon> 当我的应用程序抛出一个未捕获的异常错误时，我可以防止Cypress失败我的测试吗?
 
-Yes.
+ 是的.
 
-By default Cypress will automatically fail tests whenever an uncaught exception bubbles up out of your app.
+默认情况下，任何时候，你的应用程序抛出一个未捕获的异常, Cypress会自动失败。
 
-Cypress exposes an event for this (amongst many others) that you can listen for to either:
+Cypress为此公开了一个事件(在许多其他事件中)，你可以聆听其中之一:
 
-- Debug the error instance itself
-- Prevent Cypress from failing the test
+- 调试错误实例本身
+- 防止Cypress测试失败
 
-This is documented in detail on the [Catalog Of Events](/api/events/catalog-of-events) page and the recipe [Handling errors](/examples/examples/recipes#Fundamentals).
+详细记录在[事件目录](/api/events/catalog-of-events) 页面和配方[处理错误](/examples/examples/recipes#Fundamentals).
 
-## <Icon name="angle-right"></Icon> Will Cypress fail the test when an application has unhandled rejected promise?
+## <Icon name="angle-right"></Icon> 当一个应用程序没有处理被拒绝的promise时，Cypress会通过测试吗?
 
-By default no, Cypress does not listen to the unhandled promise rejection event in your application, and thus does not fail the test. You can set up your own listener though and fail the test, see our recipe [Handling errors](/examples/examples/recipes#Fundamentals):
-
+默认情况下，是的，Cypress不会在您的应用程序中侦听未处理的promise拒绝事件，因此不会失败. 您可以设置自己的侦听器，但测试失败，请参阅我们的配方[处理错误](/examples/examples/recipes#Fundamentals):
+** 译者：注意，这段信息可能已过期，Cypress 版本7 以上，已调整成 自动失败，[处理错误](/examples/examples/recipes#Fundamentals)中的信息是最新的***
 ```js
-// register listener during cy.visit
-it('fails on unhandled rejection', () => {
+// 在cy.visit期间注册监听器
+it('未处理的拒绝失败', () => {
   cy.visit('/', {
     onBeforeLoad(win) {
       win.addEventListener('unhandledrejection', (event) => {
         const msg = `UNHANDLED PROMISE REJECTION: ${event.reason}`
 
-        // fail the test
+        // 让测试失败
         throw new Error(msg)
       })
     },
   })
 })
 
-// ALTERNATIVE: register listener for this test
-it('fails on unhandled rejection', () => {
+// 可选的: 为这个测试注册侦听器
+it('未处理的拒绝失败', () => {
   cy.on('window:before:load', (win) => {
     win.addEventListener('unhandledrejection', (event) => {
       const msg = `UNHANDLED PROMISE REJECTION: ${event.reason}`
 
-      // fail the test
+      // 让测试失败
       throw new Error(msg)
     })
   })
@@ -371,126 +369,126 @@ it('fails on unhandled rejection', () => {
   cy.visit('/')
 })
 
-// ALTERNATIVE: register listener in every test
+// 可选的:为所有测试中注册听众
 before(() => {
   Cypress.on('window:before:load', (win) => {
     win.addEventListener('unhandledrejection', (event) => {
       const msg = `UNHANDLED PROMISE REJECTION: ${event.reason}`
 
-      // fail the test
+      // 让测试失败
       throw new Error(msg)
     })
   })
 })
 
-it('fails on unhandled rejection', () => {
+it('未处理的拒绝失败', () => {
   cy.visit('/')
 })
 ```
 
-## <Icon name="angle-right"></Icon> Can I override environment variables or create configuration for different environments?
+## <Icon name="angle-right"></Icon> 我可以覆盖环境变量或为不同的环境创建配置吗?
 
-Yes, you can pass configuration to Cypress via environment variables, CLI arguments, JSON files and other means.
+是的，您可以通过环境变量、CLI参数、JSON文件和其他方式将配置传递给Cypress。
 
-[Read the Environment Variables guide.](/guides/guides/environment-variables)
+[请阅读环境变量指南。](/guides/guides/environment-variables)
 
-## <Icon name="angle-right"></Icon> Can I override or change the default user agent the browser uses?
+## <Icon name="angle-right"></Icon> 我可以覆盖或更改浏览器使用的默认user agent吗?
 
-Yes. [You can override this with `userAgent` in your configuration file (`cypress.json` by default).](/guides/references/configuration#Browser)
+是的. [你可以在配置文件中用`userAgent`覆盖它 (默认配置文件`cypress.json`).](/guides/references/configuration#Browser)
 
-## <Icon name="angle-right"></Icon> Can I block traffic going to specific domains? I want to block Google Analytics or other providers.
+## <Icon name="angle-right"></Icon> 我可以阻止流量去特定的域吗?我想阻止谷歌Analytics或其他外部API提供商.
 
-Yes. [You can set this with `blockHosts` in your configuration file (`cypress.json` by default).](/guides/references/configuration#Browser)
+是的. [你可以在配置文件 (默认配置文件`cypress.json`)中用`blockHosts`来设置.](/guides/references/configuration#Browser)
 
-Also, check out our [Stubbing Google Analytics Recipe](/examples/examples/recipes#Stubbing-and-spying).
+另外，请查看我们的[Stubbing谷歌Analytics 配方](/examples/examples/recipes#Stubbing-and-spying).
 
-## <Icon name="angle-right"></Icon> How can I verify that calls to analytics like Google Analytics are being made correct?
+## <Icon name="angle-right"></Icon> 我如何验证调用的分析，如谷歌analytics是正确的?
 
-You can stub their functions and then ensure they're being called.
+你可以模拟他们的功能，然后确保他们被调用.
 
-Check out our [Stubbing Google Analytics Recipe](/examples/examples/recipes#Stubbing-and-spying).
+查看我们的[Stubbing谷歌Analytics配方](/examples/examples/recipes#Stubbing-and-spying).
 
-## <Icon name="angle-right"></Icon> I'm trying to test a chat application. Can I run more than one browser at a time with Cypress?
+## <Icon name="angle-right"></Icon> 我想测试一个聊天应用程序。我可以使用Cypress同时运行多个浏览器吗?
 
-[We've answered this question in detail here.](/guides/references/trade-offs#Multiple-browsers-open-at-the-same-time)
+[我们已经详细地回答了这个问题.](/guides/references/trade-offs#Multiple-browsers-open-at-the-same-time)
 
-## <Icon name="angle-right"></Icon> Can I test a chrome extension? How do I load my chrome extension?
+## <Icon name="angle-right"></Icon> 我可以测试一个chrome扩展吗?我如何加载我的chrome扩展?
 
-Yes. You can test your extensions by [loading them when we launch the browser.](/api/plugins/browser-launch-api).
+是的。你可以通过[启动浏览器时加载它们](/api/plugins/browser-launch-api)来测试你的扩展。.
 
-## <Icon name="angle-right"></Icon> How can I modify or pass arguments used to launch the browser?
+## <Icon name="angle-right"></Icon> 如何修改或传递用于启动浏览器的参数?
 
-You use the [`before:browser:launch`](/api/plugins/browser-launch-api) plugin event.
+你使用[`before:browser:launch`](/api/plugins/browser-launch-api)插件事件.
 
-## <Icon name="angle-right"></Icon> Can I make cy.request() poll until a condition is met?
+## <Icon name="angle-right"></Icon> 我是否可以进行cy.request()轮询，直到满足条件?
 
-Yes. You do it the [same way as any other recursive loop](/api/commands/request#Request-Polling).
+是的。你用[和其他递归循环一样的方法](/api/commands/request#Request-Polling).
 
-## <Icon name="angle-right"></Icon> Can I use the Page Object pattern?
+## <Icon name="angle-right"></Icon> 我可以使用页面对象模式吗?
 
-Yes.
+是的.
 
-The page object pattern isn't actually anything "special". If you're coming from Selenium you may be accustomed to creating instances of classes, but this is completely unnecessary and irrelevant.
+页面对象模式实际上没有任何“特殊”之处。 如果您来自Selenium，那么您可能习惯于创建类的实例，但这完全没有必要，也无关紧要.
 
-The "Page Object Pattern" should really be renamed to: "Using functions and creating custom commands".
+“页面对象模式”实际上应该重命名为:“使用函数和创建自定义命令”.
 
-If you're looking to abstract behavior or roll up a series of actions you can create reusable [Custom Commands with our API](/api/cypress-api/custom-commands). You can also use regular ol' JavaScript functions without any of the ceremony typical with "Page Objects".
+如果你想抽象行为或卷起一系列动作，你可以创建可重用的[API自定义命令](/api/cypress-api/custom-commands). 你也可以使用常规的JavaScript函数，而不用像“页面对象”那样繁琐。.
 
-For those wanting to use page objects, we've highlighted the [best practices ](/api/cypress-api/custom-commands#Best-Practices) for replicating the page object pattern.
+对于那些希望使用页面对象的人，我们突出显示了用于复制页面对象模式的[最佳实践](/api/cypress-api/custom-commands#Best-Practices).
 
-## <Icon name="angle-right"></Icon> Why do my Cypress tests pass locally but not in CI?
+## <Icon name="angle-right"></Icon> 为什么我的Cypress测试在本地通过了，但在CI中没有通过?
 
-There are many reasons why tests may fail in CI but pass locally. Some of these include:
+有很多原因导致测试在CI中失败，但在本地通过。其中包括:
 
-- There is a problem isolated to the Electron browser (`cypress run` by default runs in the Electron browser)
-- A test failure in CI could be highlighting a bug in your CI build process
-- Variability in timing when running your application in CI (For example, network requests that resolve within the timeout locally may take longer in CI)
-- Machine differences in CI versus your local machine -- CPU resources, environment variables, etc.
+- Electron浏览器有一个孤立问题(`cypress run`默认运行在Electron浏览器)
+- CI中的测试失败可能会突出显示CI构建过程中的错误
+- 在CI中运行应用程序时的时间变量 (例如，在本地超时内解析的网络请求在CI中可能需要更长的时间)
+- CI与本地机器之间的机器差异——CPU资源、环境变量等.
 
-To troubleshoot why tests are failing in CI but passing locally, you can try these strategies:
+要排除测试在CI中失败但在本地通过的原因，可以尝试以下策略:
 
-- Test locally with Electron to identify if the issue is specific to the browser.
-- You can also identify browser-specific issues by running in a different browser in CI with the `--browser` flag.
-- Review your CI build process to ensure nothing is changing with your application that would result in failing tests.
-- Remove time-sensitive variability in your tests. For example, ensure a network request has finished before looking for the DOM element that relies on the data from that network request. You can leverage [aliasing](/guides/core-concepts/variables-and-aliases#Aliases) for this.
-- Ensure video recording and/or screenshots are enabled for the CI run and compare the recording to the Command Log when running the test locally.
+- 使用Electron在本地进行测试，以确定问题是否特定于浏览器.
+- 您还可以通过在CI中使用`--browser`标志运行不同的浏览器来识别特定于浏览器的问题.
+- 检查CI构建过程，确保应用程序没有发生任何可能导致测试失败的更改.
+- 删除测试中对时间敏感的变量. 例如，在查找依赖于网络请求数据的DOM元素之前，确保网络请求已经完成. 你可以利用[别名](/guides/core-concepts/variables-and-aliases#Aliases).
+- 确保为CI运行启用了视频录制或（并）屏幕截图，并在本地运行测试时将录制与命令日志进行比较.
 
-## <Icon name="angle-right"></Icon> Why are my video recordings freezing or dropping frames when running in CI?
+## <Icon name="angle-right"></Icon> 为什么我CI时录制的视频发现测试运行冻结或丢帧?
 
-Videos recorded on Continuous Integration may have frozen or dropped frames if there are not enough resources available when running the tests in your CI container. Like with any application, there needs to be the required CPU to run Cypress and record video. You can run your tests with [memory and CPU logs enabled](/guides/references/troubleshooting#Log-memory-and-CPU-usage) to identify and evaluate the resource utilization within your CI.
+如果在CI容器中运行测试时没有足够的可用资源，则在持续集成上录制的视频可能会冻结或掉帧. 与任何应用程序一样，需要有所需的CPU来运行Cypress并录制视频. 您可以在[启用内存和CPU日志](/guides/references/troubleshooting#Log-memory-and-CPU-usage)的情况下运行测试，以确定和评估CI中的资源利用率。
 
-If you are experiencing this issue, we recommend switching to a more powerful CI container or provider.
+如果遇到这个问题，我们建议您切换到功能更强大的CI容器或CI提供商.
 
-## <Icon name="angle-right"></Icon> What can I do if my tests crash or hang on CI?
+## <Icon name="angle-right"></Icon> 如果CI中测试崩溃或挂起，该怎么办?
 
-As some users have noted, a longer test has a higher chance of hanging or even crashing when running on CI. When a test runs for a long period of time, its commands and the application itself might allocate more memory than available, causing the crash. The exact risk of crashing depends on the application and the available hardware resources. While there is no single time limit that would solve this problem, in general we recommend splitting spec files to run in under one minute each. You can read the blog post [Make Cypress Run Faster by Splitting Specs](https://glebbahmutov.com/blog/split-spec/) to learn how to split a spec file.
+正如一些用户所注意到的，在CI上运行时，较长的测试挂起甚至崩溃的几率更高.当测试长时间运行时，它的命令和应用程序本身可能会分配比可用内存更多的内存，从而导致崩溃. 崩溃的确切风险取决于应用程序和可用的硬件资源.虽然没有单一的时间限制来解决这个问题，但一般来说，我们建议拆分spec文件，每个文件的运行时间不超过一分钟. 你可以阅读博客文章[通过拆分spec使Cypress运行得更快](https://glebbahmutov.com/blog/split-spec/) 来学习如何拆分spec文件。
 
-You can further split individual long-running tests. For example, you can verify parts of the longer user feature in the separate tests as described in [Split a very long Cypress test into shorter ones using App Actions](https://www.cypress.io/blog/2019/10/29/split-a-very-long-cypress-test-into-shorter-ones-using-app-actions/).
+您可以进一步分割各个长时间运行的测试. 例如，您可以在单独的测试中验证较长的用户功能的部分，如[使用App Actions将非常长的Cypress测试分割为较短的测试](https://www.cypress.io/blog/2019/10/29/split-a-very-long-cypress-test-into-shorter-ones-using-app-actions/) 中所述。.
 
-## <Icon name="angle-right"></Icon> How can I parallelize my runs?
+## <Icon name="angle-right"></Icon> 我如何让测试并行执行?
 
-You can read more about parallelization [here](/guides/guides/parallelization).
+你可以在[这里](/guides/guides/parallelization)阅读更多关于并行化的内容。.
 
-## <Icon name="angle-right"></Icon> Can I run a single test or group of tests?
+## <Icon name="angle-right"></Icon> 我可以运行单个测试或一组测试吗?
 
-You can run a group of tests or a single test by placing an [`.only`](/guides/core-concepts/writing-and-organizing-tests#Excluding-and-Including-Tests) on a test suite or specific test.
+您可以通过在测试集或特定测试上放置[`.only`](/guides/core-concepts/writing-and-organizing-tests#Excluding-and-Including-Tests)来运行一组测试或单个测试.
 
-You can run a single test file or group of tests by passing the `--spec` flag to [cypress run](/guides/guides/command-line#cypress-run).
+您可以通过传递`--spec`标志到[cypress run](/guides/guides/command-line#cypress-run)来运行单个测试文件或一组测试。.
 
-## <Icon name="angle-right"></Icon> How do I test uploading a file?
+## <Icon name="angle-right"></Icon> 如何测试上传文件?
 
-It is possible to upload files in your application but it's different based on how you've written your own upload code. Many people had success by using the community plugin [cypress-file-upload](https://github.com/abramenal/cypress-file-upload). This plugin adds a custom child command `.attachFile` that you call from the test.
+在你的应用程序中上传文件是可能的，但这取决于你如何编写自己的上传代码。 许多人通过使用社区插件[cypress-file-upload](https://github.com/abramenal/cypress-file-upload)获得了成功. 这个插件添加了一个自定义子命令`.attachFile`。
 
 ```javascript
-// attaches the file cypress/fixtures/data.json
+// 附加文件 cypress/fixtures/data.json
 cy.get('[data-cy="file-input"]').attachFile('data.json')
 ```
 
-You can read more about uploading files in [this issue](https://github.com/cypress-io/cypress/issues/170).
+你可以在[这个问题](https://github.com/cypress-io/cypress/issues/170)中阅读更多关于上传文件的内容。.
 
-## <Icon name="angle-right"></Icon> What is the projectId for?
+## <Icon name="angle-right"></Icon> projectId是做什么用的?
 
-The `projectId` is a 6 character string that helps identify your project once you've [set up your tests to record](/guides/dashboard/runs). It's generated by Cypress and typically is found in your [configuration file (`cypress.json` by default)](/guides/references/configuration) file.
+“projectId”是一个6个字符的字符串，一旦你[设置好要记录的测试](/guides/dashboard/runs)，它就可以帮助识别你的项目。它是由Cypress生成的，通常是在您的[配置文件(默认是`Cypress.json`)](/guides/references/configuration) 中.
 
 ```json
 {
@@ -498,124 +496,124 @@ The `projectId` is a 6 character string that helps identify your project once yo
 }
 ```
 
-For further detail see the [Identification](/guides/dashboard/projects#Identification) section of the [Dashboard Service](/guides/dashboard/introduction) docs.
+要了解更多细节，请参阅[Dashboard 服务](/guides/dashboard/projects#Identification)文档中的[Identification](/guides/dashboard/introduction)部分.
 
-## <Icon name="angle-right"></Icon> What is a Record Key?
+## <Icon name="angle-right"></Icon> 什么是记录密钥?
 
-A _Record Key_ is a GUID that's generated automatically by Cypress once you've [set up your tests to record](/guides/dashboard/runs). It helps identify your project and authenticate that your project is even _allowed_ to record tests.
+一个 _记录密钥_ 是一个GUID，它当你已经[设置记录你的测试](/guides/dashboard/runs)，由Cypress自动生成的。 它有助于识别您的项目，并验证您的项目是否 _允许_ 记录测试.
 
-You can find your project's record key inside of the _Settings_ tab in the Test Runner.
+您可以在Test Runner中的_Settings_选项卡中找到项目的记录密钥.
 
 <DocsImage src="/img/dashboard/record-key-shown-in-desktop-gui-configuration.jpg" alt="Record Key in Configuration Tab" ></DocsImage>
 
-For further detail see the [Identification](/guides/dashboard/projects#Identification) section of the [Dashboard Service](/guides/dashboard/introduction) docs.
+要了解更多细节，请参阅[Dashboard 服务](/guides/dashboard/projects#Identification)文档中的[Identification](/guides/dashboard/introduction)部分..
 
-## <Icon name="angle-right"></Icon> How do I check that an email was sent out?
+## <Icon name="angle-right"></Icon> 我如何检查邮件是否已发出?
 
 <Alert type="warning">
 
 <strong class="alert-header">Anti-Pattern</strong>
 
-Don't try to use your UI to check email. Instead opt to programmatically use 3rd party APIs or talk directly to your server. Read about this [best practice](/guides/references/best-practices#Visiting-external-sites) here.
+不要尝试使用UI去查看邮件。相反，选择以编程方式使用第三方api或直接与服务器对话. 在这里阅读有关[最佳实践](/guides/references/best-practices#Visiting-external-sites).
 
 </Alert>
 
-1. If your application is running locally and is sending the emails directly through an SMTP server, you can use a temporary local test SMTP server running inside Cypress Test Runner. Read the blog post ["Testing HTML Emails using Cypress"](https://www.cypress.io/blog/2021/05/11/testing-html-emails-using-cypress/) for details.
-2. If your application is using a 3rd party email service, or you cannot stub the SMTP requests, you can use a test email inbox with an API access. Read the blog post ["Full Testing of HTML Emails using SendGrid and Ethereal Accounts"](https://www.cypress.io/blog/2021/05/24/full-testing-of-html-emails-using-ethereal-accounts/) for details.
+1. 如果您的应用程序在本地运行并直接通过SMTP服务器发送电子邮件，您可以使用在Cypress test Runner中运行的临时本地测试SMTP服务器。详情请阅读博客文章[“使用Cypress测试HTML邮件”](https://www.cypress.io/blog/2021/05/11/testing-html-emails-using-cypress/).
+2. 如果您的应用程序正在使用第三方电子邮件服务，或者您不能“挡板”SMTP请求，那么您可以使用带有API访问的测试电子邮件收件箱。详情请阅读博客文章[“使用SendGrid和Ethereal账户测试HTML邮件”](https://www.cypress.io/blog/2021/05/24/full-testing-of-html-emails-using-ethereal-accounts/) .
 
-Cypress can even load the received HTML email in its browser to verify the email's functionality and visual style:
+Cypress甚至可以在浏览器中加载接收到的HTML电子邮件，以验证电子邮件的功能和视觉风格:
 
 <DocsImage
   src="/img/guides/references/email-test.png"
   title="The HTML email loaded during the test"
   alt="The test finds and clicks the Confirm registration button"></DocsImage>
 
-3. You can use a 3rd party email service that provides temporary email addresses for testing. Some of these services even offer a [Cypress plugin](/plugins/directory#Email) to access emails.
+3. 您可以使用第三方电子邮件服务提供临时电子邮件地址进行测试. 有些服务甚至提供了一个[Cypress插件](/plugins/directory#Email)来访问电子邮件.
 
-## <Icon name="angle-right"></Icon> How do I wait for multiple requests to the same url?
+## <Icon name="angle-right"></Icon>我如何等待对同一个url的多个请求?
 
-You should set up an alias (using [`.as()`](/api/commands/as)) to a single [`cy.intercept()`](/api/commands/intercept) that matches all of the XHRs. You can then [`cy.wait()`](/api/commands/wait) on it multiple times. Cypress keeps track of how many matching requests there are.
+您应该设置一个别名(使用[`.as()`](/api/commands/as))，以匹配所有XHRs的单个[`cy.intercept()`](/api/commands/intercept). 然后可以对它进行多次 [`cy.wait()`](/api/commands/wait)操作. Cypress会跟踪有所有匹配的请求.
 
 ```javascript
 cy.intercept('/users*').as('getUsers')
-cy.wait('@getUsers') // Wait for first GET to /users/
+cy.wait('@getUsers') // 等待第一次 GET to /users/
 cy.get('#list>li').should('have.length', 10)
 cy.get('#load-more-btn').click()
-cy.wait('@getUsers') // Wait for second GET to /users/
+cy.wait('@getUsers') // 等待第二次 GET to /users/
 cy.get('#list>li').should('have.length', 20)
 ```
 
-## <Icon name="angle-right"></Icon> How do I seed / reset my database?
+## <Icon name="angle-right"></Icon> 我如何在测试数据库上 造数或重置?
 
-You can use [`cy.request()`](/api/commands/request), [`cy.exec()`](/api/commands/exec), or [`cy.task()`](/api/commands/task) to talk to your back end to seed data.
+您可以使用[`cy.request()`](/api/commands/request), [`cy.exec()`](/api/commands/exec), 或 [`cy.task()`](/api/commands/task)与您的后端就造数通信.
 
-You could also stub requests directly using [`cy.intercept()`](/api/commands/intercept) which avoids ever even needing to fuss with your database.
+你也可以直接使用[`cy.intercept()`](/api/commands/intercept)将模拟请求响应，这样就避免了数据库的麻烦.
 
-## <Icon name="angle-right"></Icon> How do I test elements inside an iframe?
+## <Icon name="angle-right"></Icon> 如何测试iframe中的元素?
 
-We have an [open proposal](https://github.com/cypress-io/cypress/issues/685) to expand the APIs to support "switching into" an iframe and then back out of them.
+我们有一个[开放提案](https://github.com/cypress-io/cypress/issues/685)来扩展api，以支持“切换到”iframe，然后退出它们.
 
-## <Icon name="angle-right"></Icon> How do I preserve cookies / localStorage in between my tests?
+## <Icon name="angle-right"></Icon> 如何在测试之间保存 cookie 和 localStorage?
 
-By default, Cypress automatically [clears all cookies **before** each test](/api/commands/clearcookies) to prevent state from building up.
+默认情况下，Cypress自动[在每次测试前清除所有cookie](/api/commands/clearcookies)以防止状态构建。
 
-You can preserve specific cookies across tests using the [Cypress.Cookies api](/api/cypress-api/cookies):
+你可以使用[Cypress.Cookies api](/api/cypress-api/cookies)，在多个测试之间保存特定的cookie :
 
 ```javascript
-// now any cookie with the name 'session_id' will
-// not be cleared before each test runs
+// 现在，任何名为“session_id”的cookie都
+// 不会在每次测试运行前不被清除
 Cypress.Cookies.defaults({
   preserve: 'session_id',
 })
 ```
 
-You **cannot** currently preserve localStorage across tests and can read more in [this issue](https://github.com/cypress-io/cypress/issues/461#issuecomment-325402086).
+您目前**无法** 跨测试 保留localStorage，可以在[此问题](https://github.com/cypress-io/cypress/issues/461#issuecomment-325402086)中读取更多信息。.
 
-## <Icon name="angle-right"></Icon> Some of my elements animate in; how do I work around that?
+## <Icon name="angle-right"></Icon> 我的一些元素进入动画;我该如何解决这个问题呢?
 
-Oftentimes you can usually account for animation by asserting [`.should('be.visible')`](/api/commands/should) or [another assertion](/guides/core-concepts/introduction-to-cypress#Assertions) on one of the elements you expect to be animated in.
+通常你可以通过断言 [`.should('be.visible')`](/api/commands/should) 或 [其他断言](/guides/core-concepts/introduction-to-cypress#Assertions)来期望进入动画的元素的最后状态.
 
 ```javascript
-// assuming a click event causes the animation
+// 假设一个点击事件导致了动画
 cy.get('.element').click().should('not.have.class', 'animating')
 ```
 
-If the animation is especially long, you could extend the time Cypress waits for the assertion to pass by increasing the `timeout` of the previous command before the assertion.
+如果动画特别长，您可以通过增加断言之前的前一个命令的`timeout`来延长Cypress等待断言通过的时间.
 
 ```javascript
-cy.get('button', { timeout: 10000 }) // wait up to 10 seconds for this 'button' to exist
-  .should('be.visible') // and to be visible
+cy.get('button', { timeout: 10000 }) // 等待这个“按钮”存在10秒
+  .should('be.visible') //并且是可见的
 
 cy.get('.element')
   .click({ timeout: 10000 })
   .should('not.have.class', 'animating')
-// wait up to 10 seconds for the .element to not have 'animating' class
+// 最长等待10秒.element将没有'animating'class
 ```
 
-However, most of the time you don't even have to worry about animations. Why not? Cypress will [automatically wait](/guides/core-concepts/interacting-with-elements) for elements to stop animating prior to interacting with them via action commands like `.click()` or `.type()`.
+然而，大多数时候你甚至不需要担心动画. 为什么不需要呢? Cypress通过动作命令，如`.click()`或`.type()`与元素交互，将[自动等待](/guides/core-concepts/interacting-with-elements)元素停止动画.
 
-## <Icon name="angle-right"></Icon> Can I test anchor links that open in a new tab?
+## <Icon name="angle-right"></Icon> 我可以测试会打开新标签页的link吗?
 
-Cypress does not and may never have multi-tab support for various reasons.
+由于各种原因，Cypress不支持也可能永远不支持多标签（tab）页。
 
-Luckily there are lots of clear and safe workarounds that enable you to test this behavior in your application.
+幸运的是，有许多清晰和安全的变通方法可以让您在应用程序中测试此行为。
 
-[Read through the recipe on tab handling and links to see how to test anchor links.](/examples/examples/recipes#Testing-the-DOM)
+[请阅读关于标签页处理和链接的菜谱，了解如何测试link](/examples/examples/recipes#Testing-the-DOM)
 
-## <Icon name="angle-right"></Icon> Can I dynamically test multiple viewports?
+## <Icon name="angle-right"></Icon> 我可以动态测试多个视口吗?
 
-Yes, you can. We provide an [example here](/api/commands/viewport#Width-Height).
+是的,你可以。我们提供了一个[示例](/api/commands/viewport#Width-Height).
 
-## <Icon name="angle-right"></Icon> Can I run the same tests on multiple subdomains?
+## <Icon name="angle-right"></Icon> 我可以在多个子域上运行相同的测试吗?
 
-Yes. In this example, we loop through an array of urls and make assertions on the logo.
+是的。在这个例子中，我们循环了一个url数组并在logo上进行断言.
 
 ```javascript
 const urls = ['https://docs.cypress.io', 'https://www.cypress.io']
 
 describe('Logo', () => {
   urls.forEach((url) => {
-    it(`Should display logo on ${url}`, () => {
+    it(`应该在多个${url}上显示logo`, () => {
       cy.visit(url)
       cy.get('#logo img').should('have.attr', 'src').and('include', 'logo')
     })
@@ -625,144 +623,144 @@ describe('Logo', () => {
 
 <DocsImage src="/img/faq/questions/command-log-of-dynamic-url-test.png" alt="Command Log multiple urls" ></DocsImage>
 
-## <Icon name="angle-right"></Icon> How do I require or import node modules in Cypress?
+## <Icon name="angle-right"></Icon> 如何在Cypress中 require 或 import node的模块?
 
-The code you write in Cypress is executed in the browser, so you can import or require JS modules, _but_ only those that work in a browser.
+你用Cypress编写的代码是在浏览器中执行的，所以你可以 require 或 import 任意能在浏览器中工作的JS模块.
 
-You can `require` or `import` them as you're accustomed to. We preprocess your spec files with webpack and Babel.
+你可以像你习惯的那样`require` or `import`它们. 我们用webpack和Babel对你的spec文件进行预处理。
 
-We recommend utilizing one of the following to execute code outside of the browser. Furthermore, you can use your own Node version during code excecution by setting the [nodeVersion](/guides/references/configuration#Node-version) in your configuration.
+我们建议使用以下方法之一在浏览器外执行代码. 此外，通过在配置中设置[nodeVersion](/guides/references/configuration#Node-version)，您可以在代码执行期间使用自己的Node版本.
 
-- [`cy.task()`](/api/commands/task) to run code in Node via the [pluginsFile](/guides/references/configuration#Folders-Files)
-- [`cy.exec()`](/api/commands/exec) to execute a shell command
+- [`cy.task()`](/api/commands/task)通过[pluginsFile](/guides/references/configuration#Folders-Files)在Node中运行代码
+- [`cy.exec()`](/api/commands/exec)执行shell命令
 
-[Check out the "Node Modules" example recipe.](/examples/examples/recipes#Fundamentals)
+[查看“Node Modules”示例菜谱.](/examples/examples/recipes#Fundamentals)
 
-## <Icon name="angle-right"></Icon> Is there a way to give a proper SSL certificate to your proxy so the page doesn't show up as "not secure"?
+## <Icon name="angle-right"></Icon> 有没有办法给你的代理提供正确的SSL证书，这样页面就不会显示为“不安全”?
 
-No, Cypress modifies network traffic in real time and therefore must sit between your server and the browser. There is no other way for us to achieve that.
+没有，Cypress实时修改网络流量，因此必须位于服务器和浏览器之间. 我们没有其他的方法来实现这一点.
 
-## <Icon name="angle-right"></Icon> Is there any way to detect if my app is running under Cypress?
+## <Icon name="angle-right"></Icon> 有没有办法检测我的应用程序是否在Cypress下运行?
 
-You can check for the existence of `window.Cypress`, in your **application code**.
+在你的**应用程序代码**中，可以检查`window.Cypress`是否存在。。
 
-Here's an example:
+这里有一个例子:
 
 ```javascript
 if (window.Cypress) {
-  // we are running in Cypress
-  // so do something different here
+  // 我们在Cypress中运行
+  // 可以在这里做些不同的事情
   window.env = 'test'
 } else {
-  // we are running in a regular ol' browser
+  // 我们在一个常规场景中的浏览器中运行
 }
 ```
 
-## <Icon name="angle-right"></Icon> Do you allow before, beforeEach, after, or afterEach hooks?
+## <Icon name="angle-right"></Icon> 测试支持 before, before each, after, or after each钩子 吗?
 
-Yes. You can read more [here](/guides/core-concepts/writing-and-organizing-tests#Hooks).
+是的。你可以在[这里](/guides/core-concepts/writing-and-organizing-tests#Hooks)阅读更多.
 
-## <Icon name="angle-right"></Icon> I tried to install Cypress in my CI, but I get the error: `EACCES: permission denied`.
+## <Icon name="angle-right"></Icon> 我试图在我的CI中 安装Cypress，但我得到了错误: `EACCES: permission denied`.
 
-First, make sure you have [Node](https://nodejs.org) installed on your system. `npm` is a Node package that is installed globally by default when you install Node and is required to install our [`cypress` npm package](/guides/guides/command-line).
+首先，确保您的系统上安装了[Node](https://nodejs.org) 。 `npm`是一个Node包，当你安装Node时默认全局安装，并且需要安装我们的[`cypress` npm 包](/guides/guides/command-line).
 
-Next, you'd want to check that you have the proper permissions for installing on your system or you may need to run `sudo npm install cypress`.
+接下来，你需要检查你是否有正确的安装权限，或者你可能需要运行 `sudo npm install cypress`.
 
-## <Icon name="angle-right"></Icon> Is there a way to test that a file got downloaded? I want to test that a button click triggers a download.
+## <Icon name="angle-right"></Icon> 有没有一种方法来测试一个文件被下载了? 我想测试一下点击按钮是否会触发下载.
 
-There are a lot of ways to test this, so it depends. You'll need to be aware of what actually causes the download, then think of a way to test that mechanism.
+有很多方法可以测试，所以要视情况而定。您需要了解导致下载的实际机制，然后考虑测试该机制的方法.
 
-If your server sends specific disposition headers which cause a browser to prompt for download, you can figure out what URL this request is made to, and use [cy.request()](/api/commands/request) to hit that directly. Then you can test that the server send the right response headers.
+如果您的服务器发送特定的配置头，导致浏览器提示下载，您可以找出这个请求的URL，并使用[cy.request()](/api/commands/request)直接命中该请求. 然后您可以测试服务器是否发送了正确的响应头.
 
-If it's an anchor that initiates the download, you could test that it has the right `href` property. As long as you can verify that clicking the button is going to make the right HTTP request, that might be enough to test for.
+如果它是一个启动下载的link，你可以测试它是否有正确的`href`属性. 只要您能够验证单击按钮将发出正确的HTTP请求，这就足够进行测试了。
 
-Finally, if you want to really download the file and verify its contents, see our [File download](https://github.com/cypress-io/cypress-example-recipes#testing-the-dom) recipe.
+最后，如果你想真正下载文件并验证其内容，请查看我们的[文件下载](https://github.com/cypress-io/cypress-example-recipes#testing-the-dom) 食谱.
 
-In the end, it's up to you to know your implementation and to test enough to cover everything.
+最后，取决于您是否了解您的实现并进行足够的测试以覆盖所有内容.
 
-## <Icon name="angle-right"></Icon> Is it possible to catch the promise chain in Cypress?
+## <Icon name="angle-right"></Icon> 有可能在Cypress中 ，catch promise吗?
 
-No. You cannot add a `.catch` error handler to a failed command. [Read more about how the Cypress commands are not Promises](/guides/core-concepts/introduction-to-cypress#Commands-Are-Not-Promises)
+不能。不能为命令添加`catch`捕获失败。 [阅读更多关于Cypress的命令不是promise](/guides/core-concepts/introduction-to-cypress#Commands-Are-Not-Promises)
 
-## <Icon name="angle-right"></Icon> Is there a way to modify the screenshots/video resolution?
+## <Icon name="angle-right"></Icon> 有办法修改截屏或视频的分辨率吗?
 
-There is an [open issue](https://github.com/cypress-io/cypress/issues/587) for more easily configuring this.
+有一个[open中的问题]((https://github.com/cypress-io/cypress/issues/587))在讨论是否更简单配置.
 
-You can modify the screenshot and video size when running headlessly with [this workaround](/api/plugins/browser-launch-api#Set-screen-size-when-running-headless).
+你可以在无头运行时修改屏幕截图和视频大小，采用[这个变通方法](/api/plugins/browser-launch-api#Set-screen-size-when-running-headless).
 
-## <Icon name="angle-right"></Icon> Does Cypress support ES7?
+## <Icon name="angle-right"></Icon>Cypress支持ES7吗?
 
-Yes. You can customize how specs are processed by using one of our [preprocessor plugins](/plugins/directory) or by [writing your own custom preprocessor](/api/plugins/preprocessors-api).
+是的。你可以使用我们的一个[预处理器插件](/plugins/directory)或 [编写自己的自定义预处理器](/api/plugins/preprocessors-api)来 自定义spec 是如何预处理处理 .
 
-Typically you'd reuse your existing Babel and webpack configurations.
+通常情况下，你会重用现有的Babel和webpack配置.
 
-## <Icon name="angle-right"></Icon> How does one determine what the latest version of Cypress is?
+## <Icon name="angle-right"></Icon> 如何确定最新版本的Cypress是什么?
 
-There are a few ways.
+有几种方法.
 
-- The easiest way is probably to check our [changelog](/guides/references/changelog).
-- You can also check the latest version [here](https://download.cypress.io/desktop.json).
-- It's also always in our [repo](https://github.com/cypress-io/cypress).
+- 最简单的方法可能是查看我们的[更新日志](/guides/references/changelog).
+- 你也可以在[这里](https://download.cypress.io/desktop.json) 查看最新版本.
+- 它也一直在我们的[代码库]中(https://github.com/cypress-io/cypress).
 
-## <Icon name="angle-right"></Icon> Is there an ESLint plugin for Cypress or a list of globals?
+## <Icon name="angle-right"></Icon> Cypress有一个ESLint插件或一个全局变量清单吗?
 
-Yes! Check out our [ESLint plugin](https://github.com/cypress-io/eslint-plugin-cypress). It will set up all the globals you need for running Cypress, including browser globals and [Mocha](https://mochajs.org/) globals.
+是的!看看我们的[ESLint插件](https://github.com/cypress-io/eslint-plugin-cypress). 它将设置运行Cypress所需的所有全局变量，包括浏览器全局变量和[Mocha](https://mochajs.org/) 全局变量.
 
-## <Icon name="angle-right"></Icon> When I visit my site directly, the certificate is verified, however the browser launched through Cypress is showing it as "Not Secure". Why?
+## <Icon name="angle-right"></Icon> 当我直接访问我的网站时，证书被验证，但是通过Cypress启动的浏览器显示它“不安全”。为什么?
 
-When using Cypress to test an HTTPS site, you might see a browser warning next to the browser URL. This is normal. Cypress modifies the traffic between your server and the browser. The browser notices this and displays a certificate warning. However, this is purely cosmetic and does not alter the way your application under test runs in any way, so you can safely ignore this warning. The network traffic between Cypress and the backend server still happens via HTTPS.
+当使用Cypress测试HTTPS站点时，您可能会在浏览器URL旁边看到一个浏览器警告. 这是正常的。Cypress修改您的服务器和浏览器之间的通信. 浏览器注意到这一点并显示一个证书警告.然而，这纯粹是装饰，不会以任何方式改变测试中的应用程序的运行方式，所以您可以安全地忽略此警告. Cypress和后端服务器之间的网络通信仍然是通过HTTPS进行的.
 
-See also the [Web Security](/guides/guides/web-security) guide.
+参见[Web安全](/guides/guides/web-security)指南.
 
-## <Icon name="angle-right"></Icon> Is there an option to run Cypress in CI with Developer Tools open? We want to track network and console issues.
+## <Icon name="angle-right"></Icon> 是否可以在开发人员工具打开的情况下在CI中运行Cypress? 我们想跟踪 network 和console 输出的问题.
 
-No. There is not currently a way to run Cypress in `cypress run` with Developer Tools open. Refer to [this issue](https://github.com/cypress-io/cypress/issues/2024) if you'd like this feature.
+不。目前没有一种方式运行Cypress在` Cypress运行`时，打开开发者工具. 如果你喜欢这个功能，请参考[这个问题](https://github.com/cypress-io/cypress/issues/2024).
 
-You may try running the tests locally and [select the Electron browser](/guides/guides/launching-browsers#Electron-Browser), that is as close as you will get with Developer Tools open and replicating the environment that was run during `cypress run`.
+你可以试着在本地运行测试并[选择 Electron浏览器](/guides/guides/launching-browsers#Electron-Browser)，这就近似于 你打开开发者员工具并复制`cypress run`期间运行的环境一样。
 
-## <Icon name="angle-right"></Icon> How do I run the server and tests together and then shutdown the server?
+## <Icon name="angle-right"></Icon> 如何同时运行前端启动服务和测试，然后关闭服务?
 
-To start the server, run the tests and then shutdown the server we recommend [these npm tools](/guides/continuous-integration/introduction#Boot-your-server).
+要启动前端服务，并运行测试，然后关闭前端服务，我们推荐[这些npm工具](/guides/continuous-integration/introduction#Boot-your-server).
 
-## <Icon name="angle-right"></Icon> Can I test my Electron app?
+## <Icon name="angle-right"></Icon> 我可以测试我的Electron应用程序吗?
 
-Testing your Electron app will not 'just work', as Cypress is designed to test anything that runs in a browser and Electron is a browser + Node.
+测试你的Electron子应用程序不会“只是工作”，因为Cypress是设计来测试任何运行在浏览器的应用。而Electron是一个浏览器应用+Node应用。
 
-That being said, we use Cypress to test our own Desktop app's front end - by stubbing events from Electron. These tests are open source so you can check them out [here](https://github.com/cypress-io/cypress/tree/develop/packages/desktop-gui/cypress/integration).
+也就是说，我们使用Cypress来测试我们自己的桌面应用程序的前端——通过模拟拦截Electron的事件. 这些测试是开源的，所以你可以在 [这里](https://github.com/cypress-io/cypress/tree/develop/packages/desktop-gui/cypress/integration) 查看它们 。
 
-## <Icon name="angle-right"></Icon> I found a bug! What do I do?
+## <Icon name="angle-right"></Icon>我发现了一个漏洞!我该怎么办?
 
-- Search existing [open issues](https://github.com/cypress-io/cypress/issues), it may already be reported!
-- Update Cypress. Your issue may have [already been fixed](/guides/references/changelog).
-- [open an issue](https://github.com/cypress-io/cypress/issues/new/choose). Your best chance of getting a bug looked at quickly is to provide a repository with a reproducible bug that can be cloned and run.
+- 搜索现有的[open中的问题](https://github.com/cypress-io/cypress/issues)，它可能已经被报告!
+- 更新Cypress。您的问题可能已经[被修复](/guides/references/changelog).
+- [打开一个问题](https://github.com/cypress-io/cypress/issues/new/choose). 快速查看bug的最佳机会是提供一个存储库，其中包含可以克隆和运行的可复制bug。
 
-## <Icon name="angle-right"></Icon> What are your best practices for organizing tests?
+## <Icon name="angle-right"></Icon> 组织测试的最佳实践是什么?
 
-We see organizations _starting_ with Cypress by placing end-to-end tests in a separate repo. This is a great practice that allows someone on the team to prototype a few tests and evaluate Cypress within minutes. As the time passes and the number of tests grows, we _strongly suggest_ moving end-to-end tests to live right alongside your front end code. This brings many benefits:
+我们看到组织开始Cypress时，通过在单独的代码库中放置端到端测试. 这是一个很棒的实践，可以让团队成员在几分钟内完成一些测试原型，并对Cypress进行评估. 随着时间的推移和测试数量的增加，我们强烈建议将端到端测试移到前端代码旁边. 这带来了很多好处:
 
-- engages developers in writing end-to-end tests sooner
-- keeps tests and the features they test in sync
-- tests can be run every time the code changes
-- allows code sharing between the application code and the tests (like selectors)
+- 让开发人员更快地编写端到端测试
+- 保持测试和所测试的功能同步
+- 每次代码更改时都可以运行测试
+- 允许在应用程序代码和测试之间共享代码(如选择器)
 
-## <Icon name="angle-right"></Icon> What is the right balance between custom commands and utility functions?
+## <Icon name="angle-right"></Icon> 自定义命令和实用函数之间的如何 正确平衡?
 
-There is already a great section in [Custom Commands](/api/cypress-api/custom-commands#Best-Practices) guide that talks about trade-offs between custom commands and utility functions. We feel reusable functions in general are a way to go. Plus they do not confuse [IntelliSense like custom commands do](https://github.com/cypress-io/cypress/issues/1065).
+在[自定义命令](/api/cypress-api/custom-commands#Best-Practices)指南中，已经有一大块内容讨论了自定义命令和实用函数之间的权衡. 我们认为可重用的功能通常是可行的。另外，它们不会混淆[像自定义命令一样的智能感知](https://github.com/cypress-io/cypress/issues/1065).
 
-## <Icon name="angle-right"></Icon> Can I print the list of commands from a test in the terminal?
+## <Icon name="angle-right"></Icon> 我可以在终端中打印来自测试的命令列表吗?
 
-If a test fails, Cypress takes a screenshot image, but does not print the list of commands in the terminal, only the failed assertion. There is a user space plugin [cypress-failed-log](https://github.com/bahmutov/cypress-failed-log) that saves a JSON file with all commands from a failed test.
+如果测试失败，Cypress将获取一个截屏，但不会在终端中打印命令列表，只打印失败的断言. 有一个用户空间插件[cypress-failed-log](https://github.com/bahmutov/cypress-failed-log) ，它保存一个JSON文件，其中包含来自失败测试的所有命令。
 
-## <Icon name="angle-right"></Icon> Can my tests interact with Redux / Vuex data store?
+## <Icon name="angle-right"></Icon> 我的测试可以与 Redux 或 Vuex数据存储交互吗?
 
-Usually your end-to-end tests interact with the application through public browser APIs: DOM, network, storage, etc. But sometimes you might want to make assertions against the data held inside the application's data store. Cypress helps you do this. Tests run right in the same browser instance and can reach into the application's context using [`cy.window`](/api/commands/window). By conditionally exposing the application reference and data store from the application's code, you can allow the tests to make assertions about the data store, and even drive the application via Redux actions.
+通常，端到端测试通过公共浏览器api (DOM、网络、存储等)与应用程序交互。 但有时您可能希望对应用程序数据存储中的数据进行断言. Cypress帮你做到这一点. 测试在同一个浏览器实例中正确运行，可以使用[`cy.window`](/api/commands/window)进入应用程序的上下文。通过有条件地从应用程序代码中公开应用程序引用和数据存储，可以允许测试对数据存储进行断言，甚至通过Redux操作驱动应用程序。
 
-- see [Testing Redux Store](https://www.cypress.io/blog/2018/11/14/testing-redux-store/) blog post and [Redux Testing](/examples/examples/recipes#Blogs) recipe.
-- see [Testing Vue web applications with Vuex data store & REST back end](https://www.cypress.io/blog/2017/11/28/testing-vue-web-application-with-vuex-data-store-and-rest-backend/) blog post and [Vue + Vuex + REST Testing](/examples/examples/recipes#Blogs) recipe.
+- 参见[测试 Redux Store](https://www.cypress.io/blog/2018/11/14/testing-redux-store/)博客文章和[Redux测试](/examples/examples/recipes#Blogs)食谱.
+- 参见[使用Vuex数据存储和REST后端测试Vue web应用程序](https://www.cypress.io/blog/2017/11/28/testing-vue-web-application-with-vuex-data-store-and-rest-backend/) 博客文章和[Vue + Vuex + REST测试](/examples/examples/recipes#Blogs)食谱。
 
-## <Icon name="angle-right"></Icon> How do I spy on console.log?
+## <Icon name="angle-right"></Icon> 如何 模拟间谍 console.log?
 
-To spy on `console.log` you should use [cy.stub()](/api/commands/stub).
+要模拟监视`console.log`，你应该使用[cy.stub()](/api/commands/stub).
 
 ```javascript
 cy.visit('/', {
@@ -775,13 +773,13 @@ cy.visit('/', {
 cy.get('@consoleLog').should('be.calledWith', 'Hello World!')
 ```
 
-Also, check out our [Stubbing `console` Receipe](/examples/examples/recipes#Stubbing-and-spying).
+还有，看看我们的[模拟 `console` 食谱](/examples/examples/recipes#Stubbing-and-spying).
 
-## <Icon name="angle-right"></Icon> How do I use special characters with `cy.get()`?
+## <Icon name="angle-right"></Icon> 如何在`cy.get()`时使用特殊字符 ?
 
-Special characters like `/`, `.` are valid characters for ids [according to the CSS spec](https://www.w3.org/TR/html50/dom.html#the-id-attribute).
+特殊字符，如`/`, `.`，[根据CSS规范](https://www.w3.org/TR/html50/dom.html#the-id-attribute) ，是id的有效字符.
 
-To test elements with those characters in ids, they need to be escaped with [`CSS.escape`](https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape) or [`Cypress.$.escapeSelector`](https://api.jquery.com/jQuery.escapeSelector/).
+要测试id中包含这些字符的元素，需要使用[`CSS.escape`](https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape) 或 [`Cypress.$.escapeSelector`](https://api.jquery.com/jQuery.escapeSelector/) 进行转义。.
 
 ```html
 <!DOCTYPE html>
@@ -805,70 +803,70 @@ it('test', () => {
 })
 ```
 
-Note that `cy.$$.escapeSelector()` doesn't work. `cy.$$` doesn't refer to `jQuery`. It only queries DOM. [Learn more about why](/api/utilities/$#Notes)
+注意`cy.$$.escapeSelector()`不起作用。 `cy.$$`并不是引用`jQuery`.它只查询DOM. [了解更多原因](/api/utilities/$#Notes)
 
-## <Icon name="angle-right"></Icon> Can I use Cypress to test charts and graphs?
+## <Icon name="angle-right"></Icon> 我可以使用Cypress测试图表和图形吗?
 
-Yes. You can leverage visual testing tools to test that charts and graphs are rendering as expected. For more information, check out the [Visual Testing guide](/guides/tooling/visual-testing) and the following blog posts.
+是的。您可以利用可视化测试工具来测试图表和图形是否按照预期的方式呈现. 要了解更多信息，请查看[视觉测试指南](/guides/tooling/visual-testing)和下面的博客文章。
 
-- see [Testing a chart with Cypress and Applitools](https://glebbahmutov.com/blog/testing-a-chart/)
-- see [Testing how an application renders a drawing with Cypress and Percy.io](https://glebbahmutov.com/blog/testing-visually/)
+- 参见[用Cypress测试应用程序图表](https://glebbahmutov.com/blog/testing-a-chart/)
+- 参见[用Cypress和Percy.io测试应用程序如何渲染绘图](https://glebbahmutov.com/blog/testing-visually/)
 
-## <Icon name="angle-right"></Icon> Why doesn't the `instanceof Event` work?
+## <Icon name="angle-right"></Icon> 为什么`instanceof Event`不起作用?
 
-It might be because of the 2 different windows in Cypress Test Runner. For more information, please check [the note here](/api/commands/window#Cypress-uses-2-different-windows).
+可能是因为在Cypress Test Runner中有两个不同的窗口. 欲了解更多信息，请点击[此处提示](/api/commands/window#Cypress-uses-2-different-windows).
 
-## <Icon name="angle-right"></Icon> Can I use Cucumber to write tests?
+## <Icon name="angle-right"></Icon> 我可以使用Cucumber来编写测试吗?
 
-Yes, you can. You can write feature files containing Cucumber scenarios and then use Cypress to write your step definitions in your spec files. A special preprocessor then converts the scenarios and step definitions into "regular" JavaScript Cypress tests.
+是的,你可以。您可以编写包含Cucumber场景的特性文件，然后使用Cypress在spec文件中编写步骤定义. 然后，一个特殊的预处理器将场景和步骤定义转换为“常规”JavaScript Cypress测试。
 
-- try using the [Cucumber preprocessor](https://github.com/TheBrainFamily/cypress-cucumber-preprocessor) and search our [Plugins](/plugins/directory) page for additional helper plugins
-- read [Cypress Super-patterns: How to elevate the quality of your test suite](https://dev.to/wescopeland/cypress-super-patterns-how-to-elevate-the-quality-of-your-test-suite-1lcf) for best practices when writing Cucumber tests
+- 尝试使用[Cucumber preprocessor](https://github.com/TheBrainFamily/cypress-cucumber-preprocessor)，并搜索我们的[Plugins](/plugins/directory) 页面，以获得更多的帮助插件
+- 阅读[Cypress 超级模式:如何提高测试集的质量](https://dev.to/wescopeland/cypress-super-patterns-how-to-elevate-the-quality-of-your-test-suite-1lcf) ，了解编写Cucumber测试时的最佳实践
 - take a look at [briebug/bba-cypress-quickstart](https://github.com/briebug/bba-cypress-quickstart) example application
 
-## <Icon name="angle-right"></Icon> Can I test Next.js sites using Cypress?
+## <Icon name="angle-right"></Icon> 我可以使用Cypress测试Next.js 网站吗?
 
-Yes, absolutely. See an example in the [next-and-cypress-example](https://github.com/bahmutov/next-and-cypress-example) repository where we show how to instrument the application's source code to get [code coverage](/guides/tooling/code-coverage) from tests. You can learn how to set good Cypress tests for a Next.js application in this [tutorial](https://getstarted.sh/bulletproof-next/e2e-testing-with-cypress).
+是的,当然。在[next-and-cypress-example](https://github.com/bahmutov/next-and-cypress-example) 库中可以看到一个示例，在那里我们展示了如何检测应用程序的源代码，以从测试中获得[代码覆盖率](/guides/tooling/code-coverage). 你可以在这个[教程](https://getstarted.sh/bulletproof-next/e2e-testing-with-cypress) 中学习如何为Next.js应用程序设置Cypress测试。
 
-## <Icon name="angle-right"></Icon> Can I test Gatsby.js sites using Cypress?
+## <Icon name="angle-right"></Icon> 我可以使用Cypress测试 Gatsby.js网站吗?
 
-Yes, as you can read in the official [Gatsby docs](https://www.gatsbyjs.com/docs/end-to-end-testing/). You can also watch the "Cypress + Gatsby webinar" [recording](https://www.youtube.com/watch?v=Tx6Lg9mwcCE) and browse the webinar's [slides](https://cypress.slides.com/amirrustam/cypress-gatsby-confidently-fast-web-development).
+是的，你可以在官方的[Gatsby文档](https://www.gatsbyjs.com/docs/end-to-end-testing/) 中读到. 您还可以观看“Cypress + Gatsby网络研讨会”的视频(https://www.youtube.com/watch?v=Tx6Lg9mwcCE)和浏览网络研讨会的幻灯片(https://cypress.slides.com/amirrustam/cypress-gatsby-confidently-fast-web-development)。
 
-## <Icon name="angle-right"></Icon> Can I test React applications using Cypress?
+## <Icon name="angle-right"></Icon> 我可以使用Cypress测试React应用程序吗?
 
-Yes, absolutely. A good example of a fully tested React application is our [Cypress RealWorld App](https://github.com/cypress-io/cypress-example-realworld) and [TodoMVC Redux App](https://github.com/cypress-io/cypress-example-todomvc-redux). You can even use React DevTools while testing your application, read [The easiest way to connect Cypress and React DevTools](https://dev.to/dmtrkovalenko/the-easiest-way-to-connect-cypress-and-react-devtools-5hgm). If you really need to select React components by their name, props, or state, check out [cypress-react-selector](https://github.com/abhinaba-ghosh/cypress-react-selector).
+是的,当然。一个经过充分测试的React应用程序的好例子是我们的[Cypress RealWorld App](https://github.com/cypress-io/cypress-example-realworld) 和 [TodoMVC Redux App](https://github.com/cypress-io/cypress-example-todomvc-redux) 。 您甚至可以在测试您的应用程序时使用React DevTools，请阅读[连接Cypress和React DevTools的最简单的方法](https://dev.to/dmtrkovalenko/the-easiest-way-to-connect-cypress-and-react-devtools-5hgm). 如果你真的需要根据名称、道具或状态选择React组件，请查看[cypress-react-selector](https://github.com/abhinaba-ghosh/cypress-react-selector).
 
-Finally, you might want to check out the [React Component Testing](/guides/component-testing/introduction) adaptor that allows you to test your React components right inside Cypress.
+最后，你可能想看看[React 组件测试](/guides/component-testing/introduction) 适配器，它允许你在Cypress中测试React组件。
 
-## <Icon name="angle-right"></Icon> Can I check the GraphQL network calls using Cypress?
+## <Icon name="angle-right"></Icon> 我可以使用Cypress检查 GraphQL网络调用吗?
 
-Yes, by using the newer API command [cy.intercept()](/api/commands/intercept) as described in the [Smart GraphQL Stubbing in Cypress](https://glebbahmutov.com/blog/smart-graphql-stubbing/) post or by utilizing the [cypress-graphql-mock](https://github.com/tgriesser/cypress-graphql-mock) plugin.
+是的，通过使用更新的API命令[cy.intercept()](/api/commands/intercept)，如[Smart GraphQL Stubbing in Cypress](https://glebbahmutov.com/blog/smart-graphql-stubbing/) 博客中描述的，或通过使用[Cypress - GraphQL -mock](https://github.com/tgriesser/cypress-graphql-mock)插件。
 
-## <Icon name="angle-right"></Icon> Can Cypress be used for model-based testing?
+## <Icon name="angle-right"></Icon> Cypress可以用于基于模型的测试吗?
 
-Yes, for example see [this webinar](https://www.youtube.com/watch?v=U30BKedA2CY) hosted by Curiosity Software. In addition, since our [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) is implemented using XState model state library, we are looking for ways to make model-based testing simpler and more powerful. Read [Access XState from Cypress Test](https://glebbahmutov.com/blog/cypress-and-xstate/) for our start.
+可以，例如，请参阅由Curiosity Software主办的[网络研讨会](https://www.youtube.com/watch?v=U30BKedA2CY) . 此外，由于我们的[Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) 是使用XState模型状态库实现的，我们正在寻找使基于模型的测试更简单和更强大的方法. 读取我们开始的[访问XState从Cypress Test](https://glebbahmutov.com/blog/cypress-and-xstate/)。
 
-## <Icon name="angle-right"></Icon> Can Cypress be used for performance testing?
+## <Icon name="angle-right"></Icon> Cypress可以用于性能测试吗?
 
-Cypress is not built for performance testing. Because Cypress instruments the page under test, proxies the network requests, and tightly controls the test steps, the Test Runner adds its own overhead. Thus, the performance numbers you get from Cypress tests are slower than "normal" use. Still, you can access the native `window.performance` object and grab the page time measurements, see the [Evaluate performance metrics](https://github.com/cypress-io/cypress-example-recipes#testing-the-dom) recipe. You can also [run Lighthouse audit straight from Cypress](https://www.mariedrake.com/post/web-performance-testing-with-google-lighthouse) via [cypress-audit](https://www.npmjs.com/package/cypress-audit) community plugin.
+Cypress不是为性能测试而构建的。因为Cypress检测被测试页面，代理网络请求，并严格控制测试步骤，所以test Runner增加了自己的开销. 因此，您从Cypress测试中得到的性能数字比“正常”使用要慢. 不过，您仍然可以访问原生`window.performance`对象并获取页面时间度量，请参见[评估性能指标](https://github.com/cypress-io/cypress-example-recipes#testing-the-dom) 食谱.你也可以通过[Cypress -audit](https://www.npmjs.com/package/cypress-audit) 社区插件[直接从Cypress运行灯塔审计](https://www.mariedrake.com/post/web-performance-testing-with-google-lighthouse)。
 
-## <Icon name="angle-right"></Icon> Can Cypress test WASM code?
+## <Icon name="angle-right"></Icon> Cypress能测试 WASM 代码吗?
 
-Yes, read the blog post [Cypress WASM Example](https://glebbahmutov.com/blog/cypress-wasm-example/). We welcome more user feedback to make WASM testing simpler.
+是的，阅读博客文章[Cypress WASM示例](https://glebbahmutov.com/blog/cypress-wasm-example/). 我们欢迎更多的用户反馈，使WASM测试更简单.
 
-## <Icon name="angle-right"></Icon> Can I use Cypress to document my application?
+## <Icon name="angle-right"></Icon> 我可以使用Cypress 作为应用的文档吗?
 
-End-to-end tests are an excellent way to keep your application's documentation accurate and up-to-date. Read [Cypress Book](https://glebbahmutov.com/blog/cypress-book/) blog post, and take a look at [cypress-movie](https://github.com/bahmutov/cypress-movie) project.
+端到端测试是保持应用程序文档准确和最新的一种很好的方法. 阅读[Cypress Book](https://glebbahmutov.com/blog/cypress-book/) 博客文章，并查看[Cypress -movie](https://github.com/bahmutov/cypress-movie)项目。
 
-## <Icon name="angle-right"></Icon> Can I use Jest snapshots?
+## <Icon name="angle-right"></Icon> 我可以使用Jest快照吗?
 
-While there is no built-in `snapshot` command in Cypress, you can make your own snapshot assertion command. Read how to do so in our blog post [End-to-End Snapshot Testing](https://www.cypress.io/blog/2018/01/16/end-to-end-snapshot-testing/). We recommend using the 3rd-party module [cypress-plugin-snapshots](https://github.com/meinaart/cypress-plugin-snapshots). For other snapshot plugins, search the [Plugins](/plugins/directory) page.
+虽然Cypress中没有内置的“快照”命令，但您可以创建自己的快照断言命令。 请参阅我们的博客文章[端到端快照测试](https://www.cypress.io/blog/2018/01/16/end-to-end-snapshot-testing/). 我们推荐使用第三方模块[cypress-plugin-snapshots](https://github.com/meinaart/cypress-plugin-snapshots). 其他快照插件，请搜索[plugins](/plugins/directory) 页.
 
-## <Icon name="angle-right"></Icon> Can I use Testing Library?
+## <Icon name="angle-right"></Icon> 我可以使用Testing Library?
 
-Absolutely! Feel free to add the [@testing-library/cypress](https://testing-library.com/docs/cypress-testing-library/intro/) to your setup and use its methods like `findByRole`, `findByLabelText`, `findByText`, `findByTestId`, and others to find the DOM elements.
+绝对的!您可以随意添加[@testing-librarycypress](https://testing-library.com/docs/cypress-testing-library/intro/)到您的设置中，并使用它的方法，如`findByRole`, `findByLabelText`, `findByText`, `findByTestId`等来查找DOM元素。
 
-The following example comes from the Testing Library's documentation
+下面的示例来自Testing Library的文档
 
 ```js
 cy.findByRole('button', { name: /Jackie Chan/i }).click()
@@ -889,4 +887,4 @@ cy.findByRole('dialog').within(() => {
 })
 ```
 
-We have had a webinar with [Roman Sandler](https://twitter.com/RomanSndlr) where he has given practical advice on writing effective tests using the Testing Library. You can find the recording and the slides [here](https://www.cypress.io/blog/2020/07/15/webcast-recording-build-invincible-integration-tests-using-cypress-and-cypress-testing-library/).
+我们与[Roman Sandler](https://twitter.com/RomanSndlr)进行了一次网络研讨会，在那里他给出了使用Testing Library编写有效测试的实用建议。 你可以在[这里](https://www.cypress.io/blog/2020/07/15/webcast-recording-build-invincible-integration-tests-using-cypress-and-cypress-testing-library/)找到录音和幻灯片.
