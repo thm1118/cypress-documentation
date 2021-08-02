@@ -1,28 +1,25 @@
 ---
-title: Visual Testing
+title: 视觉测试
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- How visual testing complements functional testing
-- How to implement visual diffing yourself or using 3rd party service
-- How to ensure the application is in consistent state before capturing an image
+- 视觉测试如何补充功能测试
+- 如何实现自己或使用第三方服务的视觉差异对比
+- 如何确保应用程序在捕获图像之前处于一致的状态
 
 </Alert>
 
-## Functional vs visual testing
+## 功能测试vs视觉测试
 
-Cypress is a _functional_ Test Runner. It drives the web application the way a
-user would, and checks if the app _functions_ as expected: if the expected
-message appears, an element is removed, or a CSS class is added after the
-appropriate user action. A typical Cypress test, for example, can check if a
-toggled "Todo" item gets a class of "completed" after the `.toggle` is checked:
+Cypress是一个**功能测试**运行器。。它以用户的方式驱动web应用程序，并检查应用程序是否如预期的那样运行:如果预期的消息出现，删除一个元素，或者在适当的用户操作之后添加一个CSS类。 
+例如，一个典型的Cypress测试可以检查一个被切换状态的“待办事项”项目是否在`.toggle`选中后，得到一个“completed” class :
 
 ```js
 it('completes todo', () => {
-  // opens TodoMVC running at "baseUrl"
+  // 打开TodoMVC运行在“baseUrl"
   cy.visit('/')
   cy.get('.new-todo').type('write tests{enter}')
   cy.contains('.todo-list li', 'write tests').find('.toggle').check()
@@ -33,39 +30,26 @@ it('completes todo', () => {
 
 <DocsImage src="/img/guides/visual-testing/completed-test.gif" alt="Passing Cypress functional test" ></DocsImage>
 
-Cypress does NOT see how the page actually looks though. For example, Cypress
-will not see if the CSS class `completed` grays out the label element and adds a
-strike-through line.
+Cypress并没有实际看到页面。例如，Cypress将不会看到CSS类`completed`是否将标签元素变成灰色并添加一条删除线。
 
 <DocsImage src="/img/guides/visual-testing/completed-item.png" alt="Completed item style" ></DocsImage>
 
-You could technically write a functional test asserting the CSS properties using
-the [`have.css` assertion](/guides/references/assertions#CSS), but these may
-quickly become cumbersome to write and maintain, especially when visual styles
-rely on a lot of CSS styles.
+从技术上讲，你可以使用[`have.css` assertion](/guides/references/assertions#CSS)编写一个断言CSS属性的功能测试，但这些可能很快就会变得很麻烦，特别是当视觉样式依赖于大量CSS样式时。
 
 ```js
 cy.get('.completed').should('have.css', 'text-decoration', 'line-through')
 cy.get('.completed').should('have.css', 'color', 'rgb(217,217,217)')
 ```
 
-Your visual styles may also rely on more than CSS, perhaps you want to ensure an
-SVG or image has rendered correctly or shapes were correctly drawn to a canvas.
+您的视觉样式还可能依赖于更多CSS，也许您想要确保SVG或图像已正确呈现，或者图形已正确绘制到画布上。
 
-Luckily, Cypress gives a stable platform for
-[writing plugins](/guides/tooling/plugins-guide) that _can perform visual
-testing_.
+幸运的是，Cypress为[编写插件](/guides/tooling/plugins-guide)提供了一个稳定的平台，_可以执行可视化测试_.
 
-Typically such plugins take an image snapshot of the entire application under
-test or a specific element, and then compare the image to a previously approved
-baseline image. If the images are the same (within a set pixel tolerance), it is
-determined that the web application looks the same to the user. If there are
-differences, then there has been some change to the DOM layout, fonts, colors or
-other visual properties that needs to be investigated.
+通常，这样的插件会获取整个测试应用程序或特定元素的图像快照，然后将该图像与之前批准的基线图像进行比较。
+如果图像是相同的(在设定的像素公差范围内)，那么用户就可以确定web应用程序看起来是相同的。
+如果存在差异，则说明DOM布局、字体、颜色或其他视觉属性发生了一些变化，需要进行调查。
 
-For example, one can use the
-[cypress-plugin-snapshots](https://github.com/meinaart/cypress-plugin-snapshots)
-plugin and catch the following visual regression:
+例如，你可以使用[cypress-plugin-snapshots](https://github.com/meinaart/cypress-plugin-snapshots) 插件捕获以下可视化回归:
 
 ```css
 .todo-list li.completed label {
@@ -82,9 +66,8 @@ it('completes todo', () => {
 
   cy.contains('.todo-list li', 'write tests').should('have.class', 'completed')
 
-  // run 'npm i cypress-plugin-snapshots -S'
-  // capture the element screenshot and
-  // compare to the baseline image
+  // 运行 'npm i cypress-plugin-snapshots -S'
+  //捕获元素截图并与基线图像进行比较
   cy.get('.todoapp').toMatchImageSnapshot({
     imageConfig: {
       threshold: 0.001,
@@ -93,33 +76,25 @@ it('completes todo', () => {
 })
 ```
 
-This open source plugin compares the baseline and the current images side by
-side within the Cypress Test Runner if pixel difference is above the threshold;
-notice how the baseline image (_Expected result_) has the label text with the
-line through, while the new image (_Actual result_) does not have it.
+这个开源插件比较基线和当前图像并排在Cypress Test Runner中，如果像素差异高于阈值;注意基线图像(预期结果)是如何有贯穿线的标签文本的，而新图像(实际结果)没有。
 
 <DocsImage src="/img/guides/visual-testing/diff.png" alt="Baseline vs current image" ></DocsImage>
 
-Like most image comparison tools, the plugin also shows a difference view on
-mouse hover:
+像大多数图像比较工具，插件也显示一个不同的观点，鼠标悬停:
 
 <DocsImage src="/img/guides/visual-testing/diff-2.png" alt="Highlighted changes" ></DocsImage>
 
-## Tooling
+## 工具
 
-There are several published, open source plugins, listed in the
-[Visual Testing plugins](/plugins/directory#visual-testing) section, and several
-commercial companies have developed visual testing solutions on top of the
-Cypress Test Runner listed below.
+在[Visual Testing plugins](/plugins/directory#visual-testing) 一节中列出了一些已发布的开源插件，一些商业公司已经在下面列出的Cypress Test Runner之上开发了可视化测试解决方案。
 
-### Open source
+### 开源
 
-Listed in the [Visual Testing plugins](/plugins/directory#Visual%20Testing)
-section.
+在[可视化测试插件](/plugins/directory#Visual%20Testing)章节中列出 .
 
 ### Applitools
 
-First joint webinar with Applitools
+首次与applittools联合举办网络研讨会
 
 <!-- textlint-disable -->
 
@@ -127,8 +102,7 @@ First joint webinar with Applitools
 
 <!-- textlint-enable -->
 
-Second joint webinar with Applitools with a focus on
-[Component Testing](/guides/component-testing/introduction)
+第二场与applittools的联合网络研讨会，重点关注[组件测试](/guides/component-testing/introduction)
 
 <!-- textlint-disable -->
 
@@ -139,12 +113,12 @@ Second joint webinar with Applitools with a focus on
 <Icon name="external-link-alt"></Icon>
 [https://applitools.com](https://applitools.com/)
 
-| Resource                                                                     | Description                                                                                                                                                   |
+| 资源                                                                         | 描述                                                                                                                                                   |
 | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Official docs](https://applitools.com/cypress)                              | Applitools' Cypress documentation                                                                                                                             |
-| [Tutorial](https://applitools.com/tutorials/cypress.html)                    | Applitools' Cypress tutorial                                                                                                                                  |
-| [Webinar](https://applitools.com/blog/cypress-applitools-end-to-end-testing) | _Creating a Flawless User Experience, End-to-End, Functional to Visual – Practical Hands-on Session_, a webinar recorded together with Cypress and Applitools |
-| [Blog](https://glebbahmutov.com/blog/testing-a-chart/)                       | Testing a chart with Cypress and Applitools                                                                                                                   |
+| [官方文档](https://applitools.com/cypress)                                    | Applitools的Cypress文档                                                                                                                             |
+| [入门](https://applitools.com/tutorials/cypress.html)                         | Applitools的 Cypress 入门                                                                                                                                  |
+| [在线会议](https://applitools.com/blog/cypress-applitools-end-to-end-testing) | _创建完美的用户体验，端到端，从功能到视觉-实践的实践环节_, 与Cypress和applittools一起录制的网络研讨会 |
+| [博客](https://glebbahmutov.com/blog/testing-a-chart/)                        | 用Cypress和applittools测试图表                                                                                                                   |
 
 ### Percy
 
@@ -158,28 +132,25 @@ Second joint webinar with Applitools with a focus on
 
 <Alert type="info">
 
-##### <Icon name="graduation-cap"></Icon> Real World Example <Badge type="success">New</Badge>
+##### <Icon name="graduation-cap"></Icon> 真实世界的例子 <Badge type="success">新鲜的</Badge>
 
-The Cypress
-[Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) uses
-the `cy.percySnapshot()` command provided by the
-[Cypress Percy plugin](https://github.com/percy/percy-cypress) to take visual
-snapshots throughout the user journey end-to-end tests
+Cypress的
+[Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app) 使用[Cypress Percy插件](https://github.com/percy/percy-cypress)提供的`cy.percySnapshot()`命令在整个用户旅程端到端测试中拍摄可视快照
 
-Check out the
+查看
 [Real World App test suites](https://github.com/cypress-io/cypress-realworld-app/tree/develop/cypress/tests/ui)
-to see these Percy and Cypress in action.
+Percy 和 Cypress 实战.
 
 </Alert>
 
-| Resource                                                                                                                                | Description                                                                                                                     |
+| 资源                                                                                                                                    | 描述                                                                                                                     |
 | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| [Official docs](https://docs.percy.io/docs/cypress)                                                                                     | Percy's Cypress documentation                                                                                                   |
-| [Tutorial](https://docs.percy.io/docs/cypress-tutorial)                                                                                 | Percy's Cypress tutorial                                                                                                        |
-| [Webinar](https://www.youtube.com/watch?v=MXfZeE9RQDw)                                                                                  | _Cypress + Percy = End-to-end functional and visual testing for the web_, a webinar recorded together with Cypress and Percy.io |
-| [Blog](https://www.cypress.io/blog/2019/04/19/webinar-recording-cypress-io-percy-end-to-end-functional-and-visual-testing-for-the-web/) | The companion blog for the Cypress + Percy webinar                                                                              |
-| [Slides](https://slides.com/bahmutov/visual-testing-with-percy)                                                                         | The companion slides for the Cypress + Percy webinar                                                                            |
-| [Blog](https://glebbahmutov.com/blog/testing-visually/)                                                                                 | Testing how an application renders a drawing with Cypress and Percy                                                             |
+| [官方文档](https://docs.percy.io/docs/cypress)                                                                                           | Percy的Cypress 文档                                                                                                  |
+| [入门](https://docs.percy.io/docs/cypress-tutorial)                                                                                     | Percy的Cypress指南                                                                                                        |
+| [在线会议](https://www.youtube.com/watch?v=MXfZeE9RQDw)                                                                                  | _Cypress + Percy = web的端到端功能和可视化测试_, 与Cypress和Percy.io一起录制的网络研讨会 |
+| [博客](https://www.cypress.io/blog/2019/04/19/webinar-recording-cypress-io-percy-end-to-end-functional-and-visual-testing-for-the-web/) | Cypress + Percy网络研讨会的同伴博客                                                                              |
+| [幻灯片](https://slides.com/bahmutov/visual-testing-with-percy)                                                                         | Cypress + Percy网络研讨会的配套幻灯片                                                                            |
+| [博客](https://glebbahmutov.com/blog/testing-visually/)                                                                                 | 测试应用程序如何使用Cypress和Percy渲染绘图                                                             |
 
 ### Happo
 
@@ -191,41 +162,36 @@ to see these Percy and Cypress in action.
 
 <Icon name="external-link-alt"></Icon> [https://happo.io/](https://happo.io/)
 
-| Resource                                                                             | Description                                                                                                                                 |
+| 资源                                                                                 | 描述                                                                                                                                 |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Official docs](https://docs.happo.io/docs/cypress)                                  | Happo's Cypress documentation                                                                                                               |
-| [Webinar](https://www.youtube.com/watch?v=C_p12IvN5HU)                               | _Keep your UI Sharp: Ensuring Functional and Visual Quality with Cypress.io + Happo.io_, a webinar recorded together with Cypress and Happo |
-| [Blog](https://www.cypress.io/blog/2020/05/27/webcast-recording-keep-your-ui-sharp/) | The companion blog for the Cypress + Happo webinar                                                                                          |
-| [Slides](https://cypress.slides.com/cypress-io/cypress-and-happo)                    | The companion slides for the Cypress + Happo webinar                                                                                        |
+| [官方文档](https://docs.happo.io/docs/cypress)                                        | Happo的Cypress 文档                                                                                                               |
+| [在线会议](https://www.youtube.com/watch?v=C_p12IvN5HU)                               | _保持你的UI清晰:确保Cypress的功能和视觉质量。Cypress.io + Happo.io_, 与Cypress和Happo共同录制的网络研讨会 |
+| [博客](https://www.cypress.io/blog/2020/05/27/webcast-recording-keep-your-ui-sharp/) | Cypress + Happo网络研讨会的配套博客                                                                                         |
+| [幻灯片](https://cypress.slides.com/cypress-io/cypress-and-happo)                    | Cypress + Happo网络研讨会的配套幻灯片                                                                                       |
 
-### Do It Yourself
+### 自己动手
 
-Even if you decide to skip using a 3rd party image storage and comparison
-service, you can still perform visual testing. Follow these examples
+即使您决定跳过使用第三方图像存储和比较服务，您仍然可以执行可视化测试。遵循这些例子
 
-- [Visual Regression testing with Cypress and cypress-image-snapshot](https://medium.com/norwich-node-user-group/visual-regression-testing-with-cypress-io-and-cypress-image-snapshot-99c520ccc595)
-  tutorial.
-- [Visual testing for React components using open source tools](https://glebbahmutov.com/blog/open-source-visual-testing-of-components/)
-  with companion
-  [videos](https://www.youtube.com/playlist?list=PLP9o9QNnQuAYhotnIDEUQNXuvXL7ZmlyZ).
+- [用Cypress和Cypress图像快照进行视觉回归测试](https://medium.com/norwich-node-user-group/visual-regression-testing-with-cypress-io-and-cypress-image-snapshot-99c520ccc595)
+  指南.
+- [使用开源工具对React组件进行可视化测试](https://glebbahmutov.com/blog/open-source-visual-testing-of-components/)
+  与同伴
+  [视频](https://www.youtube.com/playlist?list=PLP9o9QNnQuAYhotnIDEUQNXuvXL7ZmlyZ).
 
 <Alert type="warning">
 
-You will want to consider the development costs of implementing a visual testing
-tool yourself versus using an external 3rd party provider. Storing, reviewing
-and analyzing image differences are non-trivial tasks and they can quickly
-become a chore when going with a DIY solution.
+您需要考虑自己实现可视化测试工具与使用外部第三方供应商的开发成本。存储、查看和分析图像差异不是一件简单的任务，当使用DIY解决方案时，它们很快就会变成一件苦差事.
 
 </Alert>
 
-## Best practices
+## 最佳实践
 
-As a general rule there are some best practices when visual testing.
+一般来说，在进行可视化测试时，有一些最佳实践。
 
-### Recognize the need for visual testing
+### 认识到视觉测试的必要性
 
-**<Icon name="exclamation-triangle" color="red"></Icon> assertions that verify
-style properties**
+**<Icon name="exclamation-triangle" color="red"></Icon> 验证样式属性的断言**
 
 ```js
 cy.get('.completed').should('have.css', 'text-decoration', 'line-through')
@@ -234,54 +200,48 @@ cy.get('.user-info').should('have.css', 'display', 'none')
 ...
 ```
 
-If your end-to-end tests become full of assertions checking visibility, color
-and other style properties, it might be time to start using visual diffing to
-verify the page appearance.
+如果端到端测试充斥着检查可见性、颜色和其他样式属性的断言，那么可能是时候开始使用视觉差异来验证页面外观了。
 
-### DOM state
+### DOM 状态
 
 <Alert type="success">
 
-<Icon name="check-circle" color="green"></Icon> **Best Practice:** Take a
-snapshot after you confirm the page is done changing.
+<Icon name="check-circle" color="green"></Icon> **最佳实践:** 在确认页面更改完成后进行快照。
 
 </Alert>
 
-For example, if the snapshot command is `cy.mySnapshotCommand`:
+例如，如果快照命令是`cy.mySnapshotCommand`:
 
-**<Icon name="exclamation-triangle" color="red"></Icon> Incorrect Usage**
+**<Icon name="exclamation-triangle" color="red"></Icon> 不正确的使用**
 
 ```js
-// the web application takes time to add the new item,
-// sometimes it takes the snapshot BEFORE the new item appears
+//web应用程序需要时间来添加新项,
+// 有时它会在新项出现之前获取快照
 cy.get('.new-todo').type('write tests{enter}')
 cy.mySnapshotCommand()
 ```
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```js
-// use a functional assertion to ensure
-// the web application has re-rendered the page
+// 使用函数断言来确保
+// web应用程序已重新呈现页面
 cy.get('.new-todo').type('write tests{enter}')
 cy.contains('.todo-list li', 'write tests')
-// great, the new item is displayed,
-// now we can take the snapshot
+// 太好了，新项目显示出来了，
+// 现在我们可以拍快照了
 cy.mySnapshotCommand()
 ```
 
-### Timestamps
+### 时间戳
 
 <Alert type="success">
 
-<Icon name="check-circle" color="green"></Icon> **Best Practice:** Control the
-timestamp inside the application under test.
+<Icon name="check-circle" color="green"></Icon> **最佳实践:** 控制被测应用程序中的时间戳.
 
 </Alert>
 
-Below we freeze the operating system's time to `Jan 1, 2018` using
-[cy.clock()](/api/commands/clock) to ensure all images displaying dates and
-times match.
+下面我们使用[cy.clock()](/api/commands/clock)将操作系统的时间冻结到“2018年1月1日”，以确保所有显示日期和时间的图像匹配。
 
 ```js
 const now = new Date(2018, 1, 1)
@@ -291,19 +251,15 @@ cy.clock(now)
 cy.mySnapshotCommand()
 ```
 
-### Application state
+### 应用程序状态
 
 <Alert type="success">
 
-<Icon name="check-circle" color="green"></Icon> **Best Practice:** Use
-[cy.fixture()](/api/commands/fixture) and network mocking to set the application
-state.
+<Icon name="check-circle" color="green"></Icon> **最佳实践:** 使用[cy.fixture()](/api/commands/fixture) 和网络模拟来设置应用程序的状态。
 
 </Alert>
 
-Below we stub network calls using [cy.intercept()](/api/commands/intercept) to
-return the same response data for each XHR request. This ensures that the data
-displayed in our application images does not change.
+下面我们使用[cy.intercept()](/api/commands/intercept)模拟网络调用，为每个XHR请求返回相同的响应数据。这确保了应用程序映像中显示的数据不会改变。
 
 ```js
 cy.intercept('/api/items', { fixture: 'items' }).as('getItems')
@@ -312,47 +268,38 @@ cy.wait('@getItems')
 cy.mySnapshotCommand()
 ```
 
-### Visual diff elements
+### 视觉diff元素
 
 <Alert type="success">
 
-<Icon name="check-circle" color="green"></Icon> **Best Practice:** Use visual
-diffing to check individual DOM elements rather than the entire page.
+<Icon name="check-circle" color="green"></Icon> **最佳实践:** 使用视觉差异检查单个DOM元素，而不是整个页面.
 
 </Alert>
 
-Targeting specific DOM element will help avoid visual changes from component "X"
-breaking tests in other unrelated components.
+瞄准特定的DOM元素将有助于避免在其他不相关的组件中组件“X”破坏测试的可视化变更。
 
-### Component testing
+### 组件测试
 
 <Alert type="success">
 
-<Icon name="check-circle" color="green"></Icon> **Best Practice:** Use
-[Component Testing plugins](/plugins/directory) to test the individual
-components functionality in addition to end-to-end and visual tests.
+<Icon name="check-circle" color="green"></Icon> **最佳实践:** 除了端到端和可视化测试之外，使用[组件测试插件](/plugins/directory) 来测试单个组件的功能.
 
 </Alert>
 
-If you are working on React components, read
-[Visual testing for React components using open source tools](https://glebbahmutov.com/blog/open-source-visual-testing-of-components/),
-browse [slides](https://slides.com/bahmutov/i-see-what-is-going-on), and watch
-the
-[companion videos](https://www.youtube.com/playlist?list=PLP9o9QNnQuAYhotnIDEUQNXuvXL7ZmlyZ).
+如果你正在使用React组件，请阅读[使用开源工具对React组件进行可视化测试](https://glebbahmutov.com/blog/open-source-visual-testing-of-components/),
+浏览[幻灯片](https://slides.com/bahmutov/i-see-what-is-going-on), 观看[相关视频](https://www.youtube.com/playlist?list=PLP9o9QNnQuAYhotnIDEUQNXuvXL7ZmlyZ).
 
-## See also
+## 另请参阅
 
-- [After Screenshot API](/api/plugins/after-screenshot-api)
+- [截图后API](/api/plugins/after-screenshot-api)
 - [cy.screenshot()](/api/commands/screenshot)
 - [Cypress.Screenshot](/api/cypress-api/screenshot-api)
-- [Plugins](/guides/tooling/plugins-guide)
-- [Visual Testing Plugins](/plugins/directory#visual-testing)
-- [Writing a Plugin](/api/plugins/writing-a-plugin)
+- [插件](/guides/tooling/plugins-guide)
+- [视觉测试插件](/plugins/directory#visual-testing)
+- [编写一个插件](/api/plugins/writing-a-plugin)
 - <Icon name="github"></Icon>
   [Cypress Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app)
-  is a full stack example application that demonstrates **best practices and
-  scalable strategies with Cypress in practical and realistic scenarios**.
-- Read the blog post
-  [Debug a Flaky Visual Regression Test](https://www.cypress.io/blog/2020/10/02/debug-a-flaky-visual-regression-test/)
-- Read the blog post
-  [Canvas Visual Testing with Retries](https://glebbahmutov.com/blog/canvas-testing/)
+  是一个全栈示例应用程序，演示了在实际和现实的场景中使用Cypress的最佳实践和可伸缩策略。-阅读博客文章
+  [调试不稳定的视觉回归测试](https://www.cypress.io/blog/2020/10/02/debug-a-flaky-visual-regression-test/)
+- 阅读博客文章
+  [Canvas可视化测试与重试](https://glebbahmutov.com/blog/canvas-testing/)
