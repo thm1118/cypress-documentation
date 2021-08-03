@@ -104,7 +104,7 @@ it('adds items', () => {
 
 所有Cypress的命令，当点击[命令日志](/guides/core-concepts/test-runner#Command-Log)，打印关于命令的额外信息，它的目标元素，和它产生的结果. 尝试打开开发人员工具在命令日志中单击! 你可以在这里找到一些有用的信息.
 
-#### 当单击.type()`命令时，开发人员工具控制台输出如下内容:
+#### 当单击`.type()`命令时，开发人员工具控制台输出如下内容:
 
 <DocsImage src="/img/api/type/console-log-of-typing-with-entire-key-events-table-for-each-character.png" alt="Console Log type" ></DocsImage>
 
