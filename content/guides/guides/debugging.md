@@ -1,198 +1,198 @@
 ---
-title: Debugging
+title: 调试
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- How Cypress runs in the same event loop with your code, keeping debugging less demanding and more understandable
-- How Cypress embraces the standard Developer Tools
-- How and when to use `debugger` and the shorthand [`.debug()`](/api/commands/debug) command
+- Cypress如何与您的代码在相同的事件循环中运行，使调试要求更低，更容易理解
+- Cypress如何拥抱标准的开发工具
+- 如何以及何时使用`debugger` 和简写[`.debug()`](/api/commands/debug) 命令
 
 </Alert>
 
-## Using `debugger`
+## 使用 `debugger`
 
-Your Cypress test code runs in the same run loop as your application. This means you have access to the code running on the page, as well as the things the browser makes available to you, like `document`, `window`, and `debugger`.
+您的Cypress测试代码在与应用程序相同的运行循环中运行. 这意味着你可以访问在页面上运行的代码，以及浏览器提供给你的东西，比如`document`, `window`, 和 `debugger`。
 
-### Debug just like you always do
+### 就像你经常做的那样调试
 
-Based on those statements, you might be tempted to throw a `debugger` into your test, like so:
+基于这些语句，您可能会忍不住在测试中抛出一个`debugger`，就像这样:
 
 ```js
-it('let me debug like a fiend', () => {
+it('让我像个恶魔一样调试', () => {
   cy.visit('/my/page/path')
 
   cy.get('.selector-in-question')
 
-  debugger // Doesn't work
+  debugger // 不起作用
 })
 ```
 
-This may not work exactly as you are expecting. As you may remember from the [Introduction to Cypress](/guides/core-concepts/introduction-to-cypress), `cy` commands enqueue an action to be taken later. Can you see what the test above will do given that perspective?
+这可能不完全像您所期望的那样工作. 你们可能还记得[Cypress简介](/guides/core-concepts/introduction-to-cypress), `cy` 命令将一个稍后要执行的动作编入队列。你能看到上面的测试在这个视角下的作用吗?
 
-Both [`cy.visit()`](/api/commands/visit) and [`cy.get()`](/api/commands/get) will return immediately, having enqueued their work to be done later, and `debugger` will be executed before any of the commands have actually run.
+[`cy.visit()`](/api/commands/visit) 和 [`cy.get()`](/api/commands/get) 都会立即返回，并将它们的工作排队待稍后完成, 并且 `debugger` 将在任何命令实际运行之前执行.
 
-Let's use [`.then()`](/api/commands/then) to tap into the Cypress command during execution and add a `debugger` at the appropriate time:
+让我们使用[`.then()`](/api/commands/then) 在执行过程中进入Cypress命令，并在适当的时候添加一个`debugger`:
 
 ```js
-it('let me debug when the after the command executes', () => {
+it('让我在命令执行后进行调试', () => {
   cy.visit('/my/page/path')
 
   cy.get('.selector-in-question').then(($selectedElement) => {
-    // Debugger is hit after the cy.visit
-    // and cy.get command have completed
+    // 调试器在cy.visit之后被命中
+    // 并且cy.get命令已经完成
     debugger
   })
 })
 ```
 
-Now we're in business! The first time through, [`cy.visit()`](/api/commands/visit) and the [`cy.get()`](/api/commands/get) chain (with its [`.then()`](/api/commands/then) attached) are enqueued for Cypress to execute. The `it` block exits, and Cypress starts its work:
+现在我们开始做事了!首先通过[`cy.visit()`](/api/commands/visit) 和 [`cy.get()`](/api/commands/get)链(附带它的[`.then()`](/api/commands/then))被排队等待Cypress执行.  其次`it`代码块退出, Cypress正式开始了它的工作:
 
-1. The page is visited, and Cypress waits for it to load.
-2. The element is queried, and Cypress automatically waits and retries for a few moments if it isn't found immediately.
-3. The function passed to [`.then()`](/api/commands/then) is executed, with the found element yielded to it.
-4. Within the context of the [`.then()`](/api/commands/then) function, the `debugger` is called, halting the browser and calling focus to the Developer Tools.
-5. You're in! Inspect the state of your application like you normally would if you'd dropped the `debugger` into your application code.
+1. 页面被访问，Cypress等待它加载.
+2. 查询元素，如果没有立即找到，Cypress会自动等待并重试几分钟。
+3. 将执行传递给[`.then()`](/api/commands/then) 的函数，并将找到的元素交给它.
+4. 在[`.then()`](/api/commands/then)函数的上下文中，将调用`debugger`，停止浏览器并将焦点转移到开发人员工具。
+5. 现在你在里面了! 检查你的应用程序的状态，就像你通常会在你的应用程序代码中删除`debugger`一样.
 
-### Using [`.debug()`](/api/commands/debug)
+### 使用 [`.debug()`](/api/commands/debug)
 
-Cypress also exposes a shortcut for debugging commands, [`.debug()`](/api/commands/debug). Let's rewrite the test above using this helper method:
+Cypress还提供了一个调试命令的快捷方式, [`.debug()`](/api/commands/debug). 让我们使用这个帮助方法重写上面的测试:
 
 ```js
-it('let me debug like a fiend', () => {
+it('让我像个恶魔一样调试', () => {
   cy.visit('/my/page/path')
 
   cy.get('.selector-in-question').debug()
 })
 ```
 
-The current subject that is yielded by the [`cy.get()`](/api/commands/get) is exposed as the variable `subject` within your Developer Tools so that you can interact with it in the console.
+由[`cy.get()`](/api/commands/get) 生成的当前目标将在开发人员工具中作为变量`subject`公开，以便您可以在控制台与它进行交互。
 
 <DocsImage src="/img/guides/debugging-subject.png" alt="Debugging Subject" ></DocsImage>
 
-Use [`.debug()`](/api/commands/debug) to quickly inspect any (or many!) part(s) of your application during the test. You can attach it to any Cypress chain of commands to have a look at the system's state at that moment.
+使用[`.debug()`](/api/commands/debug)可以在测试期间快速检查应用程序的任何(或许多)部分。 您可以将它附加到任何Cypress命令链上，以查看此时系统的状态.
 
-## Step through test commands
+## 逐步执行测试命令
 
-You can run the test command by command using the [`.pause()`](/api/commands/pause) command.
+您可以使用[`.pause()`](/api/commands/pause)命令,通过命令运行test命令.
 
 ```javascript
 it('adds items', () => {
   cy.pause()
   cy.get('.new-todo')
-  // more commands
+  // 更多的命令
 })
 ```
 
-This allows you to inspect the web application, the DOM, the network, and any storage after each command to make sure everything happens as expected.
+这允许您在每个命令之后检查web应用程序、DOM、网络和任何存储，以确保一切按照预期进行.
 
-## Using the Developer Tools
+## 使用开发者工具
 
-Though Cypress has built out [an excellent Test Runner](/guides/core-concepts/test-runner) to help you understand what is happening in your application and your tests, there's no replacing all the amazing work browser teams have done on their built-in development tools. Once again, we see that Cypress goes _with_ the flow of the modern ecosystem, opting to leverage these tools wherever possible.
+尽管Cypress已经构建了[一个优秀的测试运行器](/guides/core-concepts/test-runner) 来帮助您理解应用程序和测试中发生的事情，但没有什么能取代浏览器团队在其内置开发工具上所做的所有令人惊讶的工作. 我们再一次看到，Cypress顺应了现代生态系统的潮流，选择在任何可能的地方利用这些工具。
 
 <Alert type="info">
 
-### <Icon name="video"></Icon> See it in action!
+### <Icon name="video"></Icon> 看它的作用!
 
-You can see a walk-through of debugging some application code from Cypress [in this segment from our React tutorial series](https://vimeo.com/242961930#t=264s).
+你可以看到一个从Cypress调试一些应用程序代码的演练[在我们的React教程系列的这个部分](https://vimeo.com/242961930#t=264s).
 
 </Alert>
 
-### Get console logs for commands
+### 获取命令的控制台日志
 
-All of Cypress's commands, when clicked on within the [Command Log](/guides/core-concepts/test-runner#Command-Log), print extra information about the command, its subject, and its yielded result. Try clicking around the Command Log with your Developer Tools open! You may find some useful information here.
+所有Cypress的命令，当点击[命令日志](/guides/core-concepts/test-runner#Command-Log)，打印关于命令的额外信息，它的目标元素，和它产生的结果. 尝试打开开发人员工具在命令日志中单击! 你可以在这里找到一些有用的信息.
 
-#### When clicking on `.type()` command, the Developer Tools console outputs the following:
+#### 当单击.type()`命令时，开发人员工具控制台输出如下内容:
 
 <DocsImage src="/img/api/type/console-log-of-typing-with-entire-key-events-table-for-each-character.png" alt="Console Log type" ></DocsImage>
 
-## Errors
+## 错误
 
-Sometimes tests fail. Sometimes we want them to fail, just so we know they're testing the right thing when they pass. But other times, tests fail unintentionally and we need to figure out why. Cypress provides some tools to help make that process as easy as possible.
+有时测试失败。有时我们希望他们失败，这样我们就知道当他们通过时，他们在测试正确的东西。 但有时，测试在无意中失败了，我们需要找出原因。Cypress提供了一些工具，以帮助使这一过程尽可能容易.
 
-### Anatomy of an error
+### 剖析一个错误
 
-Let's take a look at the anatomy of an error and how it is displayed in Cypress, by way of a failing test.
+让我们看看错误的剖析，以及如何通过失败的测试在Cypress中显示它。
 
 ```js
-it('reroutes on users page', () => {
+it('在用户页面上重新路由', () => {
   cy.contains('Users').click()
   cy.url().should('include', 'users')
 })
 ```
 
-The center of the `<li>Users</li>` element is hidden from view in our application under test, so the test above will fail. Within Cypress, an error will show on failure that includes the following pieces of information:
+`<li>Users</li>`元素的中心在我们测试的应用程序中被隐藏，所以上面的测试将失败. 在Cypress中，失败将显示一个错误，其中包括以下信息片段:
 
-1. **Error name**: This is the type of the error (e.g. AssertionError, CypressError)
-1. **Error message**: This generally tells you what went wrong. It can vary in length. Some are short like in the example, while some are long, and may tell you exactly how to fix the error.
-1. **Learn more:** Some error messages contain a Learn more link that will take you to relevant Cypress documentation.
-1. **Code frame file**: This is usually the top line of the stack trace and it shows the file, line number, and column number that is highlighted in the code frame below. Clicking on this link will open the file in your [preferred file opener](https://on.cypress.io/IDE-integration#File-Opener-Preference) and highlight the line and column in editors that support it.
-1. **Code frame**: This shows a snippet of code where the failure occurred, with the relevant line and column highlighted.
-1. **View stack trace**: Clicking this toggles the visibility of the stack trace. Stack traces vary in length. Clicking on a blue file path will open the file in your [preferred file opener](https://on.cypress.io/IDE-integration#File-Opener-Preference).
-1. **Print to console button**: Click this to print the full error to your DevTools console. This will usually allow you to click on lines in the stack trace and open files in your DevTools.
+1. **Error name**: 这是错误的类型(例如AssertionError, CypressError)
+1. **Error message**: 这通常会告诉你哪里出了问题. 它的长度可以变化.有些是短的，如示例中所示，而有些是长的，并可能确切地告诉您如何修复错误.
+1. **Learn more:** 一些错误消息包含一个“Learn more”链接，将带您到相关的Cypress文档.
+1. **Code frame file**: 这通常是堆栈跟踪的最上面一行，它显示了文件、行号和列号，在下面的代码框架中高亮显示. 点击此链接将在您的[首选文件打开器](https://on.cypress.io/IDE-integration#File-Opener-Preference) 中打开代码文件，并在支持它的编辑器中突出显示行和列.
+1. **Code frame**: 这显示了发生故障的代码片段，并突出显示了相关的行和列.
+1. **View stack trace**: 单击此按钮将切换堆栈跟踪的可见性。堆栈跟踪的长度不同. 点击一个蓝色的文件路径将在您的[首选文件打开器](https://on.cypress.io/IDE-integration#File-Opener-Preference) 中打开文件.
+1. **Print to console button**: 单击此以打印完整的错误到您的DevTools控制台. 这通常允许您点击堆栈跟踪中的行，并在DevTools中打开文件.
 
 <DocsImage src="/img/guides/command-failure-error.png" alt="example command failure error" ></DocsImage>
 
 ### Source maps
 
-Cypress utilizes source maps to enhance the error experience. Stack traces are translated so that your source files are shown instead of the generated file that is loaded by the browser. This also enables displaying code frames. Without inline source maps, you will not see code frames.
+Cypress利用Source maps来增强错误体验. 栈跟踪被转换，从而显示您的源代码文件，而不是由浏览器加载的生成文件. 这也支持显示代码帧。如果没有内联Source maps，您将看不到代码帧.
 
-By default, Cypress will include an inline source map in your spec file, so you will get the most out of the error experience. If you [modify the preprocessor](/api/plugins/preprocessors-api), ensure that inline source maps are enabled to get the same experience. With webpack and the [webpack preprocessor](https://github.com/cypress-io/cypress/tree/master/npm/webpack-preprocessor), for example, set [the `devtool` option](https://webpack.js.org/configuration/devtool/) to `inline-source-map`.
+默认情况下，Cypress将在您的spec文件中包含一个内联Source maps，因此您将最大限度地利用错误体验. 如果你[修改了预处理器](/api/plugins/preprocessors-api), 确保内联Source maps能够获得相同的体验. 比如，使用webpack和[webpack preprocessor](https://github.com/cypress-io/cypress/tree/master/npm/webpack-preprocessor) 时，设置[`devtool`选项](https://webpack.js.org/configuration/devtool/) 为 `inline-source-map`.
 
-## Debugging flake
+## 调试脆弱的测试
 
-While Cypress is [flake-resistant](/guides/overview/key-differences#Flake-resistant), some users do experience flake, particularly when running in CI versus locally. Most often in cases of flaky tests, we see that there are not enough assertions surrounding test actions or network requests before moving on to the next assertion.
+虽然Cypress是[抗脆弱的](/guides/overview/key-differences#Flake-resistant)，一些用户确实有脆弱的经验，特别是在CI和本地运行时. 在脆弱测试的情况下，我们经常看到，在进行下一个断言之前，围绕测试操作或网络请求没有足够的断言。
 
-If there is any variation in the speed of the network requests or responses when run locally versus in CI, then there can be failures in one over the other.
+如果在本地运行时**网络请求或响应的速度**与在CI中运行时存在任何变化，那么其中一个可能会出现故障。
 
-Because of this, we recommend asserting on as many required steps as possible before moving forward with the test. This also helps later to isolate where the exact failure is when debugging.
+因此，我们建议在进行测试之前尽可能多地断言所需的步骤。 这也有助于以后在调试时隔离故障的确切位置。
 
-Flake can also occur when there are differences between your local and CI environments. You can use the following methods troubleshoot tests that pass locally but fail in CI.
+当本地环境和CI环境之间存在差异时，也会发生脆弱. 可以使用以下方法对本地通过但在CI中失败的测试进行故障排除.
 
-- Review your CI build process to ensure nothing is changing with your application that would result in failing tests.
-- Remove time-sensitive variability in your tests. For example, ensure a network request has finished before looking for the DOM element that relies on the data from that network request. You can leverage [aliasing](/guides/core-concepts/variables-and-aliases#Aliases) for this.
+- 检查CI构建过程，确保应用程序没有发生任何可能导致测试失败的更改.
+- 删除测试中对时间敏感的变量. 例如，在查找依赖于网络请求数据的DOM元素之前，确保网络请求已经完成. 你可以利用[别名](/guides/core-concepts/variables-and-aliases#Aliases) .
 
-The Cypress Dashboard also offers [Analytics](/guides/dashboard/analytics) that illustrate trends in your tests and can help identify the tests that fail most often. This could help narrow down what is causing the flake -- for example, seeing increased failures after a change to the test environment could indicate issues with the new environment.
+Cypress Dashboard还提供[分析](/guides/dashboard/analytics)，分析测试中的趋势，并有助于识别最常失败的测试. 这有助于缩小造成脆弱的趋势 -- 例如，在更改测试环境后看到增加的失败可能表明新环境存在问题.
 
-For more advice on dealing with flake read a [series of our blog posts](https://cypress.io/blog/tag/flake/) and [Identifying Code Smells in Cypress](https://codingitwrong.com/2020/10/09/identifying-code-smells-in-cypress.html) by [Cypress Ambassador](https://www.cypress.io/ambassadors/) Josh Justice.
+欲知更多处理脆弱的建议，请阅读[我们的博客系列文章](https://cypress.io/blog/tag/flake/) 以及 [Cypress 大使](https://www.cypress.io/ambassadors/) Josh Justice写的[Cypress中的坏味道代码](https://codingitwrong.com/2020/10/09/identifying-code-smells-in-cypress.html) .
 
-## Log Cypress events
+## 输出Cypress事件日志
 
-Cypress emits multiple events you can listen to as shown below. [Read more about logging events in the browser here](/api/events/catalog-of-events#Logging-All-Events).
+Cypress发出多个事件，如下所示. [在浏览器中阅读更多关于日志事件的信息](/api/events/catalog-of-events#Logging-All-Events).
 
 <DocsImage src="/img/api/catalog-of-events/console-log-events-debug.png" alt="console log events for debugging" ></DocsImage>
 
-## Run Cypress command outside the test
+## 在测试外部运行Cypress命令
 
-If you need to run a Cypress command straight from the Developer Tools console, you can use the internal command `cy.now('command name', ...arguments)`. For example, to run the equivalent of `cy.task('database', 123)` outside the normal execution command chain:
+如果需要直接从Developer Tools控制台运行Cypress命令，可以使用内部命令`cy.now('command name', ...arguments)`. 例如，在正常的执行命令链之外运行`cy.task('database', 123)`:
 
 ```javascript
 cy.now('task', 123).then(console.log)
-// runs cy.task(123) and prints the resolved value
+// 运行 cy.task(123) 并打印解析值
 ```
 
 <Alert type="warning">
 
-The `cy.now()` command is an internal command and may change in the future.
+`cy.now()`命令是一个内部命令，将来可能会更改.
 
 </Alert>
 
 ## Cypress fiddle
 
-While learning Cypress it may be a good idea to try small tests against some HTML. We have written a [@cypress/fiddle](https://github.com/cypress-io/cypress-fiddle) plugin for this. It can quickly mount any given HTML and run some Cypress test commands against it.
+在学习Cypress的同时，对一些HTML进行小测试可能是一个好主意. 我们已经为此编写了一个[@cypressfiddle](https://github.com/cypress-io/cypress-fiddle) 插件. 它可以快速装入任何给定的HTML并对其运行一些Cypress测试命令.
 
-## Troubleshooting Cypress
+## Cypress故障排除
 
-There are times when you will encounter errors or unexpected behavior with Cypress itself. In this situation, we recommend checking out our [Troubleshooting Guide](/guides/references/troubleshooting).
+有时您会遇到错误或Cypress本身的意外行为。在这种情况下，我们建议查看我们的[故障排除指南](/guides/references/troubleshooting).
 
-## More info
+## 更多信息
 
-Often debugging a failing Cypress test means understanding better how your own application works, and how the application might race against the test commands. We recommend reading these blog posts where we show common error scenarios and how to solve them:
+通常，调试失败的Cypress测试意味着更好地理解您自己的应用程序如何工作，以及应用程序如何与测试命令竞争。 我们建议阅读这些博客文章，其中展示了常见的错误场景以及如何解决它们:
 
-- [When Can The Test Start?](https://www.cypress.io/blog/2018/02/05/when-can-the-test-start/)
-- [When Can The Test Stop?](https://www.cypress.io/blog/2020/01/16/when-can-the-test-stop/)
-- [When Can The Test Click?](https://www.cypress.io/blog/2019/01/22/when-can-the-test-click/)
-- [When Can The Test Log Out?](https://www.cypress.io/blog/2020/06/25/when-can-the-test-log-out/)
-- [Do Not Get Too Detached](https://www.cypress.io/blog/2020/07/22/do-not-get-too-detached/)
+- [测试什么时候开始?](https://www.cypress.io/blog/2018/02/05/when-can-the-test-start/)
+- [测试什么时候可以停止?](https://www.cypress.io/blog/2020/01/16/when-can-the-test-stop/)
+- [测试什么时候可以点击?](https://www.cypress.io/blog/2019/01/22/when-can-the-test-click/)
+- [测试什么时候可以退出?](https://www.cypress.io/blog/2020/06/25/when-can-the-test-log-out/)
+- [不要获取太多的已分离元素](https://www.cypress.io/blog/2020/07/22/do-not-get-too-detached/)
