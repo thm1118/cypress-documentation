@@ -329,7 +329,7 @@ describe('My First Test', () => {
 
 <Alert type="info">
 
-<strong class="alert-header">Page Transitions</strong>
+<strong class="alert-header">页面跳转</strong>
 
 值得注意的是，这个测试在两个不同的页面上跳转。
 
