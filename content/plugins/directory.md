@@ -13,4 +13,4 @@ layout: plugins
 
 </Alert>
 
-## Plugin Types
+## 插件类型
