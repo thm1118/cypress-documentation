@@ -119,11 +119,11 @@
               "slug": "slack-integration"
             },
             {
-              "title": "Analytics",
+              "title": "分析",
               "slug": "analytics"
             },
             {
-              "title": "Flaky Test Management",
+              "title": "管理脆弱测试",
               "slug": "flaky-test-management"
             },
             {
