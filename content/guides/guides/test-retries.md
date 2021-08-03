@@ -1,136 +1,104 @@
 ---
-title: Test Retries
+title: 测试重试
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- What are test retries?
-- Why are test retries important?
-- How to configure test retries
+- 什么是测试重试?
+- 为什么测试重试很重要?
+- 如何配置测试重试
 
 </Alert>
 
-## Introduction
+## 介绍
 
-End-to-end (E2E) tests excel at testing complex systems. However, there are
-still behaviors that are hard to verify and make tests flaky (i.e., unreliable)
-and fail sometimes due to unpredictable conditions (eg., temporary outages in
-external dependencies, random network errors, etc.). Some other common race
-conditions that could result in unreliable tests include:
+端到端(E2E)测试擅长于测试复杂的系统。然而，仍然有一些行为很难验证，并使测试不可靠(即，不可靠)，有时由于不可预测的条件(例如，外部依赖的临时中断，随机网络错误等不可靠)而失败。
+其他一些可能导致不可靠测试的常见竞态条件包括:
 
-- Animations
-- API calls
-- Test server / database availability
-- Resource dependencies availability
-- Network issues
+- 动画
+- API 调用
+- 测试服务器 / 数据库的可用性
+- 依赖资源的可用性
+- 网络问题
 
-With test retries, Cypress is able to retry failed tests to help reduce test
-flakiness and continuous integration (CI) build failures. By doing so, this will
-save your team valuable time and resources so you can focus on what matters most
-to you.
+通过测试重试，Cypress能够重试失败的测试，以帮助减少脆弱测试和持续集成(CI)构建失败。这样做可以节省你的团队宝贵的时间和资源，让你专注于对你最重要的事情。
 
-## How It Works
+## 它是如何运作的
 
-By default, tests will not retry when they fail. You will need to
-[enable test retries in your configuration](#Configure-Test-Retries) to use this
-feature.
+默认情况下，测试失败时不会重试。您将需要[在您的配置中启用测试重试](#Configure-Test-Retries)来使用此特性。
 
-Once test retries are enabled, tests can be configured to have X number of retry
-attempts. For example, if test retries has been configured with `2` retry
-attempts, Cypress will retry tests up to 2 additional times (for a total of 3
-attempts) before potentially being marked as a failed test.
+启用测试重试后，可以将测试配置为具有X次重试尝试。例如，如果测试重试被配置为“2”重试尝试，Cypress将重试测试至多2次(总共3次尝试)，然后可能被标记为失败的测试。
 
-When each test is run again, the following
-[hooks](/guides/core-concepts/writing-and-organizing-tests#Hooks) will be re-run
-also:
+当每个测试再次运行时，下面的[钩子](/guides/core-concepts/writing-and-organizing-tests#Hooks)也将重新运行:
 
 - `beforeEach`
 - `afterEach`
 
 <Alert type="warning">
 
-However, failures in `before` and `after` hooks will not trigger a retry.
+但是，`before` 和 `after`钩子中的失败将不会触发重试.
 
 </Alert>
 
-**The following is a detailed step-by-step example of how test retries works:**
+**下面是测试重试工作原理的详细示例:**
 
-Assuming we have configured test retries with `2` retry attempts (for a total of
-3 attempts), here is how the tests might run:
+假设我们已经配置了“2”重试尝试(总共3次尝试)，下面是测试可能运行的方式:
 
-1. A test runs for the first time. If the
-   <Icon name="check-circle" color="green"></Icon> test passes, Cypress will
-   move forward with any remaining tests as usual.
+1. 测试第一次运行。如果
+   <Icon name="check-circle" color="green"></Icon> 测试通过, Cypress将一如既往地进行余下的测试.
 
-2. If the <Icon name="times" color="red"></Icon> test fails, Cypress will tell
-   you that the first attempt failed and will attempt to run the test a second
-   time.
+2. 如果 <Icon name="times" color="red"></Icon> 测试失败, Cypress将告诉你第一次尝试失败，并将尝试运行第二次测试。
 
 <DocsImage src="/img/guides/test-retries/attempt-2-start.png"></DocsImage>
 
-3. If the <Icon name="check-circle" color="green"></Icon> test passes after the
-   second attempt, Cypress will continue with any remaining tests.
+3. 如果 <Icon name="check-circle" color="green"></Icon> 第二次尝试测试通过, Cypress 会继续进行其他测试.
 
-4. If the <Icon name="times" color="red"></Icon> test fails a second time,
-   Cypress will make the final third attempt to re-run the test.
+4. 如果 <Icon name="times" color="red"></Icon> 第二次测试失败,
+   Cypress 会进行最后的第三次尝试重新运行测试.
 
 <DocsImage src="/img/guides/test-retries/attempt-3-start.png"></DocsImage>
 
-5. If the <Icon name="times" color="red"></Icon> test fails a third time,
-   Cypress will mark the test as failed and then move on to run any remaining
-   tests.
+5. 如果 <Icon name="times" color="red"></Icon> 第三次测试失败,
+   Cypress 是否将测试标记为失败，然后继续运行任何剩余的测试.
 
 <DocsImage src="/img/guides/test-retries/attempt-3-fail.png"></DocsImage>
 
-The following is a screen capture of what test retries looks like on the same
-failed test when run via [cypress run](/guides/guides/command-line#cypress-run).
+下面是当通过[cypress run](/guides/guides/command-line#cypress-run)运行时，在同一个失败的测试上重试的屏幕截图.
 
 <DocsImage src="/img/guides/test-retries/cli-error-message.png"></DocsImage>
 
-During [cypress open](/guides/guides/command-line#cypress-open) you will be able
-to see the number of attempts made in the
-[Command Log](/guides/core-concepts/test-runner#Command-Log) and expand each
-attempt for review and debugging if desired.
+在[cypress open](/guides/guides/command-line#cypress-open)期间，您将能够在[Command Log](/guides/core-concepts/test-runner#Command-Log)中看到尝试的次数，如果需要，可以点击展开每一次尝试，进行检查和调试。
 
 <DocsVideo src="/img/guides/test-retries/attempt-expand-collapse-time-travel.mp4"></DocsVideo>
 
-## Configure Test Retries
+## 配置测试重试
 
-### Global Configuration
+### 全局配置
 
-Typically you will want to define different retry attempts for `cypress run`
-versus `cypress open`. You can configure this in your
-[configuration file](/guides/guides/command-line#cypress-open-config-file-lt-config-file-gt)
-(`cypress.json` by default) by passing the `retries` option an object with the
-following options:
+通常，你会`cypress run`
+和 `cypress open`想要定义不同的重试尝试. 您可以在您的[配置文件](/guides/guides/command-line#cypress-open-config-file-lt-config-file-gt) 传递`retries`选项对象，如下:
 
-- `runMode` allows you to define the number of test retries when running
-  `cypress run`
-- `openMode` allows you to define the number of test retries when running
-  `cypress open`
+- `runMode` 允许您定义运行`cypress run`时测试重试的次数
+- `openMode` 允许您定义`cypress open`运行时测试重试的次数
 
 ```jsx
 {
   "retries": {
-    // Configure retry attempts for `cypress run`
-    // Default is 0
+    // 为 `cypress run`配置重试尝试
+    // 默认是 0
     "runMode": 2,
-    // Configure retry attempts for `cypress open`
-    // Default is 0
+    // 为`cypress open`配置重试尝试
+    // 默认是0
     "openMode": 0
   }
 }
 ```
 
-#### Configure retry attempts for all modes
+#### 为所有模式配置重试尝试
 
-If you want to configure the retry attempts for all tests run in both
-`cypress run` and `cypress open`, you can configure this in your
-[configuration file](/guides/guides/command-line#cypress-open-config-file-lt-config-file-gt)
-(`cypress.json` by default) by defining the `retries` property and setting the
-desired number of retries.
+如果您想为`cypress run` 和 `cypress open`中运行的所有测试配置重试尝试,你可以在你的[配置文件](/guides/guides/command-line#cypress-open-config-file-lt-config-file-gt)中定义`retries`属性并设置期望的重试次数。
 
 ```jsx
 {
@@ -138,23 +106,21 @@ desired number of retries.
 }
 ```
 
-### Custom Configurations
+### 自定义配置
 
-#### Individual Test(s)
+#### 单独的测试(s)
 
-If you want to configure retry attempts on a specific test, you can set this by
-using the
-[test's configuration](/guides/core-concepts/writing-and-organizing-tests#Test-Configuration).
+如果您想在特定的测试上配置重试尝试，您可以使用[单个测试的配置](/guides/core-concepts/writing-and-organizing-tests#Test-Configuration) 设置重试尝试。
 
 ```jsx
-// Customize retry attempts for an individual test
+// 为单个测试定制重试尝试
 describe('User sign-up and login', () => {
-  // `it` test block with no custom configuration
+  // 没有自定义配置的`it`测试块
   it('should redirect unauthenticated user to sign-in page', () => {
     // ...
   })
 
-  // `it` test block with custom configuration
+  // 带有自定义配置的`it`测试块
   it(
     'allows user to login',
     {
@@ -170,21 +136,20 @@ describe('User sign-up and login', () => {
 })
 ```
 
-#### Test Suite(s)
+#### 测试集(s)
 
-If you want to configure try attempts for a suite of tests, you can do this by
-setting the suite's configuration.
+如果您想为一组测试配置重试，可以通过设置套件的配置来实现。
 
 ```jsx
-// Customizing retry attempts for a suite of tests
+// 为一组测试定制重试尝试
 describe('User bank accounts', {
   retries: {
     runMode: 2,
     openMode: 1,
   }
 }, () => {
-  // The per-suite configuration is applied to each test
-  // If a test fails, it will be retried
+  // 每个套件的配置应用于每个测试
+  // 如果测试失败，将重新尝试
   it('allows a user to view their transactions', () => {
     // ...
   }
@@ -195,18 +160,13 @@ describe('User bank accounts', {
 })
 ```
 
-You can find more information about custom configurations here:
-[Test Configuration](/guides/references/configuration#Test-Configuration)
+您可以在这里找到更多关于自定义配置的信息:[单个测试配置](/guides/references/configuration#Test-Configuration)
 
-## Screenshots
+## 截屏
 
-When a test retries, Cypress will continue to take screenshots for each failed
-attempt or [cy.screenshot()](/api/commands/screenshot) and suffix each new
-screenshot with `(attempt n)`, corresponding to the current retry attempt
-number.
+当测试重试时，Cypress将继续为每一个失败的尝试或[cy.screenshot()](/api/commands/screenshot)抓取屏幕截图，并在每个新截图的后缀中加上`(attempt n)`，对应当前的重试尝试数。
 
-With the following test code, you would see the below screenshot filenames when
-all 3 attempts fail:
+使用下面的测试代码，当3次尝试都失败时，你会看到下面的截图文件名:
 
 ```js
 describe('User Login', () => {
@@ -219,39 +179,34 @@ describe('User Login', () => {
 ```
 
 ```js
-// screenshot filename from cy.screenshot() on 1st attempt
+// 第一次尝试时cy.screenshot()的截屏文件名
 'user-login-errors.png'
-// screenshot filename on 1st failed attempt
+// 第一次尝试并失败时cy.screenshot()的截屏文件名
 'user-login-errors (failed).png'
-// screenshot filename from cy.screenshot() on 2nd attempt
+// 第2次尝试时cy.screenshot()的截屏文件名
 'user-login-errors (attempt 2).png'
-// screenshot filename on 2nd failed attempt
+// 第2次 失败时cy.screenshot()的截屏文件名
 'user-login-errors (failed) (attempt 2).png'
-// screenshot filename from cy.screenshot() on 3rd attempt
+// 第3次尝试时cy.screenshot()的截屏文件名
 'user-login-errors (attempt 3).png'
-// screenshot filename on 3rd failed attempt
+// 第3次 失败时cy.screenshot()的截屏文件名
 'user-login-errors (failed) (attempt 3).png'
 
 ```
 
-## Videos
+## 视频
 
-You can use Cypress's [`after:spec`](/api/plugins/after-spec-api) event listener
-that fires after each spec file is run to delete the recorded video for specs
-that had no retry attempts or failures. Deleting passing and non-retried videos
-after the run can save resource space on the machine as well as skip the time
-used to process, compress, and upload the video to the
-[Dashboard Service](/guides/dashboard/introduction).
+你可以使用Cypress的[`after:spec`](/api/plugins/after-spec-api)事件监听器，它会在每个spec文件运行后触发，以删除没有重试尝试或失败的spec的录制视频。
+在运行后删除传递的和未重试的视频可以节省机器上的资源空间，并跳过用于处理、压缩和上传视频到[Dashboard服务](/guides/dashboard/introduction)的时间。
 
-### Only upload videos for specs with failing or retried tests
+### 仅上传测试spec失败或重试的视频
 
-The example below shows how to delete the recorded video for specs that had no
-retry attempts or failures when using Cypress test retries.
+下面的示例演示如何在启用Cypress测试重试时，删除没有重试或成功通过的spec的录制视频。
 
 ```js
 // plugins/index.js
 
-// need to install these dependencies
+// 需要安装这些依赖项
 // npm i lodash del --save-dev
 const _ = require('lodash')
 const del = require('del')
@@ -259,12 +214,12 @@ const del = require('del')
 module.exports = (on, config) => {
   on('after:spec', (spec, results) => {
     if (results && results.video) {
-      // Do we have failures for any retry attempts?
+      // 我们是否有失败的重试尝试?
       const failures = _.some(results.tests, (test) => {
         return _.some(test.attempts, { state: 'failed' })
       })
       if (!failures) {
-        // delete the video if the spec passed and no tests retried
+        // 如果spec通过且没有重试测试，则删除视频
         return del(results.video)
       }
     }
@@ -274,76 +229,58 @@ module.exports = (on, config) => {
 
 ## Dashboard
 
-If you are using the [Cypress Dashboard](/guides/dashboard/introduction),
-information related to test retries is displayed on the Test Results tab for a
-run. Selecting the Flaky filter will show tests that retried and then passed
-during the run.
+如果您正在使用[Cypress Dashboard](/guides/dashboard/introduction),
+与测试重试相关的信息显示在运行的“测试结果”选项卡上。选择Flaky筛选器将显示在运行期间重试然后通过的测试。
 
-These tests are also indicated with a "Flaky" badge on the Latest Runs page and
-Test Results tab on the Run Details page.
+在“最新运行”页和“运行详细信息”页上的“测试结果”选项卡上还会显示这些测试。
 
 <DocsVideo src="/img/guides/test-retries/flaky-test-filter.mp4" title="Flaky test filter"></DocsVideo>
 
-Clicking on a Test Result will open the Test Case History screen. This
-demonstrates the number of failed attempts, the screenshots and/or videos of
-failed attempts, and the error for failed attempts.
+点击测试结果将打开测试用例历史记录屏幕。这显示了失败的尝试的数量，失败的尝试的截图或视频，以及失败的尝试的错误。
 
 <DocsImage src="/img/guides/test-retries/flake-artifacts-and-errors.png" alt="Flake artifacts and errors" ></DocsImage>
 
-You can also see the Flaky Rate for a given test.
+您还可以看到一个给定测试的脆弱率。
 
 <DocsImage src="/img/guides/test-retries/flaky-rate.png" alt="Flaky rate" ></DocsImage>
 
-For a comprehensive view of how flake is affecting your overall test suite, you
-can review the
-[Flake Detection](/guides/dashboard/flaky-test-management#Flake-Detection) and
-[Flake Alerting](/guides/dashboard/flaky-test-management#Flake-Alerting)
-features highlighted in the Test Flake Management Guide.
+对于脆弱测试是如何影响您的整个测试套件的全面视图，您可以查看在管理脆弱测试指南内查看 [脆弱检测](/guides/dashboard/flaky-test-management#Flake-Detection) 以及
+[脆弱报警](/guides/dashboard/flaky-test-management#Flake-Alerting)这些亮点功能
 
-## Frequently Asked Questions (FAQs)
+## 常见问题
 
-### Will retried tests be counted as more than one test result in my billing?
+### 在我的账单中，重试的测试是否会被计费为一个以上的测试结果?
 
-No. Tests recorded during `cypress run` with the `--record` flag will be counted
-the same with or without test retries.
+不。在“cypress run”期间用“——record”标记记录的测试无论是否重试都将被计算为相同的值。
 
-We consider each time the `it()` function is called to be a single test for
-billing purposes. The test retrying will not count as extra test results in your
-billing.
+我们将每次调用`it()`函数视为单个测试，以实现计费目的。在您的账单中，测试重试将不计入额外的测试结果。
 
-You can always see how many tests you've recorded from your organization's
-Billing & Usage page within the [Dashboard](https://on.cypress.io/dashboard).
+在[Dashboard](https://on.cypress.io/dashboard)中，您总是可以看到您从组织的Billing & Usage页面记录了多少测试。.
 
-### Can I access the current attempt counter from the test?
+### 我可以从测试中访问当前的重试计数器吗?
 
-Yes, although ordinarily you would not have to, since this is a low-level
-detail. But if you want to use the current attempt number and the total allowed
-attempts you could do the following:
+是的，尽管通常您不需要这样做，因为这是一个底层的细节。但是如果你想使用当前的尝试次数和允许的总尝试次数，你可以做以下事情:
 
 ```javascript
 it('does something differently on retry', { retries: 3 }, () => {
-  // cy.state('runnable') returns the current test object
-  // we can grab the current attempt and
-  // the total allowed attempts from its properties
+  // cy.state('runnable') 返回当前测试对象
+  // 我们可以抓住现在的尝试 and
+  // 从它的属性中允许尝试的总数
   const attempt = cy.state('runnable')._currentRetry
   const retries = cy.state('runnable')._retries
-  // use the "attempt" and "retries" values somehow
+  // 使用"attempt" 和 "retries" 值
 })
 ```
 
-The above `attempt` variable will have values 0 through 3 (the first default
-test execution plus three allowed retries). The `retries` constant in this case
-is always 3.
+上面的“attempt”变量的值从0到3(第一次默认的测试执行加上三次允许的重试). 在这种情况下，`retries`常量总是3。
 
-**Tip:** Cypress [bundles Lodash](/api/utilities/_) library. Use its helper
-methods to safely access a property of an object. Let's make sure the function
-supports different Cypress versions by falling back to the default values.
+**提示:** Cypress [bundles Lodash](/api/utilities/_) 库. 使用它的帮助器方法来安全地访问对象的属性。让我们通过退回到默认值来确保该函数支持不同的Cypress版本.
 
 ```javascript
 it('does something differently on retry', { retries: 3 }, () => {
-  // _.get: if the object or property is missing use the provided default value
+  // _.get: 如果缺少对象或属性，请使用提供的默认值
   const attempt = Cypress._.get(cy.state('runnable'), '_currentRetry', 0)
   const retries = Cypress._.get(cy.state('runnable'), '_retries', 0)
-  // use the "attempt" and "retries" values somehow
+  // 使用"attempt" 和 "retries" 值
 })
 ```
