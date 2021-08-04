@@ -2,19 +2,19 @@
 title: visit
 ---
 
-Visit a remote URL.
+访问远程URL.
 
 <Alert type="warning">
 
-<strong class="alert-header">Best Practice</strong>
+<strong class="alert-header">最佳实践</strong>
 
-We recommend setting a `baseUrl` when using `cy.visit()`.
+我们建议在使用`cyl .visit()`时设置`baseUrl`.
 
-Read about [best practices](/guides/references/best-practices#Setting-a-global-baseUrl) here.
+阅读[最佳实践](/guides/references/best-practices#Setting-a-global-baseUrl) .
 
 </Alert>
 
-## Syntax
+## 语法
 
 ```javascript
 cy.visit(url)
@@ -22,87 +22,87 @@ cy.visit(url, options)
 cy.visit(options)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
 cy.visit('http://localhost:3000')
-cy.visit('/') // visits the baseUrl
-cy.visit('index.html') // visits the local file "index.html"
+cy.visit('/') // 访问 baseUrl
+cy.visit('index.html') // 访问本地文件 "index.html"
 cy.visit('./pages/hello.html')
 ```
 
-### Arguments
+### 参数
 
 **<Icon name="angle-right"></Icon> url** **_(String)_**
 
-The URL to visit.
+要访问的URL.
 
-Cypress will prefix the URL with the `baseUrl` configured in your [network options](/guides/references/configuration#Global) if you've set one.
+Cypress将在您的[网络选项](/guides/references/configuration#Global) 中配置的`baseUrl`作为URL前缀，如果你设置的化.
 
-If there is no `baseUrl` set, you may specify the relative path of an html file, and Cypress will serve this file automatically using built-in static server. The path is relative to the root directory of the project. Note that the `file://` prefix is not needed.
+如果没有设置`baseUrl` , 你可以指定一个html文件的相对路径，Cypress将自动使用内置的静态服务器来服务这个文件. 该路径相对于项目的根目录。 注意，不需要`file://`前缀.
 
 **<Icon name="angle-right"></Icon> options** **_(Object)_**
 
-Pass in an options object to control the behavior of `cy.visit()`.
+传入一个options对象来控制 `cy.visit()`的行为.
 
-| Option                     | Default                                                        | Description                                                                                                                                                                                                                              |
+| 选项                       | 默认值                                                          | 描述                                                                                                                                                                                                                              |
 | -------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `url`                      | `null`                                                         | The URL to visit. Behaves the same as the `url` argument.                                                                                                                                                                                |
-| `method`                   | `GET`                                                          | The HTTP method to use in the visit. Can be `GET` or `POST`.                                                                                                                                                                             |
-| `body`                     | `null`                                                         | An optional body to send along with a `POST` request. If it is a string, it will be passed along unmodified. If it is an object, it will be URL encoded to a string and sent with a `Content-Type: application/x-www-urlencoded` header. |
-| `headers`                  | `{}`                                                           | An object that maps HTTP header names to values to be sent along with the request. _Note:_ `headers` will only be sent for the initial `cy.visit()` request, not for any subsequent requests.                                            |
-| `qs`                       | `null`                                                         | Query parameters to append to the `url` of the request                                                                                                                                                                                   |
-| `log`                      | `true`                                                         | Displays the command in the [Command log](/guides/core-concepts/test-runner#Command-Log)                                                                                                                                                 |
-| `auth`                     | `null`                                                         | Adds Basic Authorization headers                                                                                                                                                                                                         |
-| `failOnStatusCode`         | `true`                                                         | Whether to fail on response codes other than `2xx` and `3xx`                                                                                                                                                                             |
-| `onBeforeLoad`             | `function`                                                     | Called before your page has loaded all of its resources.                                                                                                                                                                                 |
-| `onLoad`                   | `function`                                                     | Called once your page has fired its load event.                                                                                                                                                                                          |
-| `retryOnStatusCodeFailure` | `false`                                                        | Whether Cypress should automatically retry status code errors under the hood. Cypress will retry a request up to 4 times if this is set to true.                                                                                         |
-| `retryOnNetworkFailure`    | `true`                                                         | Whether Cypress should automatically retry transient network errors under the hood. Cypress will retry a request up to 4 times if this is set to true.                                                                                   |
-| `timeout`                  | [`pageLoadTimeout`](/guides/references/configuration#Timeouts) | Time to wait for `cy.visit()` to resolve before [timing out](#Timeouts)                                                                                                                                                                  |
+| `url`                      | `null`                                                         | 要访问的URL。行为与`url`参数相同.                                                                                                                                                                                |
+| `method`                   | `GET`                                                          | 访问中使用的HTTP方法。`GET` 或 `POST`.                                                                                                                                                                             |
+| `body`                     | `null`                                                         | 与`POST`请求一起发送的可选body。 如果它是一个字符串，它将不加修改地传递. 如果它是一个object，它将被编码为字符串的URL，并与`Content-Type: application/x-www-urlencoded`头一起发送. |
+| `headers`                  | `{}`                                                           | 随request发送的HTTP header，由键值对组成的对象. _注意:_ `headers` 仅在初始化的 `cy.visit()` request时发送, 不会被子requests发送.                                            |
+| `qs`                       | `null`                                                         | 附加到请求的`url`的查询参数                                                                                                                                                                                   |
+| `log`                      | `true`                                                         | 是否在[命令日志](/guides/core-concepts/test-runner#Command-Log) 中显示命令                                                                                                                                                |
+| `auth`                     | `null`                                                         | 添加基本授权头                                                                                                                                                                                                         |
+| `failOnStatusCode`         | `true`                                                         | 响应码不是`2xx` 和 `3xx`时，visit是否失败                                                                                                                                                                             |
+| `onBeforeLoad`             | `function`                                                     | 在页面加载其所有资源之前调用的函数.                                                                                                                                                                                 |
+| `onLoad`                   | `function`                                                     | 一旦页面触发了它的load事件就调用的函数.                                                                                                                                                                                          |
+| `retryOnStatusCodeFailure` | `false`                                                        | 状态代码错误时，Cypress是否应该在底层自动重试. 如果设置为true, Cypress将重试一个请求最多4次.                                                                                         |
+| `retryOnNetworkFailure`    | `true`                                                         | 瞬态网络错误时，Cypress是否应该在底层自动重试. 如果设置为true, Cypress将重试一个请求最多4次.                                                                                   |
+| `timeout`                  | [`pageLoadTimeout`](/guides/references/configuration#超时) | `cy.visit()` 在[超时](#超时)之前等待的时间                                                                                                                                                                  |
 
-You can also set all `cy.visit()` commands' `pageLoadTimeout` and `baseUrl` globally in [configuration](/guides/references/configuration).
+你也可以在[configuration](/guides/references/configuration)中全局设置所有的`cy.visit()` 命令的' `pageLoadTimeout` 和 `baseUrl`.
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#目标管理)
 
-<List><li>`cy.visit()` 'yields the `window` object after the page finishes loading' </li></List>
+<List><li>`cy.visit()` '在页面完成加载后yields（生成） `window` 对象' </li></List>
 
-Let's confirm the `window.navigator.language` after visiting the site:
+让我们在访问该网站后检查 `window.navigator.language`:
 
 ```javascript
-cy.visit('/') // yields the window object
+cy.visit('/') // yields the window 对象
   .its('navigator.language') // yields window.navigator.language
-  .should('equal', 'en-US') // asserts the expected value
+  .should('equal', 'en-US') // 断言预期值
 ```
 
-## Examples
+## 例子
 
 ### URL
 
-#### Visit a local server running on `http://localhost:8000`
+#### 访问运行在`http://localhost:8000`上的本地服务
 
-`cy.visit()` resolves when the remote page fires its `load` event.
+`cy.visit()` 将在远程页面触发其`load`事件时解析.
 
 ```javascript
 cy.visit('http://localhost:8000')
 ```
 
-### Options
+### 选项
 
-#### Change the default timeout
+#### 更改默认超时时间
 
 ```javascript
-// Wait 30 seconds for page 'load' event
+// 等待页面'load'事件30秒
 cy.visit('/index.html', { timeout: 30000 })
 ```
 
-#### Add basic auth headers
+#### 添加基本身份验证头
 
-Cypress will automatically apply the right authorization headers if you're attempting to visit an application that requires [Basic Authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).
+如果您试图访问一个需要[基本身份验证](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication) 的应用程序，Cypress将自动应用正确的授权头。.
 
-Provide the `username` and `password` in the `auth` object. Then all subsequent requests matching the origin you're testing will have these attached at the network level.
+在`auth`对象中提供`username` 和 `password` . 然后，所有与您正在测试的源匹配的后续请求都将在网络级别附加这个头.
 
 ```javascript
 cy.visit('https://www.acme.com/', {
@@ -113,59 +113,59 @@ cy.visit('https://www.acme.com/', {
 })
 ```
 
-You can also provide the username and password directly in the URL.
+您还可以在URL中直接提供用户名和密码.
 
 ```javascript
-// this is the same thing as providing the auth object
+// 这与提供认证对象是一样的
 cy.visit('https://wile:coyote@www.acme.com')
 ```
 
 <Alert type="info">
 
-Cypress will automatically attach this header at the network proxy level, outside of the browser. Therefore you **will not** see this header in the Dev Tools.
+Cypress在浏览器外，基于网络代理级自动附加这个头. 因此，你**不会**在Dev Tools中看到这个头.
 
 </Alert>
 
-#### Provide an `onBeforeLoad` callback function
+#### 提供一个`onBeforeLoad`回调函数
 
-`onBeforeLoad` is called as soon as possible, before your page has loaded all of its resources. Your scripts will not be ready at this point, but it's a great hook to potentially manipulate the page.
+`onBeforeLoad`会在页面加载所有资源之前被尽快调用. 您的脚本现在还没有准备好，但是它是一个很好的钩子，可以潜在地操纵页面.
 
 ```javascript
 cy.visit('http://localhost:3000/#dashboard', {
   onBeforeLoad: (contentWindow) => {
-    // contentWindow is the remote page's window object
+    // contentWindow是远程页面的窗口对象
   },
 })
 ```
 
 <Alert type="info">
 
-Check out our example recipes using `cy.visit()`'s `onBeforeLoad` option to:
+查看我们的示例配方，使用`cy.visit()`的 `onBeforeLoad`选项:
 
-- [Bootstraping your App](/examples/examples/recipes#Server-Communication)
-- [Set a token to `localStorage` for login during Single Sign On](/examples/examples/recipes#Logging-In)
-- [Stub `window.fetch`](/examples/examples/recipes#Stubbing-and-spying)
+- [启动你的应用](/examples/examples/recipes#Server-Communication)
+- [在单点登录期间为登录设置一个令牌，保存到`localStorage` ](/examples/examples/recipes#Logging-In)
+- [模拟 `window.fetch`](/examples/examples/recipes#Stubbing-and-spying)
 
 </Alert>
 
-#### Provide an `onLoad` callback function
+#### 提供一个`onLoad` 回调函数
 
-`onLoad` is called once your page has fired its `load` event. All of the scripts, stylesheets, html and other resources are guaranteed to be available at this point.
+一旦你的页面触发了它的`load`事件，就会调用`onLoad` . 此时，所有的脚本、样式表、html和其他资源都保证可用.
 
 ```javascript
 cy.visit('http://localhost:3000/#/users', {
   onLoad: (contentWindow) => {
-    // contentWindow is the remote page's window object
+    // contentWindow是远程页面的窗口对象
     if (contentWindow.angular) {
-      // do something
+      // 做某事
     }
   },
 })
 ```
 
-#### Add query paramaters
+#### 添加查询参数
 
-You can provide query parameters as an object to `cy.visit()` by passing `qs` to `options`.
+通过将`qs`传递给`options`，你可以将查询参数作为对象提供给`cy.visit()`。
 
 ```js
 // visits http://localhost:3500/users?page=1&role=admin
@@ -177,7 +177,7 @@ cy.visit('http://localhost:3500/users', {
 })
 ```
 
-The parameters passed to `qs` will be merged into existing query parameters on the `url`.
+传递给`qs`的参数将合并到`url`上的现有查询参数中。.
 
 ```js
 // visits http://example.com/users?page=1&admin=true
@@ -186,9 +186,9 @@ cy.visit('http://example.com/users?page=1', {
 })
 ```
 
-#### Submit a form
+#### 提交表单
 
-To send a request that looks like a user submitting an HTML form, use a `POST` method with a `body` containing the form values:
+要发送一个看起来像用户提交HTML表单的请求，可以使用带有包含表单值`body`的`POST`方法:
 
 ```javascript
 cy.visit({
@@ -201,24 +201,23 @@ cy.visit({
 })
 ```
 
-## Notes
+## 注意
 
-### Redirects
+### 重定向
 
-#### Visit will automatically follow redirects
+#### 访问将自动遵循重定向
 
 ```javascript
-// we aren't logged in, so our web server
-// redirected us to /login
+// 我们没有登录，所以我们的网络服务器将我们重定向到 /login
 cy.visit('http://localhost:3000/admin')
 cy.url().should('match', /login/)
 ```
 
-### Protocol
+### 协议
 
-#### Protocol can be omitted from common hosts
+#### 普通host可以省略协议
 
-Cypress automatically prepends the `http://` protocol to common hosts. If you're not using one of these 3 hosts, then make sure to provide the protocol.
+Cypress自动将`http://`协议附加到普通host。 如果您没有使用下面 3个主机中的一个，那么请确保自己提供协议.
 
 ```javascript
 cy.visit('localhost:3000') // Visits http://localhost:3000
@@ -226,21 +225,21 @@ cy.visit('0.0.0.0:3000') // Visits http://0.0.0.0:3000
 cy.visit('127.0.0.1:3000') // Visits http://127.0.0.1:3000
 ```
 
-### Web Server
+### Web服务
 
-#### Cypress can optionally act as your web server
+#### Cypress能够可选的作为您的web服务
 
-Cypress will automatically attempt to serve your files if you don't provide a host and `baseUrl` **is not defined**. The path should be relative to your project's root folder (where the `cypress.json` file is generated by default).
+如果你不提供host并且`baseUrl`没有定义，Cypress将自动尝试为你的文件提供服务. 该路径应该相对于项目的根文件夹(根目录会已有默认生成的 `cypress.json` 文件).
 
-Having Cypress serve your files is useful in smaller projects and example apps, but isn't recommended for production apps. It is always better to run your own server and provide the url to Cypress.
+在小型项目和示例应用程序中，让Cypress为你的文件提供服务很有用，但不推荐用于生产. 最好运行自己的服务器，并向Cypress提供url.
 
 ```javascript
 cy.visit('app/index.html')
 ```
 
-#### Visit local file when `baseUrl` is set
+#### 当设置了`baseUrl`时访问本地文件
 
-If you have `baseUrl` set, but need to visit a local file in a single test or a group of tests, disable the `baseUrl` using [per-test configuration](/guides/references/configuration#Test-Configuration). Imagine our `cypress.json` file:
+如果设置了`baseUrl`，但需要在单个测试或一组测试中访问本地文件，请使用[单个测试配置](/guides/references/configuration#Test-Configuration)里禁用`baseUrl`. 想象我们的 `cypress.json`文件:
 
 ```json
 {
@@ -248,27 +247,27 @@ If you have `baseUrl` set, but need to visit a local file in a single test or a 
 }
 ```
 
-The first test visits the `baseUrl`, while the second test visits the local file.
+第一个测试访问`baseUrl`，而第二个测试访问本地文件。
 
 ```javascript
-it('visits base url', () => {
+it('访问baseUrl', () => {
   cy.visit('/')
   cy.contains('h1', 'Kitchen Sink')
 })
 
-it('visits local file', { baseUrl: null }, () => {
+it('访问本地文件', { baseUrl: null }, () => {
   cy.visit('index.html')
   cy.contains('local file')
 })
 ```
 
-**Tip:** because visiting every new domain requires the Test Runner window reload, we recommend putting the above tests in separate spec files.
+**提示:** 因为访问每个新域都需要重新加载Test Runner窗口，所以我们建议将上述两个测试放在单独，分隔的两个spec文件中.
 
-### Prefixes
+### 前缀
 
-#### Visit is automatically prefixed with `baseUrl`
+#### Visit会自动加上`baseUrl`前缀
 
-Configure `baseUrl` in the your [configuration](/guides/references/configuration) file (`cypress.json` by default) to prevent repeating yourself in every `cy.visit()` command.
+在你的[配置(`cypress.json` 默认)](/guides/references/configuration) 中配置`baseUrl` ，以免在每个`cy.visit()`命令中重复这些前缀.
 
 ```json
 {
@@ -282,63 +281,63 @@ cy.visit('dashboard') // Visits http://localhost:3000/#/dashboard
 
 ### Window
 
-#### Visit will always yield the remote page's `window` object when it resolves
+#### 当Visit 完成解析时，总是会产生（yield）远程页面的`window`对象
 
 ```javascript
 cy.visit('index.html').then((contentWindow) => {
-  // contentWindow is the remote page's window object
+  // contentWindow是远程页面的窗口对象
 })
 ```
 
 ### User agent
 
-Trying to change the `User-Agent`? You can set the `userAgent` as a [configuration value](/guides/references/configuration#Browser) in your configuration file.
+试图改变`User-Agent`? 你可以在配置文件中将`userAgent`设置[配置值](/guides/references/configuration#Browser).
 
-### Routing
+### 路由
 
-#### Prevent requests before a remote page initially loads
+#### 在远程页面最初加载之前阻止请求
 
-One common scenario Cypress supports is visiting a remote page and also preventing any Ajax requests from immediately going out.
+Cypress支持的一个常见场景是访问远程页面并防止立即发出任何Ajax请求。
 
-You may think this works:
+你可能认为这是可行的:
 
 ```javascript
-// this code may not work depending on implementation
+// 根据实现的不同，此代码可能无法工作
 cy.visit('http://localhost:8000/#/app')
 cy.intercept('/users/**', { fixture: 'users' })
 ```
 
-But if your app makes a request upon being initialized, _the above code will not work_. `cy.visit()` will resolve once its `load` event fires. The [`cy.intercept()`](/api/commands/intercept) command is not processed until _after_ `cy.visit()` resolves.
+但如果你的应用程序在初始化时发出请求， _上面的代码不能工作_. `cy.visit()` 将在它的`load`事件触发后解析. [`cy.intercept()`](/api/commands/intercept)命令在`cy.visit()`解析完成后才会被处理。
 
-Many applications will have already begun routing, initialization, and requests by the time the `cy.visit()` in the above code resolves. Therefore creating a [`cy.intercept()`](/api/commands/intercept) route will happen too late, and Cypress will not process the requests.
+在上面代码中的`cy.visit()`解析时，许多应用程序已经开始路由、初始化和请求了. 因此，创建[`cy.intercept()`](/api/commands/intercept)路由会发生得太晚，Cypress将不会处理请求.
 
-Luckily Cypress supports this use case. Reverse the order of the commands:
+幸运的是Cypress支持这个场景。颠倒命令的顺序:
 
 ```javascript
-// this code is probably what you want
+// 这段代码可能就是您想要的
 cy.intercept('/users/**', {...})
 cy.visit('http://localhost:8000/#/app')
 ```
 
-Cypress will automatically apply the routes to the very next `cy.visit()` and does so immediately before any of your application code runs.
+Cypress将自动将路由应用到下一个`cy.visit()`，并在任何应用程序代码运行之前执行。
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 需要 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`cy.visit()` requires being chained off of `cy`.</li><li>`cy.visit()` requires the response to be `content-type: text/html`.</li><li>`cy.visit()` requires the response code to be `2xx` after following redirects.</li><li>`cy.visit()` requires the load `load` event to eventually fire.</li></List>
+<List><li>`cy.visit()` 需要链在`cy`后 .</li><li>`cy.visit()` 需要响应内容是`content-type: text/html`.</li><li>`cy.visit()` 在被重定向后，需要最终的响应状态码为 `2xx` .</li><li>`cy.visit()` 需要 `load` 事件最终被触发.</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`cy.visit()` will automatically wait for assertions you have chained to pass</li></List>
+<List><li>`cy.visit()` 将自动等待已链接的断言通过</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`cy.visit()` can time out waiting for the page to fire its `load` event.</li><li>`cy.visit()` can time out waiting for assertions you've added to pass.</li></List>
+<List><li>`cy.visit()` 等待页面触发`load`'事件,直至超时.</li><li>`cy.visit()` 等待链接的断言通过，直至超时.</li></List>
 
-## Command Log
+## 命令日志
 
-**_Visit example application in a `beforeEach`_**
+**_在`beforeEach`中访问示例应用程序_**
 
 ```javascript
 beforeEach(() => {
@@ -346,15 +345,15 @@ beforeEach(() => {
 })
 ```
 
-The commands above will display in the Command Log as:
+上面的命令将在命令日志中显示为:
 
 <DocsImage src="/img/api/visit/visit-example-page-in-before-each-of-test.png" alt="Command Log visit" ></DocsImage>
 
-When clicking on `visit` within the command log, the console outputs the following:
+当单击命令日志中的`visit`时，控制台输出如下内容:
 
 <DocsImage src="/img/api/visit/visit-shows-any-redirect-or-cookies-set-in-the-console.png" alt="console Log visit" ></DocsImage>
 
-## History
+## 历史
 
 | Version                                       | Changes                                                                          |
 | --------------------------------------------- | -------------------------------------------------------------------------------- |
@@ -369,11 +368,11 @@ When clicking on `visit` within the command log, the console outputs the followi
 | [0.4.3](/guides/references/changelog#0-4-3)   | Added option `onBeforeLoad`                                                      |
 | [< 0.3.3](/guides/references/changelog#0-3.3) | `cy.visit()` command added                                                       |
 
-## See also
+## 另请参阅
 
 - [`cy.go()`](/api/commands/go)
 - [`cy.reload()`](/api/commands/reload)
 - [`cy.request()`](/api/commands/request)
-- [Recipe: Bootstrapping your App](/examples/examples/recipes#Server-Communication)
-- [Recipe: Logging In - Single Sign on](/examples/examples/recipes#Logging-In)
-- [Recipe: Stubbing `window.fetch`](/examples/examples/recipes#Stubbing-and-spying)
+- [配方:启动你的应用](/examples/examples/recipes#Server-Communication)
+- [配方:登录-单点登录](/examples/examples/recipes#Logging-In)
+- [配方:模拟 `window.fetch`](/examples/examples/recipes#Stubbing-and-spying)
