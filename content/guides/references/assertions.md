@@ -1,16 +1,16 @@
 ---
-title: Assertions
+title: 断言
 ---
 
-Cypress bundles the popular [Chai](/guides/references/assertions#Chai) assertion library, as well as helpful extensions for [Sinon](/guides/references/assertions#Sinon-Chai) and [jQuery](/guides/references/assertions#Chai-jQuery), bringing you dozens of powerful assertions for free.
+Cypress捆绑了流行的[Chai](/guides/references/assertions#Chai)断言库, 以及对[Sinon](/guides/references/assertions#Sinon-Chai) 和[jQuery](/guides/references/assertions#Chai-jQuery)的有益扩展, 免费为您带来数十个强大的断言.
 
 <Alert type="info">
 
-<strong class="alert-header">New to Cypress?</strong>
+<strong class="alert-header">Cypress 新人?</strong>
 
-This document is only a reference to every assertion Cypress supports.
+本文档只是对Cypress支持的每个断言的参考引用。 
 
-If you're looking to understand **how** to use these assertions please read about assertions in our [Introduction to Cypress](/guides/core-concepts/introduction-to-cypress#Assertions) guide.
+如果你想了解如何使用这些断言，请阅读我们的[Cypress简介](/guides/core-concepts/introduction-to-cypress#Assertions)指南中的断言.
 
 </Alert>
 
@@ -18,11 +18,11 @@ If you're looking to understand **how** to use these assertions please read abou
 
 <Icon name="github"></Icon> [https://github.com/chaijs/chai](https://github.com/chaijs/chai)
 
-### BDD Assertions
+### BDD 断言
 
-These chainers are available for BDD assertions (`expect`/`should`). Aliases listed can be used interchangeably with their original chainer. You can see the entire list of available BDD Chai assertions [here](http://chaijs.com/api/bdd/).
+这些Chainer可用于BDD断言 (`expect`/`should`). 列出的别名可以与它们原来的Chainer互换使用. 您可以在[这里](http://chaijs.com/api/bdd/) 看到可用的BDD Chai断言的整个列表.
 
-| Chainer                                                                                                              | Example                                                                                                                               |
+| Chainer                                                                                                              | 例子                                                                                                                               |
 | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | not                                                                                                                  | `expect(name).to.not.equal('Jane')`                                                                                                   |
 | deep                                                                                                                 | `expect(obj).to.deep.equal({ name: 'Jane' })`                                                                                         |
@@ -68,17 +68,17 @@ These chainers are available for BDD assertions (`expect`/`should`). Aliases lis
 | increase(_function_) <br><small class="aliases"><strong>Aliases: </strong>increases</small>                          | `expect(fn).to.increase(obj, 'val')`                                                                                                  |
 | decrease(_function_) <br><small class="aliases"><strong>Aliases: </strong>decreases</small>                          | `expect(fn).to.decrease(obj, 'val')`                                                                                                  |
 
-These getters are also available for BDD assertions. They don't actually do anything, but they enable you to write clear, english sentences.
+这些getter也可用于BDD断言。它们实际上什么也做不了，但它们能让你写出清晰的英语语句。
 
-| Chainable getters                                                                           |
+| 可链接的   getters                                                                           |
 | ------------------------------------------------------------------------------------------- |
 | `to`, `be`, `been`, `is`, `that`, `which`, `and`, `has`, `have`, `with`, `at`, `of`, `same` |
 
-### TDD Assertions
+### TDD 断言
 
-These assertions are available for TDD assertions (`assert`). You can see the entire list of available Chai assertions [here](http://chaijs.com/api/assert/).
+这些断言可用于TDD断言(`assert`).你可以在[这里](http://chaijs.com/api/assert/) 看到完整的Chai断言列表.
 
-| Assertion                                                   | Example                                                |
+| 断言                                                        | 例子                                                |
 | ----------------------------------------------------------- | ------------------------------------------------------ |
 | .isOk(_object_, _[message]_)                                | `assert.isOk('everything', 'everything is ok')`        |
 | .isNotOk(_object_, _[message]_)                             | `assert.isNotOk(false, 'this will pass')`              |
@@ -124,13 +124,13 @@ These assertions are available for TDD assertions (`assert`). You can see the en
 
 <Icon name="github"></Icon> [https://github.com/chaijs/chai-jquery](https://github.com/chaijs/chai-jquery)
 
-These chainers are available when asserting about a DOM object.
+当断言DOM对象时，可以使用这些Chainers.
 
-You will commonly use these chainers after using DOM commands like: [`cy.get()`](/api/commands/get), [`cy.contains()`](/api/commands/contains), etc.
+您通常会在使用DOM命令之后使用这些Chainers，例如: [`cy.get()`](/api/commands/get), [`cy.contains()`](/api/commands/contains), 等等
 
 <!-- textlint-disable -->
 
-| Chainers                | Assertion                                                            |
+| Chainers                | 断言                                                            |
 | ----------------------- | -------------------------------------------------------------------- |
 | attr(_name_, _[value]_) | `expect($el).to.have.attr('foo', 'bar')`                             |
 | prop(_name_, _[value]_) | `expect($el).to.have.prop('disabled', false)`                        |
@@ -160,7 +160,7 @@ You will commonly use these chainers after using DOM commands like: [`cy.get()`]
 
 <Icon name="github"></Icon> [https://github.com/domenic/sinon-chai](https://github.com/domenic/sinon-chai)
 
-These chainers are used on assertions with [`cy.stub()`](/api/commands/stub) and [`cy.spy()`](/api/commands/spy).
+使用[`cy.stub()`](/api/commands/stub) 和 [`cy.spy()`](/api/commands/spy)在断言中使用这些Chainers。.
 
 | Sinon.JS property/method | Assertion                                                               |
 | ------------------------ | ----------------------------------------------------------------------- |
@@ -186,112 +186,112 @@ These chainers are used on assertions with [`cy.stub()`](/api/commands/stub) and
 | threw                    | `expect(spy).to.have.thrown(errorObjOrErrorTypeStringOrNothing)`        |
 | alwaysThrew              | `expect(spy).to.have.always.thrown(errorObjOrErrorTypeStringOrNothing)` |
 
-## Adding New Assertions
+## 添加新断言
 
-Because we are using `chai`, that means you can extend it however you'd like. Cypress will "just work" with new assertions added to `chai`. You can:
+因为我们用的是`chai`，这意味着你可以随意扩展它.Cypress 与新添加到`chai`的断言“工作”。你可以:
 
-- Write your own `chai` assertions as [documented here](http://chaijs.com/api/plugins/).
-- npm install any existing `chai` library and import into your test file or support file.
+- 写下你自己的`chai`断言 , [这里是文档](http://chaijs.com/api/plugins/).
+- npm install 任意存在 `chai` 库， import 到你的测试文件或 support 文件内.
 
 <Alert type="info">
 
-[Check out our example recipe extending chai with new assertions.](/examples/examples/recipes#Fundamentals)
+[看看我们使用新断言扩展chai的示例配方.](/examples/examples/recipes#Fundamentals)
 
 </Alert>
 
-## Common Assertions
+## 常见的断言
 
-Here is a list of common element assertions. Notice how we use these assertions (listed above) with [`.should()`](/api/commands/should). You may also want to read about how Cypress [retries](/guides/core-concepts/retry-ability) assertions.
+下面是常见元素断言的列表。注意我们如何使用[`.should()`](/api/commands/should) 中的这些断言(上面列出的). 您可能还想了解Cypress 如何[重试](/guides/core-concepts/retry-ability)断言。
 
-### Length
+### 长度
 
 ```javascript
-// retry until we find 3 matching <li.selected>
+// 重试直到找到3个<li.selected>的匹配项
 cy.get('li.selected').should('have.length', 3)
 ```
 
-### Class
+### CSS 类
 
 ```javascript
-// retry until this input does not have class disabled
+// 重试，直到该输入没有禁用class
 cy.get('form').find('input').should('not.have.class', 'disabled')
 ```
 
-### Value
+### 值
 
 ```javascript
-// retry until this textarea has the correct value
+// 重试，直到文本区域具有正确的value
 cy.get('textarea').should('have.value', 'foo bar baz')
 ```
 
-### Text Content
+### 文本内容
 
 ```javascript
-// assert the element's text content is exactly the given text
+// 断言元素的文本内容就是给定的文本
 cy.get('#user-name').should('have.text', 'Joe Smith')
-// assert the element's text includes the given substring
+// 断言元素的文本包含给定的子字符串
 cy.get('#address').should('include.text', 'Atlanta')
-// retry until this span does not contain 'click me'
+// 重试，直到不包含'click me'
 cy.get('a').parent('span.help').should('not.contain', 'click me')
-// the element's text should start with "Hello"
+// 元素的文本应该以“Hello”开始
 cy.get('#greeting')
   .invoke('text')
   .should('match', /^Hello/)
-// tip: use cy.contains to find element with its text
-// matching the given regular expression
+// 提示:使用cy.contains查找元素及其文本
+// 匹配给定的正则表达式
 cy.contains('#a-greeting', /^Hello/)
 ```
 
-**Tip:** read about assertions against a text with non-breaking space entities in [How do I get an element's text contents?](/faq/questions/using-cypress-faq#How-do-I-get-an-element-s-text-contents)
+**提示:** 在[如何获取元素的文本内容?](/faq/questions/using-cypress-faq#How-do-I-get-an-element-s-text-contents) 中阅读对具有不间断空格实体的文本的断言
 
-### Visibility
+### 可见性
 
 ```javascript
-// retry until the button with id "form-submit" is visible
+// 重试，直到id为"form-submit"的按钮可见
 cy.get('button#form-submit').should('be.visible')
-// retry until the list item with
-// text "write tests" is visible
+// 重试，直到列表项
+// 可见文本“write tests”
 cy.contains('.todo li', 'write tests').should('be.visible')
 ```
 
-**Note:** if there are multiple elements, the assertions `be.visible` and `not.be.visible` act differently:
+**注意:** 如果有多个元素，则断言`be.visible` 和 `not.be.visible`可见的行为不同:
 
 ```javascript
-// retry until SOME elements are visible
+// 重试，直到某些元素可见为止
 cy.get('li').should('be.visible')
-// retry until EVERY element is invisible
+// 重试，直到每个元素都不可见
 cy.get('li.hidden').should('not.be.visible')
 ```
 
-Watch the short video ["Multiple elements and should('be.visible') assertion"](https://www.youtube.com/watch?v=LxkrhUEE2Qk) that shows how to correctly check the visibility of elements.
+观看短视频[“多个元素和should('be.visible')断言”](https://www.youtube.com/watch?v=LxkrhUEE2Qk)  演示如何正确检查元素的可见性.
 
-### Existence
+### 存在
 
 ```javascript
-// retry until loading spinner no longer exists
+// 重试，直到加载菊花 不再存在
 cy.get('#loading').should('not.exist')
 ```
 
 ### State
 
 ```javascript
-// retry until our radio is checked
+// 在radio被选中前重试
 cy.get(':radio').should('be.checked')
 ```
 
 ### CSS
 
 ```javascript
-// retry until .completed has matching css
+// 重试直到。completed有匹配的CSS
 cy.get('.completed').should('have.css', 'text-decoration', 'line-through')
 ```
 
 ```javascript
-// retry while .accordion css has the "display: none" property
+// 重试直到 accordion的 CSS没有"display: none"属性
 cy.get('#accordion').should('not.have.css', 'display', 'none')
 ```
 
-### Disabled property
+### 禁用属性
 
 ```html
 <input type="text" id="example-input" disabled />
@@ -300,86 +300,86 @@ cy.get('#accordion').should('not.have.css', 'display', 'none')
 ```javascript
 cy.get('#example-input')
   .should('be.disabled')
-  // let's enable this element from the test
+  // 让我们从测试中启用这个元素
   .invoke('prop', 'disabled', false)
 
 cy.get('#example-input')
-  // we can use "enabled" assertion
+  // 我们可以使用“enabled”断言
   .should('be.enabled')
-  // or negate the "disabled" assertion
+  //或否定“disabled”断言
   .and('not.be.disabled')
 ```
 
-## Negative assertions
+## 否定的断言
 
-There are positive and negative assertions. Examples of positive assertions are:
+有肯定的，也有否定的断言. 正面断言的例子有:
 
 ```javascript
 cy.get('.todo-item').should('have.length', 2).and('have.class', 'completed')
 ```
 
-The negative assertions have the "not" chainer prefixed to the assertion. Examples of negative assertions are:
+否定断言的前缀是“not”前缀. 否定断言的例子有:
 
 ```javascript
 cy.contains('first todo').should('not.have.class', 'completed')
 cy.get('#loading').should('not.be.visible')
 ```
 
-#### ⚠️ False passing tests
+#### ⚠️ 错误的通过测试
 
-Negative assertions may pass for reasons you weren't expecting. Let's say we want to test that a Todo list app adds a new Todo item after typing the Todo and pressing enter.
+否定的断言可能会因为你意想不到的原因而通过. 假设我们想测试一个待办事项列表应用程序在输入待办事项并按enter键后添加了一个新的待办事项项目.
 
-**Positive assertions**
+**正面断言**
 
-When adding an element to the list and using a **positive assertion**, the test asserts a specific number of Todo items in our application.
+当向列表中添加元素并使用正断言时, 测试断言我们应用程序中的Todo项的特定数量.
 
-The test below may still falsely pass if the application behaves unexpectedly, like adding a blank Todo, instead of adding the new Todo with the text "Write tests".
+如果应用程序的行为意外，下面的测试可能仍然会错误地通过，比如添加一个空白的Todo，而不是添加带有文本“Write tests”的新Todo.
 
 ```javascript
 cy.get('li.todo').should('have.length', 2)
 cy.get('input#new-todo').type('Write tests{enter}')
 
-// using a positive assertion to check the exact number of items
+// 使用正断言检查item的确切数量
 cy.get('li.todo').should('have.length', 3)
 ```
 
-**Negative assertions**
+**否定的断言**
 
-But when using a **negative assertion** in the test below, the test can falsely pass when the application behaves in multiple unexpected ways:
+但是，当在下面的测试中使用否定断言时，当应用程序以多种意想不到的方式行为时，测试可能会错误地通过:
 
-- The app deletes the entire list of Todo items instead of inserting the 3rd Todo
-- The app deletes a Todo instead of adding a new Todo
-- The app adds a blank Todo
-- An infinite variety of possible application mistakes
+- 该应用程序删除了整个待办事项列表，而不是插入第三个待办事项
+- 该应用程序删除了一个待办事项，而不是添加一个新的待办事项
+- 该应用程序添加了一个空白的待办事项
+- 无限多种可能的应用程序错误
 
 ```javascript
 cy.get('li.todo').should('have.length', 2)
 cy.get('input#new-todo').type('Write tests{enter}')
 
-// using negative assertion to check it's not a number of items
+// 使用否定断言来检查它是不是一个数值
 cy.get('li.todo').should('not.have.length', 2)
 ```
 
-**Recommendation**
+**建议**
 
-We recommend using negative assertions to verify that a specific condition is no longer present after the application performs an action. For example, when a previously completed item is unchecked, we might verify that a CSS class is removed.
+我们建议使用否定断言来验证在应用程序执行操作后某个特定条件 不再存在. 例如，当先前完成的项未选中时，我们可能会验证CSS类是否被删除.
 
 ```javascript
-// at first the item is marked completed
+// 首先，这个项目被标记为completed
 cy.contains('li.todo', 'Write tests')
   .should('have.class', 'completed')
   .find('.toggle')
   .click()
 
-// the CSS class has been removed
+// CSS类已被删除
 cy.contains('li.todo', 'Write tests').should('not.have.class', 'completed')
 ```
 
-For more examples, please read the blog post [Be Careful With Negative Assertions](https://glebbahmutov.com/blog/negative-assertions/).
+更多的例子，请阅读博客文章[小心否定断言](https://glebbahmutov.com/blog/negative-assertions/).
 
-## Should callback
+## Should 回调
 
-If built-in assertions are not enough, you can write your own assertion function and pass it as a callback to the `.should()` command. Cypress will automatically [retry](/guides/core-concepts/retry-ability) the callback function until it passes or the command times out. See the [`.should()`](/api/commands/should#Function) documentation.
+如果内置断言还不够，您可以编写自己的断言函数，并将其作为回调传递给`.should()`命令。 Cypress将自动[重试](/guides/core-concepts/retry-ability)回调函数，直到它通过或命令超时. 查看 [`.should()`](/api/commands/should#Function) 文档.
 
 ```html
 <div class="main-abc123 heading-xyz987">Introduction</div>
@@ -391,14 +391,14 @@ cy.get('div').should(($div) => {
 
   const className = $div[0].className
 
-  // className will be a string like "main-abc123 heading-xyz987"
+  // className将是一个像"main-abc123 heading-xyz987"这样的字符串
   expect(className).to.match(/heading-/)
 })
 ```
 
-## Multiple assertions
+## 多个断言
 
-You can attach multiple assertions to the same command.
+可以将多个断言附加到同一个命令。
 
 ```html
 <a class="assertions-link active" href="https://on.cypress.io" target="_blank"
@@ -413,14 +413,14 @@ cy.get('.assertions-link')
   .and('include', 'cypress.io')
 ```
 
-Note that all chained assertions will use the same reference to the original subject. For example, if you wanted to test a loading element that first appears and then disappears, the following WILL NOT WORK because the same element cannot be visible and invisible at the same time:
+注意，所有链接的断言将使用对原始目标的相同引用. 例如，如果你想测试一个加载元素，它首先出现然后消失，下面的方法将不起作用，因为同一个元素不能同时可见和不可见:
 
 ```js
-// ⛔️ DOES NOT WORK
+// ⛔️ 行不通
 cy.get('#loading').should('be.visible').and('not.be.visible')
 ```
 
-Instead you should split the assertions and re-query the element:
+相反，您应该拆分断言并重新查询元素:
 
 ```js
 // ✅ THE CORRECT WAY
@@ -428,8 +428,8 @@ cy.get('#loading').should('be.visible')
 cy.get('#loading').should('not.be.visible')
 ```
 
-## See also
+## 另请参阅
 
-- [Guide: Introduction to Cypress](/guides/core-concepts/introduction-to-cypress#Assertions)
-- [cypress-example-kitchensink Assertions](https://example.cypress.io/commands/assertions)
-- [Cypress should callback](https://glebbahmutov.com/blog/cypress-should-callback/) blog post
+- [断言指南:介绍Cypress](/guides/core-concepts/introduction-to-cypress#Assertions)
+- [cypress-example-kitchensink 断言](https://example.cypress.io/commands/assertions)
+- [Cypress should 回调](https://glebbahmutov.com/blog/cypress-should-callback/) blog post
