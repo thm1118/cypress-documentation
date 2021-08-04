@@ -1,53 +1,53 @@
 ---
-title: Screenshots and Videos
+title: 截屏和录屏
 ---
 
 <Alert type="info">
 
-## <Icon name="graduation-cap"></Icon> What you'll learn
+## <Icon name="graduation-cap"></Icon> 你将学习
 
-- How Cypress captures screenshots of test failures automatically
-- How to manually capture your own screenshot
-- How Cypress can record a video of the entire run
-- Some options of what to do with screenshot and video artifacts
+- Cypress如何自动捕获测试失败的屏幕截图
+- 如何手动捕捉自己的截图
+- Cypress如何录制整个过程的视频
+- 关于如何处理截图和视频工件的一些参数选项
 
 </Alert>
 
-## Screenshots
+## 截屏
 
-Cypress comes with the ability to take screenshots, whether you are running via `cypress open` or `cypress run`, even in CI.
+Cypress具有截屏的能力，无论你是通过 `cypress open` 或 `cypress run`运行，即使在CI也可以。
 
-To take a manual screenshot you can use the [`cy.screenshot()`](/api/commands/screenshot) command.
+要手动截图，可以使用[`cy.screenshot()`](/api/commands/screenshot) 命令.
 
-Additionally, Cypress will automatically capture screenshots when a failure happens during `cypress run`. Screenshots on failure are _not_ automatically taken during `cypress open`.
+此外，当在`cypress run`期间发生失败时，Cypress会自动捕捉屏幕截图。 在`cypress open`期间，失败的截图 _不会_ 被自动捕获.
 
-Capturing of screenshots when a test fails can be turned off entirely by setting [`screenshotOnRunFailure`](/guides/references/configuration#Screenshots) to `false` from within your [configuration](/guides/references/configuration) or by setting `screenshotOnRunFailure` to `false` in the [Cypress.Screenshot.defaults()](/api/cypress-api/screenshot-api).
+可以完全关闭测试失败时自动捕捉屏幕截图，在[配置](/guides/references/configuration)文件里设置[`screenshotOnRunFailure`](/guides/references/configuration#Screenshots) 为`false`，或者 在[Cypress.Screenshot.defaults()](/api/cypress-api/screenshot-api)设置 `screenshotOnRunFailure` 为 `false` .
 
-Screenshots are stored in the [`screenshotsFolder`](/guides/references/configuration#Screenshots) which is set to `cypress/screenshots` by default.
+截图存储在[`screenshotsFolder`](/guides/references/configuration#Screenshots) 配置的目录里，默认是 `cypress/screenshots`。
 
-Cypress clears any existing screenshots before `cypress run`. If you do not want to clear your screenshots folder before a run, you can set [`trashAssetsBeforeRuns`](/guides/references/configuration#Screenshots) to `false`.
+Cypress在`cypress run`之前清除所有现有截图. 如果你不想在运行之前清除你的截图文件夹，你可以设置[`trashAssetsBeforeRuns`](/guides/references/configuration#Screenshots) 为 `false`。
 
-## Videos
+## 录屏
 
-Cypress records a video for each spec file when running tests during `cypress run`. Videos are _not_ automatically recorded during `cypress open`.
+在`cypress run`期间运行测试时，Cypress可以为每个spec文件录制视频. `cypress open`期间视频不会自动录制.
 
-Video recording can be turned off entirely by setting [`video`](/guides/references/configuration#Videos) to `false` from within your configuration.
+视频录制可以通过在你的配置中设置[`video`](/guides/references/configuration#Videos) 为 `false`完全关闭.
 
-Videos are stored in the [`videosFolder`](/guides/references/configuration#Videos) which is set to `cypress/videos` by default.
+视频存储在[`videosFolder`](/guides/references/configuration#Videos) 指定目录，默认是`cypress/videos`.
 
-After `cypress run` completes, Cypress automatically compresses the video in order to save on file size. By default it compresses to a `32 CRF`, but this is configurable with the [`videoCompression`](/guides/references/configuration#Videos) property.
+`cypress run`完成后，cypress自动压缩视频，以节省文件大小. 默认情况下，它压缩率为`32 CRF`，但这是可配置的[`videoCompression`](/guides/references/configuration#Videos) 属性.
 
-When using the `--record` flag while running your tests, videos are processed, compressed, and uploaded to the [Dashboard Service](/guides/dashboard/introduction) after every spec file runs, successful or not. To change this behavior to only process videos in the case that tests fail, set the [`videoUploadOnPasses`](/guides/references/configuration#Videos) configuration option to `false`.
+当你在运行测试时使用`--record`标记时，每个spec文件运行后，视频都会被处理、压缩并上传到[Dashboard 服务](/guides/dashboard/introduction), 无论是否测试通过. 要将此行为更改为仅在测试失败的情况下处理视频，请将[`videoUploadOnPasses`](/guides/references/configuration#Videos)配置选项设置为`false`。
 
-Cypress clears any existing videos before a `cypress run`. If you do not want to clear your videos folder before a run, you can set [`trashAssetsBeforeRuns`](/guides/references/configuration#Videos) to `false`.
+Cypress在`cypress run`之前清除所有现有视频. 如果你不想在运行之前清除你的视频文件夹，你可以设置[`trashAssetsBeforeRuns`](/guides/references/configuration#Videos) 为`false`。
 
-### Video encoding
+### 视频编码
 
-If your spec files have a long run duration, you might notice a time gap between a finished spec and a new spec starting during `cypress run`. During this time, Cypress is encoding the captured video and possibly uploading it to the Dashboard.
+如果你的spec文件有一个很长的运行持续时间，你可能会注意到在`cypress run`期间，完成的spec和开始的新spec之间有一个时间间隔。 在此期间，Cypress正在对捕获的视频进行编码，并将其上传到Dashboard.
 
-If the machine is encoding the video slowly (which is often the case for virtual machines that use a single core), the encoding might take a long time. In this case, you can modify the [`videoCompression`](/guides/references/configuration#Videos) configuration to make the encoding a little bit faster. Here are some common scenarios:
+如果机器编码视频很慢(通常是使用单核虚拟机的情况), 编码可能需要很长时间. 在这种情况下，你可以修改[`videoCompression`](/guides/references/configuration#Videos) 配置，使编码速度稍微快一点. 以下是一些常见的场景:
 
-**Use minimal compression**
+**使用最小的压缩**
 
 ```json
 {
@@ -55,9 +55,9 @@ If the machine is encoding the video slowly (which is often the case for virtual
 }
 ```
 
-The compression step will be skipped completely, so the video will be large, but the processing should be faster.
+压缩步骤将被完全跳过，因此视频会变大，但处理速度会更快.
 
-**Disable compression**
+**禁用压缩**
 
 ```json
 {
@@ -67,26 +67,26 @@ The compression step will be skipped completely, so the video will be large, but
 
 <Alert type="info">
 
-If you are an FFmpeg pro and want to see all the settings and debug messages during the encoding, run Cypress with the following environment variable: `DEBUG=cypress:server:video cypress run`
+如果您是FFmpeg专业人士，并希望查看编码期间的所有设置和调试消息，请使用以下环境变量运行Cypress: `DEBUG=cypress:server:video cypress run`
 
 </Alert>
 
-### Control which videos to keep and upload to Dashboard
+### 控制哪些视频保存和上传到Dashboard
 
-You may want to have more control over which videos you want to keep and upload to the Dashboard. Deleting videos after the run can save resource space on the machine as well as skip the time used to process, compress, and upload the video to the [Dashboard Service](/guides/dashboard/introduction).
+你可能想要更多的控制哪些视频你想要保留和上传到Dashboard。运行后删除视频可以节省机器上的资源空间，并跳过用于处理、压缩和上传视频到[Dashboard服务](/guides/dashboard/introduction)的时间。.
 
-To only process videos in the case that a test fails, you can set the [`videoUploadOnPasses`](/guides/references/configuration#Videos) configuration option to `false`.
+为了只在测试失败的情况下处理视频，你可以设置[`videoUploadOnPasses`](/guides/references/configuration#Videos)配置选项为`false`.
 
-For more fine grained control, you can use Cypress's [`after:spec`](/api/plugins/after-spec-api) event listener that fires after each spec file is run and delete the video when certain conditions are met.
+对于更细粒度的控制，您可以使用Cypress的[`after:spec`](/api/plugins/after-spec-api)事件监听器，该监听器在每个spec文件运行后触发，并在满足某些条件时删除视频.
 
-#### Only upload videos for specs with failing or retried tests
+#### 仅上传视频spec失败或重试的测试
 
-The example below shows how to delete the recorded video for specs that had no retry attempts or failures when using Cypress [test retries](/guides/guides/test-retries).
+下面的示例显示了如何删除在使用Cypress时,没有重试尝试或失败的spec的录制视频[测试重试](/guides/guides/test-retries).
 
 ```js
 // plugins/index.js
 
-// need to install these dependencies
+// 需要安装这些依赖项
 // npm i lodash del --save-dev
 const _ = require('lodash')
 const del = require('del')
@@ -94,12 +94,12 @@ const del = require('del')
 module.exports = (on, config) => {
   on('after:spec', (spec, results) => {
     if (results && results.video) {
-      // Do we have failures for any retry attempts?
+      // 我们是否有失败的重试尝试?
       const failures = _.some(results.tests, (test) => {
         return _.some(test.attempts, { state: 'failed' })
       })
       if (!failures) {
-        // delete the video if the spec passed and no tests retried
+        // 如果spec通过, 且没有重试测试，则删除视频
         return del(results.video)
       }
     }
@@ -107,24 +107,24 @@ module.exports = (on, config) => {
 }
 ```
 
-## Now What?
+## 又该做什么?
 
-So you are capturing screenshots and recording videos of your test runs, now what?
+你正在捕捉屏幕截图并录制测试运行的视频，又该做什么呢?
 
-### Share Them With Your Team
+### 与你的团队共享
 
 <!-- Line breaks removed to prevent random br elements -->
 
-Something you can take advantage of today is the [Cypress Dashboard Service](/guides/dashboard/introduction): our companion enterprise service that stores your artifacts for you and lets you view them from any web browser, as well as share them with your team.
+今天你可以利用的是[Cypress Dashboard 服务](/guides/dashboard/introduction): 我们的配套企业服务，为您存储工件，并允许您从任何web浏览器查看它们，以及与您的团队共享它们。
 
-### Visual Regression Test / Screenshot Diffing
+### 视觉回归测试 / 截屏对比
 
-Another possibility is visual regression testing: comparing screenshots of past runs with the current run to ensure that nothing changed. [Read about how to implement visual testing.](/guides/tooling/visual-testing)
+另一种可能是视觉回归测试:将过去运行的截图与当前运行的截图进行比较，以确保没有任何更改. [阅读如何实现视觉测试.](/guides/tooling/visual-testing)
 
-## See also
+## 另请参阅
 
 - [After Screenshot API](/api/plugins/after-screenshot-api)
 - [Cypress.Screenshot](/api/cypress-api/screenshot-api)
-- [Dashboard Service](/guides/dashboard/introduction)
+- [Dashboard 服务](/guides/dashboard/introduction)
 - [`cy.screenshot()`](/api/commands/screenshot)
-- [Visual Testing](/guides/tooling/visual-testing)
+- [视觉测试](/guides/tooling/visual-testing)
