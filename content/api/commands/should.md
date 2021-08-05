@@ -2,21 +2,21 @@
 title: should
 ---
 
-Create an assertion. Assertions are automatically retried until they pass or time out.
+创建一个断言。断言会自动重试，直到它们通过或超时.
 
 <Alert type="info">
 
-An alias of [`.and()`](/api/commands/and)
+别名 [`.and()`](/api/commands/and)
 
 </Alert>
 
 <Alert type="info">
 
-**Note:** `.should()` assumes you are already familiar with core concepts such as [assertions](/guides/core-concepts/introduction-to-cypress#Assertions)
+**注意:** `.should()` 假设您已经熟悉核心概念，如[断言](/guides/core-concepts/introduction-to-cypress#Assertions)
 
 </Alert>
 
-## Syntax
+## 语法
 
 ```javascript
 .should(chainers)
@@ -25,69 +25,69 @@ An alias of [`.and()`](/api/commands/and)
 .should(callbackFn)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
-
-```javascript
-cy.get('.error').should('be.empty') // Assert that '.error' is empty
-cy.contains('Login').should('be.visible') // Assert that el is visible
-cy.wrap({ foo: 'bar' }).its('foo').should('eq', 'bar') // Assert the 'foo' property equals 'bar'
-```
-
-**<Icon name="exclamation-triangle" color="red"></Icon> Incorrect Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
-cy.should('eq', '42') // Should not be chained off 'cy'
+cy.get('.error').should('be.empty') // 断言 '.error' 是 empty
+cy.contains('Login').should('be.visible') // 断言这个元素是  visible
+cy.wrap({ foo: 'bar' }).its('foo').should('eq', 'bar') // 断言属性 'foo' 等于 'bar'
 ```
 
-### Arguments
+**<Icon name="exclamation-triangle" color="red"></Icon> 不正确的使用**
+
+```javascript
+cy.should('eq', '42') // 不能 直接链在 'cy'后
+```
+
+### 参数
 
 **<Icon name="angle-right"></Icon> chainers** **_(String)_**
 
-Any valid chainer that comes from [Chai](/guides/references/assertions#Chai) or [Chai-jQuery](/guides/references/assertions#Chai-jQuery) or [Sinon-Chai](/guides/references/assertions#Sinon-Chai).
+任何来自[Chai](/guides/references/assertions#Chai) 或 [Chai-jQuery](/guides/references/assertions#Chai-jQuery) 或 [Sinon-Chai](/guides/references/assertions#Sinon-Chai)的有效chainer.
 
 **<Icon name="angle-right"></Icon> value** **_(String)_**
 
-Value to assert against chainer.
+断言chainer的值.  
 
 **<Icon name="angle-right"></Icon> method** **_(String)_**
 
-A method to be called on the chainer.
+在 chainer 上调用的方法.
 
 **<Icon name="angle-right"></Icon> callbackFn** **_(Function)_**
 
-Pass a function that can have any number of explicit assertions within it. Whatever was passed to the function is what is yielded.
+传递一个函数，其中可以包含任意数量的显式断言. 传递给函数的参数，函数最终都会输出回来.
 
 ### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-<List><li>In most cases, `.should()` yields the same subject it was given from the previous command.</li></List>
+<List><li>大部分情况下, `.should()` 产生与前一个命令相同的目标.</li></List>
 
 ```javascript
 cy.get('nav') // yields <nav>
   .should('be.visible') // yields <nav>
 ```
 
-However, some chainers change the subject. In the example below, the second `.should()` yields the string `sans-serif` because the chainer `have.css, 'font-family'` changes the subject.
+然而，一些chainer改变了目标. 在下面的例子中, 第二个`.should()`产生了字符串`sans-serif` 因为chainer `have.css, 'font-family'`改变了目标.
 
 ```javascript
-cy.get('nav') // yields <nav>
-  .should('be.visible') // yields <nav>
-  .should('have.css', 'font-family') // yields 'sans-serif'
-  .and('match', /serif/) // yields 'sans-serif'
+cy.get('nav') // yields 产生<nav>
+  .should('be.visible') // yields产生 <nav>
+  .should('have.css', 'font-family') // 产生 'sans-serif'
+  .and('match', /serif/) // 产生 'sans-serif'
 ```
 
-## Examples
+## 例子
 
 ### Chainers
 
-#### Assert the checkbox is disabled
+#### 断言复选框已被禁用
 
 ```javascript
 cy.get(':checkbox').should('be.disabled')
 ```
 
-#### The current DOM element is yielded
+#### 生成当前DOM元素
 
 ```javascript
 cy.get('option:first')
@@ -97,21 +97,21 @@ cy.get('option:first')
   })
 ```
 
-### Value
+### 值
 
-#### Assert the class is 'form-horizontal'
+#### A这个类是 'form-horizontal'
 
 ```javascript
 cy.get('form').should('have.class', 'form-horizontal')
 ```
 
-#### Assert the value is not 'Jane'
+#### 断言 值不是'Jane'
 
 ```javascript
 cy.get('input').should('not.have.value', 'Jane')
 ```
 
-#### The current subject is yielded
+#### 生成当前的目标
 
 ```javascript
 cy.get('button')
@@ -121,45 +121,45 @@ cy.get('button')
   })
 ```
 
-### Method and Value
+### 方法和值
 
-#### Assert the anchor element has href attribute
+#### 断言锚元素具有href属性
 
 ```javascript
-// have.attr comes from chai-jquery
+// have.attr 来自 chai-jquery
 cy.get('#header a').should('have.attr', 'href')
 ```
 
-#### Assert the href attribute is equal to '/users'
+#### 断言href属性等于'/users'
 
 ```javascript
 cy.get('#header a').should('have.attr', 'href', '/users')
 ```
 
-**Note:** the `have.attr` assertion changes the subject from the original element to the attribute's value
+**注意:** `have.attr`断言将当前的目标从原始元素更改为属性值
 
 ```javascript
-cy.get('#header a') // yields the element
-  .should('have.attr', 'href') // yields the "href" attribute
-  .and('equal', '/users') // checks the "href" value
+cy.get('#header a') // 生成 元素
+  .should('have.attr', 'href') // 生成"href"属性
+  .and('equal', '/users') // 检查"href"值
 ```
 
-### Focus
+### 焦点
 
-#### Assert an input is focused after button click
+#### 断言单击按钮后一个输入框获得焦点
 
 ```javascript
 cy.get('#btn-focuses-input').click()
-cy.get('#input-receives-focus').should('have.focus') // equivalent to should('be.focused')
+cy.get('#input-receives-focus').should('have.focus') // 相当于 should('be.focused')
 ```
 
-### Function
+### 函数
 
-Passing a function to `.should()` enables you to make multiple assertions on the yielded subject. This also gives you the opportunity to _massage_ what you'd like to assert on.
+将函数传递给`.should()` 使您能够对所生成的目标进行多个断言. 这也给你机会充分操作你想要断言的目标.
 
-Be sure _not_ to include any code that has side effects in your callback function. The callback function will be retried over and over again until no assertions within it throw.
+请确保不要在回调函数中包含任何有副作用的代码. 回调函数将被一次又一次地重试，直到其中没有断言抛出.
 
-#### Verify length, content, and classes from multiple `<p>`
+#### 验证多个元素 长度，内容和类 `<p>`
 
 ```html
 <div>
@@ -171,19 +171,19 @@ Be sure _not_ to include any code that has side effects in your callback functio
 
 ```javascript
 cy.get('p').should(($p) => {
-  // should have found 3 elements
+  // 应该找到3个元素
   expect($p).to.have.length(3)
 
-  // make sure the first contains some text content
+  // 确保第一个包含一些文本内容
   expect($p.first()).to.contain('Hello World')
 
-  // use jquery's map to grab all of their classes
-  // jquery's map returns a new jquery object
+  // 使用jquery的map来抓取它们的所有类
+  // Jquery的map返回一个新的Jquery对象
   const classes = $p.map((i, el) => {
     return Cypress.$(el).attr('class')
   })
 
-  // call classes.get() to make this a plain array
+  // 调用classes.get()使其成为普通数组
   expect(classes.get()).to.deep.eq([
     'text-primary',
     'text-danger',
@@ -192,7 +192,7 @@ cy.get('p').should(($p) => {
 })
 ```
 
-**<Icon name="exclamation-triangle" color="red"></Icon> Warning** Any value returned from a `.should()` callback function will be ignored. The original subject will be yielded to the next command.
+**<Icon name="exclamation-triangle" color="red"></Icon> 警告** `.should()`回调函数返回的任何值都将被忽略. 原来的目标将继续传递给下一个命令.
 
 ```js
 cy.get('p')
@@ -202,11 +202,11 @@ cy.get('p')
     return 'foo'
   })
   .then(($p) => {
-    // the argument $p will be the 3 elements, not "foo"
+    //参数$p是3个元素，而不是"foo"
   })
 ```
 
-#### Assert class name contains `heading-`
+#### 断言类名包含`heading-`
 
 ```html
 <div class="docs-header">
@@ -217,7 +217,7 @@ cy.get('p')
 ```js
 cy.get('.docs-header')
   .find('div')
-  // .should(cb) callback function will be retried
+  // .should(cb) 回调函数将被重试
   .should(($div) => {
     expect($div).to.have.length(1)
 
@@ -225,21 +225,21 @@ cy.get('.docs-header')
 
     expect(className).to.match(/heading-/)
   })
-  // .then(cb) callback is not retried,
-  // it either passes or fails
+  // .then(cb) 回调不会被重试,
+  // 要么通过，要么失败
   .then(($div) => {
     expect($div).to.have.text('Introduction')
   })
 ```
 
-You can even throw your own errors from the callback function.
+您甚至可以从回调函数抛出自己的错误。
 
 ```js
 cy.get('.docs-header')
   .find('div')
   .should(($div) => {
     if ($div.length !== 1) {
-      // you can throw your own errors
+      //你可以抛出自己的错误
       throw new Error('Did not find 1 element')
     }
 
@@ -251,9 +251,9 @@ cy.get('.docs-header')
   })
 ```
 
-#### Assert text content of 3 elements
+#### 断言3个元素的文本内容
 
-Example below first asserts that there are 3 elements, and then checks the text content of each one.
+下面的示例首先断言有3个元素，然后检查每个元素的文本内容.
 
 ```html
 <ul class="connectors-list">
@@ -274,11 +274,11 @@ cy.get('.connectors-list > li').should(($lis) => {
 
 <Alert type="info">
 
-Read [Cypress should callback](https://glebbahmutov.com/blog/cypress-should-callback/) blog post to see more variations of the above example.
+阅读[Cypress should 回调](https://glebbahmutov.com/blog/cypress-should-callback/) 博客文章，查看以上例子的更多变体e.
 
 </Alert>
 
-For clarity you can pass a string message as a second argument to any `expect` assertion, see [Chai#expect](https://www.chaijs.com/guide/styles/#expect).
+为清晰起见，您可以将字符串消息作为第二个参数传递给任何`expect`断言, 查看 [Chai#expect](https://www.chaijs.com/guide/styles/#expect).
 
 ```javascript
 cy.get('.connectors-list > li').should(($lis) => {
@@ -289,13 +289,13 @@ cy.get('.connectors-list > li').should(($lis) => {
 })
 ```
 
-These string messages will be shown in the Command Log giving each assertion more context.
+这些字符串消息将显示在命令日志中，为每个断言提供更多的上下文。
 
 <DocsImage src="/img/api/should/expect-with-message.png" alt="Expect assertions with messages" ></DocsImage>
 
-#### Compare text values of two elements
+#### 比较两个元素的文本值
 
-The example below gets the text contained within one element and saves it in a closure variable. Then the test gets the text in another element and asserts that the two text values are the same after normalizing.
+下面的示例获取一个元素中包含的文本，并将其保存在闭包变量中. 然后测试获取另一个元素中的文本，并断言规范化后的两个文本值是相同的。
 
 ```html
 <div class="company-details">
@@ -307,47 +307,47 @@ The example below gets the text contained within one element and saves it in a c
 ```javascript
 const normalizeText = (s) => s.replace(/\s/g, '').toLowerCase()
 
-// will keep text from title element
+// 保存从标题元素获取的文本
 let titleText
 
 cy.get('.company-details')
   .find('.title')
   .then(($title) => {
-    // save text from the first element
+    // 保存第一个元素 的文本 
     titleText = normalizeText($title.text())
   })
 
 cy.get('.company-details')
   .find('.identifier')
   .should(($identifier) => {
-    // we can massage text before comparing
+    //我们可以在比较前预处理文字
     const idText = normalizeText($identifier.text())
 
-    // text from the title element should already be set
+    // 标题元素中的文本应该已经设置
     expect(idText, 'ID').to.equal(titleText)
   })
 ```
 
-### Multiple Assertions
+### 多个断言
 
-#### Chaining multiple assertions
+#### 链上多个断言
 
-Cypress makes it easier to chain assertions together.
+Cypress使将断言链在一起变得更容易。
 
-In this example we use [`.and()`](/api/commands/and) which is identical to `.should()`.
+在这个例子中，我们使用与`.should()`等价的[`.and()`](/api/commands/and).
 
 ```javascript
-// our subject is not changed by our first assertion,
-// so we can continue to use DOM based assertions
+// 我们的目标并没有因为第一个断言而改变，
+// 所以我们可以继续使用基于DOM的断言
 cy.get('option:first').should('be.selected').and('have.value', 'Metallica')
 ```
 
-### Wait until the assertions pass
+### 持续等待，直到断言通过
 
-Cypress won't resolve your commands until all of its assertions pass.
+Cypress不会解决完成你的命令，直到所有的断言通过。
 
 ```javascript
-// Application Code
+// 应用程序代码
 $('button').click(() => {
   $button = $(this)
 
@@ -364,91 +364,91 @@ cy.get('button')
   .and('not.have.class', 'inactive')
 ```
 
-## Notes
+## 注意
 
-### Subjects
+### 目标
 
-#### How do I know which assertions change the subject and which keep it the same?
+#### 我如何知道哪些断言改变了目标，哪些断言保持了目标不变?
 
-The chainers that come from [Chai](/guides/references/bundled-tools#Chai) or [Chai-jQuery](/guides/references/bundled-tools#Chai-jQuery) will always document what they return.
+来自[Chai](/guides/references/bundled-tools#Chai) 或 [Chai-jQuery](/guides/references/bundled-tools#Chai-jQuery)的 chainer 都在文档中写清楚了返回的内容.
 
-#### Using a callback function will not change what is yielded
+#### 使用回调函数不会改变所生成的目标
 
-Whatever is returned in the function is ignored. Cypress always forces the command to yield the value from the previous cy command's yield (which in the example below is `<button>`)
+无论函数返回什么都会被忽略。Cypress总是强制命令生成前一个cy命令的生成值 (下面的例子是一个 `<button>`)
 
 ```javascript
 cy.get('button')
   .should(($button) => {
     expect({ foo: 'bar' }).to.deep.eq({ foo: 'bar' })
 
-    return { foo: 'bar' } // return is ignored, .should() yields <button>
+    return { foo: 'bar' } // 返回被忽略, .should() 生成 <button>
   })
   .then(($button) => {
-    // do anything we want with <button>
+    // 对<button>做任何我们想要的事情
   })
 ```
 
-### Differences
+### 差异
 
-### What's the difference between `.then()` and `.should()`/`.and()`?
+### ' `.then()` 和 `.should()`/`.and()` 之间的区别是什么??
 
-Using `.then()` allows you to use the yielded subject in a callback function and should be used when you need to manipulate some values or do some actions.
+使用`.then()` 允许您在回调函数中使用生成的目标，当您需要操作一些值或执行一些操作时应该使用.
 
-When using a callback function with `.should()` or `.and()`, on the other hand, there is special logic to rerun the callback function until no assertions throw within it. You should be careful of side affects in a `.should()` or `.and()` callback function that you would not want performed multiple times.
+当使用带有`.should()` 或 `.and()`的回调函数时, 另一方面, 有一个特殊的逻辑可以重新运行回调函数，直到其中没有抛出断言为止. 你应该注意`.should()` or `.and()`回调函数中不希望被多次执行的副作用。
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 需要 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`.should()` requires being chained off a previous command.</li></List>
+<List><li>`.should()` 需要链接在一个其他命令之后.</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`.should()` will continue to [retry](/guides/core-concepts/retry-ability) its specified assertions until it times out.</li></List>
+<List><li>`.should()` 会继续[重试](/guides/core-concepts/retry-ability)它指定的断言，直到它超时.</li></List>
 
 ```javascript
 cy.get('input', { timeout: 10000 }).should('have.value', '10')
-// timeout here will be passed down to the '.should()'
-// and it will retry for up to 10 secs
+// 这里的超时配置 将被传递给'.should()'
+// 它将重试10秒
 ```
 
 ```javascript
 cy.get('input', { timeout: 10000 }).should(($input) => {
-  // timeout here will be passed down to the '.should()'
-  // unless an assertion throws earlier,
-  // ALL of the assertions will retry for up to 10 secs
+  // 这里的超时配置 将被传递给'.should()'
+  // 除非在前面抛出断言,
+  // 所有断言将重试至多10秒
   expect($input).to.not.be('disabled')
   expect($input).to.not.have.class('error')
   expect($input).to.have.value('US')
 })
 ```
 
-## Command Log
+## 命令日志
 
-**_Assert that there should be 8 children in a nav_**
+**_断言导航中应该有8个子导航_**
 
 ```javascript
 cy.get('.left-nav>.nav').children().should('have.length', 8)
 ```
 
-The commands above will display in the Command Log as:
+上面的命令将在命令日志中显示为:
 
 <DocsImage src="/img/api/should/should-command-shows-up-as-assert-for-each-assertion.png" alt="Command Log should" ></DocsImage>
 
-When clicking on `assert` within the command log, the console outputs the following:
+当在命令日志中单击`assert` 时, 控制台输出如下内容:
 
 <DocsImage src="/img/api/should/assertion-in-console-log-shows-actual-versus-expected-data.png" alt="Console Log should" ></DocsImage>
 
-## History
+## 历史
 
 | Version                                       | Changes                           |
 | --------------------------------------------- | --------------------------------- |
 | [0.11.4](/guides/references/changelog#0-11-4) | Allows callback function argument |
 | [< 0.3.3](/guides/references/changelog#0-3-3) | `.should()` command added         |
 
-## See also
+## 另请参阅
 
 - [`.and()`](/api/commands/and)
-- [Guide: Introduction to Cypress](/guides/core-concepts/introduction-to-cypress#Assertions)
-- [Reference: List of Assertions](/guides/references/assertions)
-- [cypress-example-kitchensink Assertions](https://example.cypress.io/commands/assertions)
+- [指南:介绍Cypress](/guides/core-concepts/introduction-to-cypress#Assertions)
+- [参考:断言列表](/guides/references/assertions)
+- [cypress-example-kitchensink 断言](https://example.cypress.io/commands/assertions)
