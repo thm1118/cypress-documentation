@@ -2,47 +2,47 @@
 title: scrollIntoView
 ---
 
-Scroll an element into view.
+将元素滚动到视图中.
 
-## Syntax
+## 语法
 
 ```javascript
 .scrollIntoView()
 .scrollIntoView(options)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
-
-```javascript
-cy.get('footer').scrollIntoView() // Scrolls 'footer' into view
-```
-
-**<Icon name="exclamation-triangle" color="red"></Icon> Incorrect Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
-cy.scrollIntoView('footer') // Errors, cannot be chained off 'cy'
-cy.window().scrollIntoView() // Errors, 'window' does not yield DOM element
+cy.get('footer').scrollIntoView() // 将footer滚动到视图中
 ```
 
-### Arguments
+**<Icon name="exclamation-triangle" color="red"></Icon> 不正确的用法**
+
+```javascript
+cy.scrollIntoView('footer') // 错误，不能链接到'cy'
+cy.window().scrollIntoView() // 错误，'window'不输出DOM元素
+```
+
+### 参数
 
 **<Icon name="angle-right"></Icon> options** **_(Object)_**
 
-Pass in an options object to change the default behavior of `.scrollIntoView()`.
+传入一个options对象来改变`.scrollIntoView()`的默认行为.
 
-| Option     | Default                                                              | Description                                                                              |
+| 选项        | 默认值                                                               | 描述                                                                              |
 | ---------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `duration` | `0`                                                                  | Scrolls over the duration (in ms)                                                        |
-| `easing`   | `swing`                                                              | Will scroll with the easing animation                                                    |
-| `log`      | `true`                                                               | Displays the command in the [Command log](/guides/core-concepts/test-runner#Command-Log) |
-| `offset`   | `{top: 0, left: 0}`                                                  | Amount to scroll after the element has been scrolled into view                           |
-| `timeout`  | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts) | Time to wait for `.scrollIntoView()` to resolve before [timing out](#Timeouts)           |
+| `duration` | `0`                                                                  | 滚动持续时间(单位毫秒)                                                       |
+| `easing`   | `swing`                                                              | 滚动使用动画的缓动程度                                                    |
+| `log`      | `true`                                                               | 在[命令日志](/guides/core-concepts/test-runner#Command-Log) 中显示命令 |
+| `offset`   | `{top: 0, left: 0}`                                                  | 元素被滚动到视图后要滚动的数量                           |
+| `timeout`  | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts) | 等待`.scrollIntoView()`在[超时](#Timeouts)之前解决的时间           |
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### 输出 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-<List><li>`.scrollIntoView()` yields the same subject it was given from the previous command.</li></List>
+<List><li>'`.scrollIntoView()`输出与前一个命令相同的目标。</li></List>
 
 ## Examples
 
@@ -52,21 +52,21 @@ Pass in an options object to change the default behavior of `.scrollIntoView()`.
 cy.get('button#checkout').scrollIntoView().should('be.visible')
 ```
 
-### Options
+### 选项
 
-#### Use linear easing animation to scroll
+#### 使用线性缓和动画滚动
 
 ```javascript
 cy.get('.next-page').scrollIntoView({ easing: 'linear' })
 ```
 
-#### Scroll to element over 2000ms
+#### 滚动元素持续2000ms
 
 ```javascript
 cy.get('footer').scrollIntoView({ duration: 2000 })
 ```
 
-#### Scroll 150px below an element
+#### 滚动到元素下到方150px
 
 ```js
 cy.get('#nav').scrollIntoView({ offset: { top: 150, left: 0 } })
@@ -74,42 +74,42 @@ cy.get('#nav').scrollIntoView({ offset: { top: 150, left: 0 } })
 
 ## Notes
 
-### Snapshots
+### 快照
 
-#### Snapshots do not reflect scroll behavior
+#### 快照不反映滚动行为
 
-_Cypress does not reflect the accurate scroll positions of any elements within snapshots._ If you want to see the actual scrolling behavior in action, we recommend using [`.pause()`](/api/commands/pause) to walk through each command or [watching the video of the test run](/guides/guides/screenshots-and-videos#Videos).
+_柏树不反映快照中任何元素的精确滚动位置._ 如果你想看到实际的滚动行为, 我们建议使用[`.pause()`](/api/commands/pause) 遍历每个命令， 或者[观看测试运行的视频](/guides/guides/screenshots-and-videos#Videos).
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 需要 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`.scrollIntoView()` requires being chained off a command that yields DOM element(s).</li></List>
+<List><li>`.scrollIntoView()`需要链接在输出DOM元素的命令链之后。</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`.scrollIntoView()` will automatically wait for assertions you have chained to pass</li></List>
+<List><li>`.scrollIntoView()`将自动等待已链接的断言传递</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`.scrollIntoView()` can time out waiting for assertions you've added to pass.</li></List>
+<List><li>`.scrollIntoView()`在等待添加的断言时可能超时.</li></List>
 
-## Command Log
+## 命令日志
 
-#### Assert element is visible after scrolling it into view
+#### 断言元素在滚动到视图后是可见的
 
 ```javascript
 cy.get('#scroll-horizontal button').scrollIntoView().should('be.visible')
 ```
 
-The commands above will display in the Command Log as:
+上面的命令将在命令日志中显示为:
 
 <DocsImage src="/img/api/scrollintoview/command-log-for-scrollintoview.png" alt="command log scrollintoview" ></DocsImage>
 
-When clicking on the `scrollintoview` command within the command log, the console outputs the following:
+当单击命令日志中的`scrollintoview` 命令时，控制台输出如下内容:
 
 <DocsImage src="/img/api/scrollintoview/console-log-for-scrollintoview.png" alt="console.log scrollintoview" ></DocsImage>
 
-## See also
+## 另请参阅
 
 - [`cy.scrollTo()`](/api/commands/scrollto)
