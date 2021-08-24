@@ -2,15 +2,15 @@
 title: stub
 ---
 
-Replace a function, record its usage and control its behavior.
+替换一个函数，记录它的使用并控制它的行为。
 
 <Alert type="info">
 
-**Note:** `.stub()` assumes you are already familiar with our guide: [Stubs, Spies, and Clocks](/guides/guides/stubs-spies-and-clocks)
+**注意:** `.stub()`假设你已经熟悉我们的指南:[桩，间谍和时钟](/guides/guides/stubs-spies-and-clocks)
 
 </Alert>
 
-## Syntax
+## 语法
 
 ```javascript
 cy.stub()
@@ -18,62 +18,62 @@ cy.stub(object, method)
 cy.stub(object, method, replacerFn)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
 cy.stub(user, 'addFriend')
 ```
 
-### Arguments
+### 参数
 
 **<Icon name="angle-right"></Icon> object** **_(Object)_**
 
-The `object` that has the `method` to be replaced.
+需要替换的某方法的对象。
 
 **<Icon name="angle-right"></Icon> method** **_(String)_**
 
-The name of the `method` on the `object` to be wrapped.
+要封装的对象上的方法名称。
 
 **<Icon name="angle-right"></Icon> replacerFn** **_(Function)_**
 
-The function used to replace the `method` on the `object`.
+用来替换对象上的方法的函数。
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### Yields 输出 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-Unlike most Cypress commands, `cy.stub()` is _synchronous_ and returns a value (the stub) instead of a Promise-like chain-able object.
+与大多数Cypress命令不同，`cy.stub()` 是同步的，立即返回一个值(桩)，而不是类似promise的可链对象。
 
-`cy.stub()` returns a [Sinon.js stub](http://sinonjs.org). All methods found on [Sinon.js](http://sinonjs.org) spies and stubs are supported.
+`cy.stub()` 返回一个 [Sinon.js stub](http://sinonjs.org). 支持在[Sinon.js](http://sinonjs.org)间谍和桩上找到的所有方法.
 
-## Examples
+## 例子
 
-### Method
+### 方法
 
-#### Create a stub and manually replace a function
+#### 创建桩并手动替换函数
 
 ```javascript
-// assume App.start calls util.addListeners
+// 假设 App.start 会调用 util.addListeners
 util.addListeners = cy.stub()
 
 App.start()
 expect(util.addListeners).to.be.called
 ```
 
-#### Replace a method with a stub
+#### 用桩替换方法
 
 ```javascript
-// assume App.start calls util.addListeners
+// 假设 App.start 会调用 util.addListeners
 cy.stub(util, 'addListeners')
 
 App.start()
 expect(util.addListeners).to.be.called
 ```
 
-#### Replace a method with a function
+#### 用一个函数替换方法
 
 ```javascript
-// assume App.start calls util.addListeners
+// 假设 App.start 会调用 util.addListeners
 let listenersAdded = false
 
 cy.stub(util, 'addListeners', () => {
@@ -84,10 +84,10 @@ App.start()
 expect(listenersAdded).to.be.true
 ```
 
-#### Specify the return value of a stubbed method
+#### 指定桩方法的返回值
 
 ```javascript
-// assume App.start calls util.addListeners, which returns a function
+// 假设 App.start 会调用 util.addListeners, 这个函数会返回一个方法
 // that removes the listeners
 const removeStub = cy.stub()
 
@@ -98,10 +98,10 @@ App.stop()
 expect(removeStub).to.be.called
 ```
 
-#### Replace built-in window methods like prompt
+#### 替换 window 的内置方法，比如 prompt
 
 ```javascript
-// assume App.start uses prompt to set the value of an element with class "name"
+// 假设 App.start 使用 prompt 来设置 一个样式类为"name"元素的值
 cy.visit('http://localhost:3000', {
   onBeforeLoad(win) {
     cy.stub(win, 'prompt').returns('my custom message')
@@ -114,9 +114,9 @@ cy.window().its('prompt').should('be.called')
 cy.get('.name').should('have.value', 'my custom message')
 ```
 
-#### Disable logging to Command Log
+#### 禁用命令日志记录
 
-You can chain a `.log(bool)` method to disable `cy.stub()` calls from being shown in the Command Log. This may be useful when your stubs are called an excessive number of times.
+你可以链接一个`.log(bool)` 方法来禁止`cy.stub()`调用显示在命令日志中。 当调用存根的次数过多时，这可能很有用。
 
 ```javascript
 const obj = {
@@ -125,17 +125,17 @@ const obj = {
 const stub = cy.stub(obj, 'foo').log(false)
 ```
 
-#### More `cy.stub()` examples
+#### 更多的 `cy.stub()` 例子
 
 <Alert type="info">
 
-[Check out our example recipe testing spying, stubbing and time](/examples/examples/recipes#Stubbing-and-spying)
+[看看我们的例子配方测试间谍，桩和时钟](/examples/examples/recipes#Stubbing-and-spying)
 
 </Alert>
 
-### Aliases
+### 别名
 
-Adding an alias using [`.as()`](/api/commands/as) to stubs makes them easier to identify in error messages and Cypress's command log.
+使用[`.as()`](/api/commands/as) 向桩添加别名，可以更容易地在错误消息和Cypress的命令日志中识别它们.
 
 ```javascript
 const obj = {
@@ -146,44 +146,44 @@ const withFoo = stub.withArgs('foo').as('withFoo')
 
 obj.foo()
 expect(stub).to.be.called
-expect(withFoo).to.be.called // purposefully failing assertion
+expect(withFoo).to.be.called // 故意失败的断言
 ```
 
-You will see the following in the command log:
+您将在命令日志中看到以下内容:
 
 <DocsImage src="/img/api/stub/stubs-with-aliases-and-error-in-command-log.png" alt="stubs with aliases" ></DocsImage>
 
-## Notes
+## 注意
 
-### Restores
+### 还原
 
-#### Automatic reset/restore between tests
+#### 多个测试之间 会自动重设和还原
 
-`cy.stub()` creates stubs in a [sandbox](http://sinonjs.org/releases/v2.0.0/sandbox/), so all stubs created are automatically reset/restored between tests without you having to explicitly reset/restore them.
+`cy.stub()` 在[沙盒](http://sinonjs.org/releases/v2.0.0/sandbox/) 中创建桩, 因此，所有创建的桩都会在测试之间自动重设和还原，而不必显式地重设和还原。
 
-### Differences
+### 区别
 
-#### Difference between cy.spy() and cy.stub()
+#### cy.spy() 和 cy.stub()的区别
 
-The main difference between `cy.spy()` and [`cy.stub()`](/api/commands/stub) is that `cy.spy()` does not replace the method, it only wraps it. So, while invocations are recorded, the original method is still called. This can be very useful when testing methods on native browser objects. You can verify a method is being called by your test and still have the original method action invoked.
+`cy.spy()` 和 [`cy.stub()`](/api/commands/stub) 之间的主要区别是`cy.spy()`不替换方法, 它只是再次封装它. 因此，在记录调用的同时，仍然会调用原始方法. 在本地浏览器对象上测试方法时，这非常有用. 您可以验证一个方法正在被您的测试调用，并且仍然调用原始的方法操作.
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 要求 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`cy.stub()` requires being chained off of `cy`.</li></List>
+<List><li>`cy.stub()` 需要链接自 `cy`.</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`cy.stub()` cannot have any assertions chained.</li></List>
+<List><li>`cy.stub()` 不能链接任何断言.</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`cy.stub()` cannot time out.</li></List>
+<List><li>`cy.stub()`不能超时.</li></List>
 
-## Command Log
+## 命令日志
 
-**_Create a stub, alias it, and call it_**
+**_创造一个桩，取别名，再调用它_**
 
 ```javascript
 const obj = {
@@ -195,11 +195,11 @@ obj.foo('foo', 'bar')
 expect(stub).to.be.called
 ```
 
-The command above will display in the Command Log as:
+上面的命令将在命令日志中显示为:
 
 <DocsImage src="/img/api/stub/stub-in-command-log.png" alt="Command Log stub" ></DocsImage>
 
-When clicking on the `(stub-1)` event within the command log, the console outputs the following:
+当单击命令日志中的`(stub-1)`事件时，控制台输出如下内容:
 
 <DocsImage src="/img/api/stub/inspect-the-stubbed-object-and-any-calls-or-arguments-made.png" alt="Console Log stub" ></DocsImage>
 
@@ -215,7 +215,7 @@ When clicking on the `(stub-1)` event within the command log, the console output
 - [`.as()`](/api/commands/as)
 - [`cy.clock()`](/api/commands/clock)
 - [`cy.spy()`](/api/commands/spy)
-- [Guide: Stubs, Spies and Clocks](/guides/guides/stubs-spies-and-clocks)
-- [Recipe: Stubbing, Spying](/examples/examples/recipes#Stubbing-and-spying)
-- [Recipe: Unit Test - Stubbing Dependencies](/examples/examples/recipes)
-- [Stub navigator API in end-to-end tests](https://glebbahmutov.com/blog/stub-navigator-api/)
+- [指南:桩、间谍和时钟](/guides/guides/stubs-spies-and-clocks)
+- [配方:桩,间谍](/examples/examples/recipes#Stubbing-and-spying)
+- [配方:单元测试-模拟依赖](/examples/examples/recipes)
+- [在端到端测试中的模拟导航器API](https://glebbahmutov.com/blog/stub-navigator-api/)
