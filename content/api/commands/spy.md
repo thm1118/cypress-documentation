@@ -2,60 +2,60 @@
 title: spy
 ---
 
-Wrap a method in a spy in order to record calls to and arguments of the function.
+将方法包装在spy中，以便记录对函数的调用，以及用什么参数调用.
 
 <Alert type="info">
 
-**Note:** `.spy()` assumes you are already familiar with our guide: [Stubs, Spies, and Clocks](/guides/guides/stubs-spies-and-clocks)
+**注意:** `.spy()` 假设你已经熟悉我们的指南:[桩，间谍和时钟](/guides/guides/stubs-spies-and-clocks)
 
 </Alert>
 
-## Syntax
+## 语法
 
 ```javascript
 cy.spy(object, method)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
 cy.spy(user, 'addFriend')
 ```
 
-### Arguments
+### 参数
 
 **<Icon name="angle-right"></Icon> object** **_(Object)_**
 
-The `object` that has the `method` to be wrapped.
+具有需要包装方法的对象。
 
 **<Icon name="angle-right"></Icon> method** **_(String)_**
 
-The name of the `method` on the `object` to be wrapped.
+要包装对象上的方法的名称。
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### Yields 输出[<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-Unlike most Cypress commands, `cy.spy()` is _synchronous_ and returns a value (the spy) instead of a Promise-like chain-able object.
+与大多数Cypress命令不同，`cy.spy()是同步的，立即返回一个值(间谍)，而不是类似promise的可链对象。
 
-`cy.spy()` returns a [Sinon.js spy](https://sinonjs.org/releases/v6.1.5/spies/). All methods found on Sinon.JS spies are supported.
+`cy.spy()` 返回 一个 [Sinon.js spy](https://sinonjs.org/releases/v6.1.5/spies/). 支持 所有 Sinon.JS spies上的方法。
 
-## Examples
+## 例子
 
-### Method
+### 方法
 
-#### Wrap a method with a spy
+#### 用间谍包装方法
 
 ```javascript
-// assume App.start calls util.addListeners
+// 假设 App.start 会调用 util.addListeners
 cy.spy(util, 'addListeners')
 App.start()
 expect(util.addListeners).to.be.called
 ```
 
-#### Disable logging to Command Log
+#### 禁用命令日志记录
 
-You can chain a `.log(bool)` method to disable `cy.stub()` calls from being shown in the Command Log. This may be useful when your stubs are called an excessive number of times.
+你可以链接一个`.log(bool)`方法来禁止 `cy.stub()`调用显示在命令日志中. 当调用桩的次数过多时，这可能很有用.
 
 ```javascript
 const obj = {
@@ -64,17 +64,17 @@ const obj = {
 const stub = cy.stub(obj, 'foo').log(false)
 ```
 
-#### More `cy.spy()` examples
+#### 更多的`cy.spy()`例子
 
 <Alert type="info">
 
-[Check out our example recipe testing spying, stubbing and time](/examples/examples/recipes#Stubbing-and-spying)
+[看看我们的例子配方测试间谍，桩和时钟](/examples/examples/recipes#Stubbing-and-spying)
 
 </Alert>
 
-### Aliases
+### 别名
 
-Adding an alias using [`.as()`](/api/commands/as) to spies makes them easier to identify in error messages and Cypress' command log.
+使用[`.as()`](/api/commands/as) 为间谍添加一个别名，可以更容易地在错误消息和Cypress的命令日志中识别它们.
 
 ```javascript
 const obj = {
@@ -85,50 +85,49 @@ const withFoo = spy.withArgs('foo').as('withFoo')
 
 obj.foo()
 expect(spy).to.be.called
-expect(withFoo).to.be.called // purposefully failing assertion
+expect(withFoo).to.be.called // 故意失败的断言
 ```
 
-You will see the following in the command log:
+您将在命令日志中看到以下内容:
 
 <DocsImage src="/img/api/spy/using-spy-with-alias.png" alt="spies with aliases" ></DocsImage>
 
-## Notes
+## 注意
 
 ### Restores
 
-#### Automatic reset/restore between tests
+#### 在多个测试之间 自动 重置/还原
 
-`cy.spy()` creates spies in a [sandbox](https://sinonjs.org/releases/v6.1.5/sandbox/), so all spies created are automatically reset/restored between tests without you having to explicitly reset/restore them.
+`cy.spy()` 在[沙箱](https://sinonjs.org/releases/v6.1.5/sandbox/) 中创建间谍, 所以所有创建的间谍在测试之间自动重置/还原，而无需你显式地重新重置/还原.
 
-### Differences
+### 区别
 
-#### Difference between cy.spy() and cy.stub()
+#### cy.spy() 和 cy.stub()之间的区别
 
-The main difference between `cy.spy()` and [`cy.stub()`](/api/commands/stub) is that `cy.spy()` does not replace the method, it only wraps it. So, while invocations are recorded, the original method is still called. This can be very useful when testing methods on native browser objects. You can verify a method is being called by your test and still have the original method action invoked.
+`cy.spy()` 和 [`cy.stub()`](/api/commands/stub) 之间的主要区别是`cy.spy()`不替换方法, 它只是再次封装它. 因此，在记录调用的同时，仍然会调用原始方法. 在本地浏览器对象上测试方法时，这非常有用. 您可以验证一个方法正在被您的测试调用，并且仍然调用原始的方法操作.
 
-### Assertions
+### 断言
 
-#### Assertion Support
+#### 断言支持
 
-Cypress has also built-in [sinon-chai](/guides/references/bundled-tools#Sinon-Chai) support, so any [assertions supported by `sinon-chai`](/guides/references/assertions#Sinon-Chai) can be used without any configuration.
+Cypress 也内置[sinon-chai](/guides/references/bundled-tools#Sinon-Chai)支持, 因此，任何[由`sinon-chai`支持的断言](/guides/references/assertions#Sinon-Chai)都可以使用，无需任何配置。
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 要求 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`cy.spy()` requires being chained off of `cy`.</li></List>
+<List><li>`cy.spy()` 需要链接自 `cy`.</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`cy.spy()` cannot have any assertions chained.</li></List>
+<List><li>`cy.spy()` 不能链接任何断言.</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`cy.spy()` cannot time out.</li></List>
+<List><li>`cy.spy()` 不能超时.</li></List>
 
-## Command Log
-
-**_Create a spy, alias it, and call it_**
+## 命令日志
+**_创造一个间谍，取别名，再调用它_**
 
 ```javascript
 const obj = {
@@ -140,11 +139,11 @@ obj.foo('foo', 'bar')
 expect(spy).to.be.called
 ```
 
-The command above will display in the Command Log as:
+上面的命令将在命令日志中显示为:
 
 <DocsImage src="/img/api/spy/spying-shows-any-aliases-and-also-any-assertions-made.png" alt="Command Log spy" ></DocsImage>
 
-When clicking on the `spy-1` event within the command log, the console outputs the following:
+当单击命令日志中的 `spy-1`事件时，控制台输出如下内容:
 
 <DocsImage src="/img/api/spy/console-shows-spy-arguments-calls-and-the-object-being-spied.png" alt="Console Log spy" ></DocsImage>
 
@@ -155,10 +154,10 @@ When clicking on the `spy-1` event within the command log, the console outputs t
 | [0.20.0](/guides/references/changelog#0-20.0) | Added `.log(bool)` method |
 | [0.18.8](/guides/references/changelog#0-18-8) | `cy.spy()` command added  |
 
-## See also
+## 另请参阅
 
 - [`.as()`](/api/commands/as)
 - [`cy.clock()`](/api/commands/clock)
-- [Guide: Stubs, Spies and Clocks](/guides/guides/stubs-spies-and-clocks)
-- [Recipe: Stubbing, Spying](/examples/examples/recipes#Stubbing-and-spying)
+- [指南:桩、间谍和时钟](/guides/guides/stubs-spies-and-clocks)
+- [配方:桩,间谍](/examples/examples/recipes#Stubbing-and-spying)
 - [`cy.stub()`](/api/commands/stub)
