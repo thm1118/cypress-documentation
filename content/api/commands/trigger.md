@@ -2,9 +2,9 @@
 title: trigger
 ---
 
-Trigger an event on a DOM element.
+在DOM元素上触发事件.
 
-## Syntax
+## 语法
 
 ```javascript
 .trigger(eventName)
@@ -15,76 +15,76 @@ Trigger an event on a DOM element.
 .trigger(eventName, x, y, options)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
-
-```javascript
-cy.get('a').trigger('mousedown') // Trigger mousedown event on link
-```
-
-**<Icon name="exclamation-triangle" color="red"></Icon> Incorrect Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
-cy.trigger('touchstart') // Errors, cannot be chained off 'cy'
-cy.location().trigger('mouseleave') // Errors, 'location' does not yield DOM element
+cy.get('a').trigger('mousedown') // 在链接上触发mousedown事件
 ```
 
-### Arguments
+**<Icon name="exclamation-triangle" color="red"></Icon> 不正确的使用**
+
+```javascript
+cy.trigger('touchstart') // 错误，不能链接自'cy'
+cy.location().trigger('mouseleave') // 错误，'location'不输出DOM元素
+```
+
+### 参数
 
 **<Icon name="angle-right"></Icon> eventName** **_(String)_**
 
-The name of the `event` to be triggered on the DOM element.
+要在DOM元素上触发的事件名称.
 
 **<Icon name="angle-right"></Icon> position** **_(String)_**
 
-The position where the event should be triggered. The `center` position is the default position. Valid positions are `topLeft`, `top`, `topRight`, `left`, `center`, `right`, `bottomLeft`, `bottom`, and `bottomRight`.
+应触发事件的位置. `center`位置是默认位置. 有效的位置是`topLeft`, `top`, `topRight`, `left`, `center`, `right`, `bottomLeft`, `bottom`, 和  `bottomRight`。
 
 <DocsImage src="/img/api/coordinates-diagram.jpg" alt="cypress-command-positions-diagram" ></DocsImage>
 
 **<Icon name="angle-right"></Icon> x** **_(Number)_**
 
-The distance in pixels from element's left to trigger the event.
+从元素左侧触发事件的距离(以像素为单位).
 
 **<Icon name="angle-right"></Icon> y** **_(Number)_**
 
-The distance in pixels from element's top to trigger the event.
+从元素顶部触发事件的距离(以像素为单位)。
 
 **<Icon name="angle-right"></Icon> options** **_(Object)_**
 
-Pass in an options object to change the default behavior of `.trigger()`.
+传入一个options对象来改变`.trigger()`.的默认行为。
 
-| Option                       | Default                                                                        | Description                                                                                                                                        |
+| 选项对象                      | 默认值                                                                         | 描述                                                                                                                                        |
 | ---------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `animationDistanceThreshold` | [`animationDistanceThreshold`](/guides/references/configuration#Actionability) | The distance in pixels an element must exceed over time to be [considered animating](/guides/core-concepts/interacting-with-elements#Animations).  |
-| `bubbles`                    | `true`                                                                         | Whether the event bubbles                                                                                                                          |
-| `cancelable`                 | `true`                                                                         | Whether the event is cancelable                                                                                                                    |
-| `eventConstructor`           | `Event`                                                                        | The constructor for creating the event object (e.g. `MouseEvent`, `KeyboardEvent`)                                                                 |
-| `force`                      | `false`                                                                        | Forces the action, disables [waiting for actionability](#Assertions)                                                                               |
-| `log`                        | `true`                                                                         | Displays the command in the [Command log](/guides/core-concepts/test-runner#Command-Log)                                                           |
-| `scrollBehavior`             | [`scrollBehavior`](/guides/references/configuration#Actionability)             | Viewport position to where an element [should be scrolled](/guides/core-concepts/interacting-with-elements#Scrolling) before executing the command |
-| `timeout`                    | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts)           | Time to wait for `.trigger()` to resolve before [timing out](#Timeouts)                                                                            |
-| `waitForAnimations`          | [`waitForAnimations`](/guides/references/configuration#Actionability)          | Whether to wait for elements to [finish animating](/guides/core-concepts/interacting-with-elements#Animations) before executing the command.       |
+| `animationDistanceThreshold` | [`animationDistanceThreshold`](/guides/references/configuration#Actionability) | 一个元素[被认为是动画](/guides/core-concepts/interacting-with-elements#Animations) 必须超过的像素距离.  |
+| `bubbles`                    | `true`                                                                         | 事件是否冒泡                                                                                                                          |
+| `cancelable`                 | `true`                                                                         | 事件是否可取消                                                                                                                    |
+| `eventConstructor`           | `Event`                                                                        | 用于创建事件对象的构造函数 (例如. `MouseEvent`, `KeyboardEvent`)                                                                 |
+| `force`                      | `false`                                                                        | 强制执行动作，禁用[等待可操作性](#Assertions)                                                                               |
+| `log`                        | `true`                                                                         | 在[命令日志](/guides/core-concepts/test-runner#Command-Log) 中显示命令                                                        |
+| `scrollBehavior`             | [`scrollBehavior`](/guides/references/configuration#Actionability)             | 在执行命令之前，Viewport元素[应该滚动](/guides/core-concepts/interacting-with-elements#Scrolling)的位置  |
+| `timeout`                    | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts)           | 在[超时](#Timeouts)之前等待 `.trigger()` 解决的时间                                                                            |
+| `waitForAnimations`          | [`waitForAnimations`](/guides/references/configuration#Actionability)          | 是否在执行命令之前等待元素[完成动画](/guides/core-concepts/interacting-with-elements#Animations).       |
 
-You can also include arbitrary event properties (e.g. `clientX`, `shiftKey`) and they will be attached to the event. Passing in coordinate arguments (`clientX`, `pageX`, etc) will override the position coordinates.
+还可以包含需要附加到事件上的任意事件属性  (例如. `clientX`, `shiftKey`) . 传入坐标参数 (`clientX`, `pageX`, 等等)将覆盖位置坐标.
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### Yields 输出[<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-<List><li>`.trigger()` yields the same subject it was given from the previous command.</li></List>
+<List><li>`.trigger()` 输出与前一个命令相同的目标。</li></List>
 
-## Examples
+## 例子
 
-### Mouse Events
+### 鼠标事件
 
-#### Trigger a `mouseover` on the button
+#### 在按钮上触发 `mouseover`
 
-The DOM element must be in an "interactable" state prior to the triggered event happening (it must be visible and not disabled).
+在触发事件发生之前，DOM元素必须处于“可交互”状态(必须是可见的，不能被禁用)。
 
 ```javascript
-cy.get('button').trigger('mouseover') // yields 'button'
+cy.get('button').trigger('mouseover') // 输出 'button'
 ```
 
-#### Simulate a "long press" event
+#### 模拟“长按”事件
 
 ```javascript
 cy.get('.target').trigger('mousedown')
@@ -92,20 +92,20 @@ cy.wait(1000)
 cy.get('.target').trigger('mouseup')
 ```
 
-#### Trigger a `mousedown` from a specific mouse button
+#### 从特定的鼠标按钮触发 `mousedown`
 
 ```js
-// Main button pressed (usually the left button)
+// 主按钮按下 (通常是左键)
 cy.get('.target').trigger('mousedown', { button: 0 })
-// Auxiliary button pressed (usually the middle button)
+// 辅助按钮按下 (通常是中间的按钮)
 cy.get('.target').trigger('mousedown', { button: 1 })
-//Secondary button pressed (usually the right button)
+//第二个按钮按下 (通常是右键)
 cy.get('.target').trigger('mousedown', { button: 2 })
 ```
 
 #### jQuery UI Sortable
 
-To simulate drag and drop using jQuery UI sortable requires `pageX` and `pageY` properties along with `which:1`.
+在 jQuery UI sortable 中模拟拖放，需要`pageX` 和 `pageY`属性以及`which:1`。
 
 ```javascript
 cy.get('[data-cy=draggable]')
@@ -114,24 +114,23 @@ cy.get('[data-cy=draggable]')
   .trigger('mouseup')
 ```
 
-#### Drag and Drop
+#### 拖放
 
 <Alert type="info">
 
-[Check out our example recipe triggering mouse and drag events to test drag and drop](/examples/examples/recipes#Testing-the-DOM)
+[查看我们的示例配方：触发鼠标和拖动事件来测试拖放](/examples/examples/recipes#Testing-the-DOM)
 
 </Alert>
 
-### Change Event
+### change 事件
 
-#### Interact with a range input (slider)
+#### 与一个 range input (slider) 交互
 
-To interact with a range input (slider), we need to set its value and
-then trigger the appropriate event to signal it has changed.
+与一个 range input (slider) 交互, 我们需要设置它的值，然后触发适当的事件以表示它已经更改。
 
-Below we invoke jQuery's `val()` method to set the value, then trigger the `change` event.
+下面我们调用jQuery的`val()` 方法来设置值，然后触发`change`事件。
 
-Note that some implementations may rely on the `input` event instead, which is fired as a user moves the slider, but is not supported by some browsers.
+注意，有些实现可能依赖于`input`事件，当用户移动滑块时触发该事件，但有些浏览器不支持该事件。
 
 ```javascript
 cy.get('input[type=range]').as('range').invoke('val', 25).trigger('change')
@@ -139,117 +138,117 @@ cy.get('input[type=range]').as('range').invoke('val', 25).trigger('change')
 cy.get('@range').siblings('p').should('have.text', '25')
 ```
 
-### Position
+### 位置
 
-#### Trigger a `mousedown` on the top right of a button
+#### 在按钮的右上方触发`mousedown`
 
 ```javascript
 cy.get('button').trigger('mousedown', 'topRight')
 ```
 
-### Coordinates
+### 坐标
 
-#### Specify explicit coordinates relative to the top left corner
+#### 指定相对于左上角的显式坐标
 
 ```javascript
 cy.get('button').trigger('mouseup', 15, 40)
 ```
 
-### Options
+### 选项
 
-#### Specify that the event should not bubble
+#### 指定事件不应该冒泡
 
-By default, the event will bubble up the DOM tree. This will prevent the event from bubbling.
+默认情况下，该事件将沿DOM树冒泡。这将阻止事件冒泡。
 
 ```javascript
 cy.get('button').trigger('mouseover', { bubbles: false })
 ```
 
-#### Specify the exact `clientX` and `clientY` the event should have
+#### 指定事件应该具有的确切的`clientX`和`clientY`
 
-This overrides the default auto-positioning based on the element itself. Useful for events like `mousemove` where you need the position to be outside the element itself.
+这将覆盖基于元素本身的默认自动定位。对于像`mousemove`这样的事件很有用，因为你需要位置在元素本身之外.
 
 ```javascript
 cy.get('button').trigger('mousemove', { clientX: 200, clientY: 300 })
 ```
 
-### Fire other Event types.
+### 触发其他事件类型。
 
-By default, `cy.trigger()` fires [`Event`](https://developer.mozilla.org/en-US/docs/Web/API/Event). But you may want to trigger other events like `MouseEvent` or `KeyboardEvent`.
+默认情况下，`cy.trigger()` 触发[`Event`](https://developer.mozilla.org/en-US/docs/Web/API/Event). 但你可能想触发其他事件比如 `MouseEvent` 或 `KeyboardEvent`.
 
-In that case, use the `eventConstructor` option.
+在这种情况下，使用`eventConstructor`选项.
 
 ```js
 cy.get('button').trigger('mouseover', { eventConstructor: 'MouseEvent' })
 ```
 
-## Notes
+## 注意
 
-### Actionability
+### 可操作性
 
-#### The element must first reach actionability
+#### 要素必须首先达到可操作性
 
-`.trigger()` is an "action command" that follows all the rules [defined here](/guides/core-concepts/interacting-with-elements).
+`.trigger()`是一个“动作命令”，它遵循[这里定义的](/guides/core-concepts/interacting-with-elements)的所有规则。
 
-### Events
+### 事件
 
-#### What event should I fire?
+#### 我应该触发什么事件?
 
-`cy.trigger()` is meant to be a low-level utility that makes triggering events easier than manually constructing and dispatching them. Since any arbitrary event can be triggered, Cypress tries not to make any assumptions about how it should be triggered. This means you'll need to know the implementation details (which may be in a 3rd party library) of the event handler(s) receiving the event and provide the necessary properties.
+`cy.trigger()` 是一种低级实用程序，它使触发事件比手动构造和分派事件更容易. 由于任何任意事件都可以被触发，Cypress尽量不去假设应该如何触发.这意味着您需要知道接收事件的事件处理程序的实现细节(可能在第三方库中)，并提供必要的属性.
 
-#### Why should I manually set the event type?
+#### 为什么要手动设置事件类型?
 
-As you can see the documentation of [`MouseEvent`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent), most properties of event class instances are read-only. Because of that, it's sometimes impossible to set the value of some properties like `pageX`, `pageY`. This can be problematic in when testing some situations.
+正如你可以看到的[`MouseEvent`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent) 的文档, 事件类实例的大多数属性是只读的。 正因如此，有时无法设置一些属性的值比如`pageX`, `pageY`. 在测试某些情况时，这可能会有问题.
 
-### Differences
+### 区别
 
-#### What's the difference between triggering and event and calling the corresponding cypress command?
+#### 触发和事件与调用相应的cypress命令有什么区别?
 
-In other words, what's the difference between:
+换句话说，两者的区别是什么:
 
 ```javascript
 cy.get('button').trigger('focus')
 cy.get('button').focus()
 
-// ... or ...
+// ... 或 ...
 
 cy.get('button').trigger('click')
 cy.get('button').click()
 ```
 
-Both types commands will first verify element actionability, but only the "true" action commands will implement all of the default actions of the browser, and additionally perform low level actions to fulfill what's defined in the spec.
+这两种类型的命令都将首先验证元素的可操作性，但只有“真正的”操作命令将实现浏览器的所有默认操作，并额外执行低级操作来实现spec中定义的内容.
 
-`.trigger()` will _only_ fire the corresponding event and do nothing else.
+`.trigger()` _仅仅_ 触发相应的事件而不做其他事情.
 
-That means that your event listener callbacks will be invoked, but don't expect the browser to actually "do" anything for these events. For the most part, it shouldn't matter, which is why `.trigger()` is an excellent stop-gap if the command / event you're looking for hasn't been implemented yet.
+这意味着您的事件监听回调将被调用，但不要期望浏览器实际为这些事件“做”任何事情. 在大多数情况下，这并不重要，这就是为什么如果您正在寻找的命令事件还没有实现，`.trigger()` 是一个非常好的临时方法。
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 要求 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`.trigger()` requires being chained off a command that yields DOM element(s).</li></List>
+<List><li>`.trigger()` 需要链接自一个输出DOM元素的命令.</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`.trigger()` will automatically wait for the element to reach an [actionable state](/guides/core-concepts/interacting-with-elements)</li><li>`.trigger()` will automatically [retry](/guides/core-concepts/retry-ability) until all chained assertions have passed</li></List>
+<List><li>`.trigger()` 将自动等待元素达到[可操作状态](/guides/core-concepts/interacting-with-elements)</li><li>`.trigger()` 会自动[重试](/guides/core-concepts/retry-ability)直到所有链式断言都通过</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`.trigger()` can time out waiting for the element to reach an [actionable state](/guides/core-concepts/interacting-with-elements).</li><li>`.trigger()` can time out waiting for assertions you've added to pass.</li></List>
+<List><li>`.trigger()` 在元素达到[可操作状态](/guides/core-concepts/interacting-with-elements) 时超时.</li><li>`.trigger()`在等待添加的断言通过时会超时.</li></List>
 
-## Command Log
+## 命令日志
 
-**_Trigger a `change` event on input type='range'_**
+**_在一个type='range'的input 上触发“change”事件_**
 
 ```javascript
 cy.get('.trigger-input-range').invoke('val', 25).trigger('change')
 ```
 
-The commands above will display in the Command Log as:
+上面的命令将在命令日志中显示为:
 
 <DocsImage src="/img/api/trigger/command-log-trigger.png" alt="command log trigger" ></DocsImage>
 
-When clicking on `trigger` within the command log, the console outputs the following:
+当单击命令日志中的`trigger`时，控制台输出如下内容:
 
 <DocsImage src="/img/api/trigger/console-log-trigger.png" alt="console log trigger" ></DocsImage>
 
