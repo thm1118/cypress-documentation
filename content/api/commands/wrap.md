@@ -2,47 +2,47 @@
 title: wrap
 ---
 
-Yield the object passed into `.wrap()`. If the object is a promise, yield its resolved value.
+输出传递给`.wrap()`的对象. 如果对象是一个promise，则输出其解决值.
 
-## Syntax
+## 语法
 
 ```javascript
 cy.wrap(subject)
 cy.wrap(subject, options)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
 cy.wrap({ name: 'Jane Lane' })
 ```
 
-### Arguments
+### 参数
 
 **<Icon name="angle-right"></Icon> subject** **_(Object)_**
 
-An object to be yielded.
+要输出的东西.
 
 **<Icon name="angle-right"></Icon> options** **_(Object)_**
 
-Pass in an options object to change the default behavior of `cy.wrap()`.
+传入一个options对象以更改`cy.wrap()`的默认行为.
 
-| Option    | Default                                                              | Description                                                                              |
+| 选项      | 默认值                                                              | 描述                                                                              |
 | --------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `log`     | `true`                                                               | Displays the command in the [Command log](/guides/core-concepts/test-runner#Command-Log) |
-| `timeout` | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts) | Time to wait for `cy.wrap()` to resolve before [timing out](#Timeouts)                   |
+| `log`     | `true`                                                               | 在[命令日志](/guides/core-concepts/test-runner#Command-Log) 中显示命令 |
+| `timeout` | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts) | 等待`cy.wrap()`在[超时](#Timeouts)之前解决的时间                   |
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### Yields 输出[<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-<List><li>`cy.wrap()` 'yields the object it was called with' </li></List>
+<List><li>`cy.wrap()` '输出调用它传入的参数对象' </li></List>
 
-## Examples
+## 例子
 
-### Objects
+### 对象
 
-#### Invoke the function on the subject in wrap and return the new value
+#### 调用包装的目标的函数并返回新值
 
 ```javascript
 const getName = () => {
@@ -52,42 +52,41 @@ const getName = () => {
 cy.wrap({ name: getName }).invoke('name').should('eq', 'Jane Lane') // true
 ```
 
-### Elements
+### DOM元素
 
-#### Wrap elements to continue executing commands
+#### 包装元素以继续执行命令
 
 ```javascript
 cy.get('form').within(($form) => {
-  // ... more commands
+  // ... 更多命令
 
   cy.wrap($form).should('have.class', 'form-container')
 })
 ```
 
-#### Conditionally wrap elements
+#### 有条件地包装元素
 
 ```javascript
 cy.get('button').then(($button) => {
-  // $button is a wrapped jQuery element
+  // $button 是个jQuery封装的元素
   if ($button.someMethod() === 'something') {
-    // wrap this element so we can
-    // use cypress commands on it
+    // 包装这个元素，这样我们就可以在它上面使用cypress命令
     cy.wrap($button).click()
   } else {
-    // do something else
+    // 做其他的事情
   }
 })
 ```
 
 ### Promises
 
-You can wrap promises returned by the application code. Cypress commands will automatically wait for the promise to resolve before continuing with the yielded value to the next command or assertion. See the [Logging in using application code](/examples/examples/recipes#Logging-In) recipe for the full example.
+您可以包装应用程序代码返回的Promises. Cypress命令将自动等待Promises解决，然后继续使用下一个命令或断言所输出的值. 完整的示例请参见[使用应用程序代码登录](/examples/examples/recipes#Logging-In) 配方.
 
-#### Simple example
+#### 简单的例子
 
 ```js
 const myPromise = new Promise((resolve, reject) => {
-  // we use setTimeout(...) to simulate async code.
+  // 用 setTimeout(...)模拟异步代码.
   setTimeout(() => {
     resolve({
       type: 'success',
@@ -96,27 +95,27 @@ const myPromise = new Promise((resolve, reject) => {
   }, 2500)
 })
 
-it('should wait for promises to resolve', () => {
+it('应该等Promise解决', () => {
   cy.wrap(myPromise).its('message').should('eq', 'It worked!')
 })
 ```
 
 <DocsImage src="/img/api/wrap/cypress-wrapped-promise-waits-to-resolve.gif" alt="Wrap of promises" ></DocsImage>
 
-#### Application example
+#### 应用程序实例
 
 ```javascript
-// import application code for logging in
+// 导入应用代码 来登录
 import { userService } from '../../src/_services/user.service'
 
-it('can assert against resolved object using .should', () => {
+it('使用 .should 可以断言对象已解析', () => {
   cy.log('user service login')
   const username = Cypress.env('username')
   const password = Cypress.env('password')
 
-  // wrap the promise returned by the application code
+  // 包装应用程序代码返回的promise
   cy.wrap(userService.login(username, password))
-    // check the yielded object
+    // 检查已输出的对象
     .should('be.an', 'object')
     .and('have.keys', ['firstName', 'lastName', 'username', 'id', 'token'])
     .and('contain', {
@@ -125,22 +124,21 @@ it('can assert against resolved object using .should', () => {
       lastName: 'User',
     })
 
-  // cy.visit command will wait for the promise returned from
-  // the "userService.login" to resolve. Then local storage item is set
-  // and the visit will immediately be authenticated and logged in
+  // cy.visit 命令将等待从"userService.login"返回的promise 解决。 
+  // 然后设置本地存储项，并立即对访问进行身份验证和登录
   cy.visit('/')
-  // we should be logged in
+  // 我们应该登陆了
   cy.contains('Hi Test!').should('be.visible')
 })
 ```
 
-**Note:** `.wrap()` will not synchronize asynchronous function calls for you. For example, given the following example:
+**注意:** `.wrap()` 不会为您同步异步函数调用. 例如，给出下面的例子:
 
-- You have two async functions `async function foo() {...}` and `async function bar() {...}`
-- You need to make sure `foo()` has resolved first before invoking `bar()`
-- `bar()` is also dependent on some data that is created while after calling other Cypress commands.
+- 有两个异步函数 `async function foo() {...}` 和 `async function bar() {...}`
+- 你需要确保`foo()`在调用`bar()`之前已经被解析。
+- `bar()`也依赖于在调用其他Cypress命令后创建的一些数据.
 
-**<Icon name="exclamation-triangle" color="red"></Icon>** If you wrap the asynchronous functions in `cy.wrap()`, then `bar()` may be called prematurely before the required data is available:
+**<Icon name="exclamation-triangle" color="red"></Icon>** 如果你用`cy.wrap()`包装异步函数, 那么`bar()`可能会在所需数据可用之前被提前调用:
 
 ```javascript
 cy.wrap(foo())
@@ -149,14 +147,13 @@ cy.get('some-button').click()
 cy.get('some-input').type(someValue)
 cy.get('some-submit-button').click()
 
-// this will execute `bar()` immediately without waiting
-// for other cy.get(...) functions to complete
-cy.wrap(bar()) // DON'T DO THIS
+// 这将立即执行`bar()`，而不会等待其他cy.get(…)函数完成
+cy.wrap(bar()) // 不这样做
 ```
 
-This behavior is due to the function invocation `foo()` and `bar()`, which call the functions immediately to return a Promise.
+这种行为是由于函数调用`foo()` 和 `bar()`，它们会立即调用函数来返回Promise.
 
-**<Icon name="check-circle" color="green"></Icon>** If you want `bar()` to execute after `foo()` and the [cy.get()](/api/commands/get) commands, one solution is to chain off the final command using [.then()](/api/commands/then):
+**<Icon name="check-circle" color="green"></Icon>** 如果你想在`foo()`和[cy.get()](/api/commands/get)命令 之后执行`bar()`, 一种解决方案是使用[.then()](/api/commands/then) 链接最终命令:
 
 ```javascript
 cy.wrap(foo())
@@ -166,39 +163,38 @@ cy.get('some-input').type(someValue)
 cy.get('some-submit-button')
   .click()
   .then(() => {
-    // this will execute `bar()` after the
-    // other cy.get(...) functions complete
+    // 这将在其他cy.get(…)函数完成后执行 `bar()`
     cy.wrap(bar())
   })
 ```
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 要求 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`cy.wrap()` requires being chained off of `cy`.</li></List>
+<List><li>`cy.wrap()`需要链接自 `cy`.</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`cy.wrap()`, when its argument is a promise, will automatically wait until the promise resolves. If the promise is rejected, `cy.wrap()` will fail the test.</li><li>`cy.wrap()` will automatically [retry](/guides/core-concepts/retry-ability) until all chained assertions have passed</li></List>
+<List><li>`cy.wrap()`, 当它的参数是一个promise时，将自动等待，直到promise被解决. 如果promise被rejected, `cy.wrap()`将让测试无法通过.</li><li>`cy.wrap()` 讲自动 [重试](/guides/core-concepts/retry-ability) 直到所有链接的断言通过</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`cy.wrap()` can time out waiting for assertions you've added to pass.</li></List>
+<List><li>`cy.wrap()` 在等待添加的断言通过时是否会超时.</li></List>
 
-## Command Log
+## 命令日志
 
-**Make assertions about object**
+**对对象进行断言**
 
 ```javascript
 cy.wrap({ amount: 10 }).should('have.property', 'amount').and('eq', 10)
 ```
 
-The commands above will display in the Command Log as:
+上面的命令将在命令日志中显示为:
 
 <DocsImage src="/img/api/wrap/wrapped-object-in-cypress-tests.png" alt="Command Log wrap" ></DocsImage>
 
-When clicking on the `wrap` command within the command log, the console outputs the following:
+当单击命令日志中的`wrap`命令时，控制台输出如下内容:
 
 <DocsImage src="/img/api/wrap/console-log-only-shows-yield-of-wrap.png" alt="Console Log wrap" ></DocsImage>
 
@@ -209,12 +205,12 @@ When clicking on the `wrap` command within the command log, the console outputs 
 | [3.2.0](/guides/references/changelog#3-2-0) | Retry `cy.wrap()` if `undefined` when followed by [.should()](/api/commands/should) |
 | [0.4.5](/guides/references/changelog#0.4.5) | `cy.wrap()` command added                                                           |
 
-## See also
+## 另请参阅
 
 - [`.invoke()`](/api/commands/invoke)
 - [`.its()`](/api/commands/its)
 - [`.should()`](/api/commands/should)
 - [`.spread()`](/api/commands/spread)
 - [`.then()`](/api/commands/then)
-- [Logging In: Using application code](/examples/examples/recipes#Logging-In) recipe
-- [Unit Testing: Application Code](/examples/examples/recipes#Unit-Testing) recipe
+- [登录:使用应用程序代码](/examples/examples/recipes#Logging-In) 配方
+- [单元测试:应用程序代码](/examples/examples/recipes#Unit-Testing) 配方
