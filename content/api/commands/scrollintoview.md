@@ -44,7 +44,7 @@ cy.window().scrollIntoView() // 错误，'window'不输出DOM元素
 
 <List><li>'`.scrollIntoView()`输出与前一个命令相同的目标。</li></List>
 
-## Examples
+## 例子
 
 ### Scrolling
 
