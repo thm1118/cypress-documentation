@@ -2,9 +2,9 @@
 title: fixture
 ---
 
-Load a fixed set of data located in a file.
+加载位于文件中的一组固定数据。
 
-## Syntax
+## 语法
 
 ```javascript
 cy.fixture(filePath)
@@ -13,32 +13,32 @@ cy.fixture(filePath, options)
 cy.fixture(filePath, encoding, options)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
+**<Icon name="check-circle" color="green"></Icon>正确的用法**
 
 ```javascript
-cy.fixture('users').as('usersJson') // load data from users.json
+cy.fixture('users').as('usersJson') // 从users.json 加载数据
 cy.fixture('logo.png').then((logo) => {
-  // load data from logo.png
+  // 加载 logo.png 图片
 })
 ```
 
-### Arguments
+### 参数
 
 **<Icon name="angle-right"></Icon> filePath** **_(String)_**
 
-A path to a file within the [`fixturesFolder`](/guides/references/configuration#Folders-Files) , which defaults to `cypress/fixtures`.
+[`fixturesFolder`](/guides/references/configuration#Folders-Files) 配置中的一个文件路径，默认为 `cypress/fixtures`.
 
-You can nest fixtures within folders and reference them by defining the path from the fixturesFolder:
+您可以将 fixture 嵌套在文件夹中，并通过定义fixturesFolder路径来引用它们:
 
 ```javascript
-cy.fixture('users/admin.json') // Get data from {fixturesFolder}/users/admin.json
+cy.fixture('users/admin.json') // 从路径 {fixturesFolder}/users/admin.json 加载数据
 ```
 
 **<Icon name="angle-right"></Icon> encoding** **_(String)_**
 
-The encoding to be used when reading the file. The following encodings are supported:
+读取文件时使用的编码。支持以下编码:
 
 - `ascii`
 - `base64`
@@ -54,35 +54,35 @@ The encoding to be used when reading the file. The following encodings are suppo
 
 **<Icon name="angle-right"></Icon> options** **_(Object)_**
 
-Pass in an options object to change the default behavior of `cy.fixture()`.
+传入一个options对象以更改`cy.fixture()`的默认行为.
 
-| Option    | Default                                                        | Description                                                               |
+| 选项      | 默认值                                                          | 描述                                                               |
 | --------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `timeout` | [`responseTimeout`](/guides/references/configuration#Timeouts) | Time to wait for `cy.fixture()` to resolve before [timing out](#Timeouts) |
+| `timeout` | [`responseTimeout`](/guides/references/configuration#Timeouts) | 在[超时](#Timeouts)之前等待 `cy.fixture()` 解决的时间 |
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### Yields 输出[<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-`cy.fixture()` yields the contents of the file. Formatting is determined by its file extension.
+`cy.fixture()`将输出文件的内容。格式由文件扩展名决定.
 
-## Examples
+## 例子
 
 ### JSON
 
-#### Load a `users.json` fixture
+#### 加载一个 `users.json` fixture
 
 ```javascript
 cy.fixture('users.json').as('usersData')
 ```
 
-#### Omit the fixture file's extension
+#### 省略 fixture文件的扩展名
 
-When no extension is passed to `cy.fixture()`, Cypress will search for files with the specified name within the [`fixturesFolder`](/guides/references/configuration#Folders-Files) (which defaults to `cypress/fixtures`) and resolve the first one.
+当没有扩展被传递给`cy.fixture()`时, Cypress将在[`fixturesFolder`](/guides/references/configuration#Folders-Files)(默认为`cypress/fixtures`)中搜索指定名称的文件，并解析第一个文件。
 
 ```javascript
 cy.fixture('admin').as('adminJSON')
 ```
 
-The example above would resolve in the following order:
+上面的例子将按照以下顺序解析:
 
 1. `cypress/fixtures/admin.json`
 2. `cypress/fixtures/admin.js`
@@ -98,9 +98,9 @@ The example above would resolve in the following order:
 12. `cypress/fixtures/admin.tiff`
 13. `cypress/fixtures/admin.zip`
 
-#### Use import statement
+#### 使用 `import`语句
 
-If you are loading a JSON fixture, you can simply use the `import` statement and let the bundler load it:
+如果你正在加载一个JSON fixture，你可以简单地使用 `import`语句，并让绑定器加载它:
 
 ```js
 // cypress/integration/spec.js
@@ -112,29 +112,29 @@ it('loads the same object', () => {
 })
 ```
 
-### Images
+### 图片
 
-#### Image fixtures are sent as `base64`
+#### 图像 fixute 默认会以 `base64`编码加载
 
 ```javascript
 cy.fixture('images/logo.png').then((logo) => {
-  // logo will be encoded as base64
-  // and should look something like this:
+  // Logo将被编码为base64
+  // 类似这样的:
   // aIJKnwxydrB10NVWqhlmmC+ZiWs7otHotSAAAOw==...
 })
 ```
 
-#### Change encoding of Image fixture
+#### 更改图像fixture的编码
 
 ```javascript
 cy.fixture('images/logo.png', 'binary').then((logo) => {
-  // logo will be encoded as binary
-  // and should look something like this:
+  // logo将被编码为二进制
+  // 类似这样:
   // 000000000000000000000000000000000000000000...
 })
 ```
 
-### Playing MP3 file
+### 播放MP3文件
 
 ```javascript
 cy.fixture('audio/sound.mp3', 'base64').then((mp3) => {
@@ -145,9 +145,9 @@ cy.fixture('audio/sound.mp3', 'base64').then((mp3) => {
 })
 ```
 
-### Accessing Fixture Data
+### 访问Fixture数据
 
-#### Using `.then()` to access fixture data
+#### 使用`.then()`访问fixture数据
 
 ```javascript
 cy.fixture('users').then((json) => {
@@ -155,17 +155,17 @@ cy.fixture('users').then((json) => {
 })
 ```
 
-#### Using fixtures to bootstrap data
+#### 使用fixture 引导数据
 
 <Alert type="info">
 
-[Check out our example recipe using `cy.fixture()` to bootstrap data for our application.](/examples/examples/recipes#Server-Communication)
+[查看我们使用`cy.fixture()` 引导应用程序数据的示例配方.](/examples/examples/recipes#Server-Communication)
 
 </Alert>
 
-#### Modifying fixture data before using it
+#### 在使用fixture数据之前修改它
 
-You can modify fixture data directly before passing it along to a route.
+在将fixture数据传递给路由之前，可以直接修改fixture数据。
 
 ```javascript
 cy.fixture('user').then((user) => {
@@ -179,29 +179,29 @@ cy.wait('@getUser').then(({ request }) => {
 })
 ```
 
-## Notes
+## 注释
 
-### Shortcuts
+### 快捷方式
 
-#### Using the `fixture` `StaticResponse` property
+#### 使用 `fixture` `StaticResponse`属性
 
-Fixtures can also be referenced directly without using the `.fixture()` command by using the special property `fixture` on the [`cy.intercept()`](/api/commands/intercept) `StaticResponse` object.
+不使用`.fixture()`命令，也可以通过使用[`cy.intercept()`](/api/commands/intercept) `StaticResponse`对象的特定属性`fixture`
 
 ```javascript
 cy.intercept('GET', '/users/**', { fixture: 'users' })
 ```
 
-### Validation
+### 验证
 
-#### Automated File Validation
+#### 自动化文件验证
 
-Cypress automatically validates your fixtures. If your `.json`, `.js`, or `.coffee` files contain syntax errors, they will be shown in the Command Log.
+Cypress会自动验证你的fixture. 如果你的 `.json`, `.js`, 或 `.coffee`文件包含语法错误，它们将显示在命令日志中.
 
-### Encoding
+### 编码
 
-#### Default Encoding
+#### 默认编码
 
-Cypress automatically determines the encoding for the following file types:
+Cypress自动确定以下文件类型的编码:
 
 - `.json`
 - `.js`
@@ -217,97 +217,96 @@ Cypress automatically determines the encoding for the following file types:
 - `.tiff`
 - `.zip`
 
-For other types of files, they will be read as `utf8` by default, unless specified in the second argument of `cy.fixture()`.
+对于其他类型的文件，除非在`cy.fixture()`的第二个参数中指定，否则默认情况下它们将被读取为`utf8`.
 
-### `this` context
+### `this` 上下文
 
-If you store and access the fixture data using `this` test context object, make sure to use `function () { ... }` callbacks. Otherwise the test engine will NOT have `this` pointing at the test context.
+如果您使用`this` 这个当前测试上下文对象存储和访问fixture数据, 需要确保使用`function () { ... }` 形式的回调函数. 否则测试引擎将不会有指向当前测试的上下文的 `this`.
 
 ```javascript
 describe('User page', () => {
   beforeEach(function () {
-    // "this" points at the test context object
+    // "this" 指向测试上下文对象
     cy.fixture('user').then((user) => {
-      // "this" is still the test context object
+      // "this" 仍然是同一个测试上下文对象
       this.user = user
     })
   })
 
-  // the test callback is in "function () { ... }" form
+  // 测试回调函数是 "function () { ... }" 形式
   it('has user', function () {
-    // this.user exists
+    // this.user 是存在的
     expect(this.user.firstName).to.equal('Jane')
   })
 })
 ```
 
-### Loaded just once
+### 只加载一次
 
-Please keep in mind that fixture files are assumed to be unchanged during the test, and thus the Test Runner loads them just once. Even if you overwrite the fixture file itself, the already loaded fixture data remains the same.
+请记住，fixture文件在测试期间假定是不变的，因此测试运行程序只加载它们一次。 即使覆盖了fixture文件本身，已经加载的fixture数据仍然是不变的。
 
-For example, if you want to reply to a network request with different object, the following **will not work**:
+例如，如果您想用不同的对象响应一个网络请求，下面的操作将**不起作用**:
 
 ```js
-// 🚨 DOES NOT WORK
+// 🚨 行不通
 cy.intercept('GET', '/todos/1', { fixture: 'todo' }).as('todo')
-// application requests the /todos/1 resource
-// the intercept replies with the object from todo.json file
+// 应用程序请求 /todos/1 资源
+// 拦截器响应来自 todo.json 文件的数据
 
 cy.wait('@todo').then(() => {
-  cy.writeFile('/cypress/fixtures/todo.json', { title: 'New data' })
+  cy.writeFile('/cypress/fixtures/todo.json', { title: '新数据' })
 })
-// application requests the /todos/1 resource again
-// the intercept replies with the originally loaded object
-// from the todo.json file and NOT { "title": "New data" }
+// 应用程序再次请求 /todos/1 资源
+// 拦截将使用最初从 todo.json 文件加载的对象进行响应，而不是 { "title": "新数据" }
 ```
 
-In this situation, avoid using the fixture file and instead respond to the network request with the object
+在这种情况下，避免使用fixture文件，而是用对象响应网络请求
 
 ```js
-// ✅ RESPOND WITH OBJECT
+// ✅ 用对象响应
 cy.fixture('todo.json').then((todo) => {
   cy.intercept('GET', '/todos/1', { body: todo }).as('todo')
-  // application requests the /todos/1 resource
-  // the intercept replies with the initial object
+  // 应用程序请求 /todos/1 资源
+  // 拦截器使用初始的对象响应
 
   cy.wait('@todo').then(() => {
-    // modify the response object
-    todo.title = 'New data'
-    // and override the intercept
+    // 修改响应对象
+    todo.title = '新数据'
+    // 覆盖拦截器响应
     cy.intercept('GET', '/todos/1', { body: todo })
   })
 })
 ```
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 要求 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`cy.fixture()` requires being chained off of `cy`.</li></List>
+<List><li>`.fixture()` 只能从`cy` 链接.</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`cy.fixture()` will only run assertions you have chained once, and will not [retry](/guides/core-concepts/retry-ability).</li></List>
+<List><li>`cy.fixture()` 只运行链接过的断言一次, 并且不会[重试](/guides/core-concepts/retry-ability).</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-- `cy.fixture()` should never time out.
+- `cy.fixture()` 永远不会超时.
 
 <Alert type="warning">
 
-Because `cy.fixture()` is asynchronous it is technically possible for there to be a timeout while talking to the internal Cypress automation APIs. But for practical purposes it should never happen.
+因为`cy.fixture()` 是异步的，所以在与内部Cypress自动化api通信时，在技术上可能会出现超时. 但出于实际目的，这是不应该发生的.
 
 </Alert>
 
-## Command Log
+## 命令日志
 
-- `cy.fixture()` does _not_ log in the Command Log
+- `cy.fixture()` _不_ 显示在命令日志中
 
-## See also
+## 另请参阅
 
-- [Guide: Variables and Aliases](/guides/core-concepts/variables-and-aliases)
+- [指南:变量和别名](/guides/core-concepts/variables-and-aliases)
 - [`cy.intercept()`](/api/commands/intercept)
 - [`.then()`](/api/commands/then)
-- [Recipe: Bootstrapping App Test Data](/examples/examples/recipes#Server-Communication)
-- [Fixtures](https://github.com/cypress-io/testing-workshop-cypress#fixtures) section of the Cypress Testing Workshop
-- [Blog: Load Fixtures from Cypress Custom Commands](https://glebbahmutov.com/blog/fixtures-in-custom-commands/) explains how to load or import fixtures to be used in the Cypress custom commands.
+- [配方:引导应用测试数据](/examples/examples/recipes#Server-Communication)
+- [Fixtures](https://github.com/cypress-io/testing-workshop-cypress#fixtures) Cypress测试工作坊的一部分
+- [博客:从Cypress自定义命令加载fixture](https://glebbahmutov.com/blog/fixtures-in-custom-commands/) 说明如何加载或导入要在Cypress自定义命令中使用的fixture.
