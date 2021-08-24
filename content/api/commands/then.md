@@ -2,21 +2,21 @@
 title: then
 ---
 
-Enables you to work with the subject yielded from the previous command.
+使您能够使用前一个命令生成的目标。
 
 <Alert type="info">
 
-**Note:** `.then()` assumes you are already familiar with core concepts such as [closures](/guides/core-concepts/variables-and-aliases#Closures).
+**注意:** `.then()` 假设您已经熟悉核心概念，如[闭包](/guides/core-concepts/variables-and-aliases#Closures).
 
 </Alert>
 
 <Alert type="info">
 
-**Note:** Prefer [`.should()` with callback](/api/commands/should#Function) over `.then()` for assertions as they are automatically rerun until no assertions throw within it but be aware of [differences](/api/commands/should#Differences).
+**注意:** 对于断言，宁愿使用 [`.should()` with callback](/api/commands/should#Function) 而不是`.then()`，因为它们会自动重试运行，直到其中没有断言再抛出，但要注意[区别](/api/commands/should#Differences).
 
 </Alert>
 
-## Syntax
+## 语法
 
 ```javascript
 .then(callbackFn)
@@ -25,48 +25,48 @@ Enables you to work with the subject yielded from the previous command.
 
 ### Usage
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
-cy.get('.nav').then(($nav) => {}) // Yields .nav as first arg
-cy.location().then((loc) => {}) // Yields location object as first arg
+cy.get('.nav').then(($nav) => {}) // 输出.nav 作为第一个参数
+cy.location().then((loc) => {}) // 输出location对象作为第一个参数
 ```
 
-### Arguments
+### 参数
 
 **<Icon name="angle-right"></Icon> options** **_(Object)_**
 
-Pass in an options object to change the default behavior of `.then()`.
+传入一个options对象来改变 `.then()`的默认行为.
 
-| Option    | Default                                                              | Description                                                          |
+| 选项       | 默认值                                                               | 描述                                                          |
 | --------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `timeout` | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts) | Time to wait for `.then()` to resolve before [timing out](#Timeouts) |
+| `timeout` | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts) | 等待`.then()` 在[超时](#Timeouts)之前解决的时间 |
 
 **<Icon name="angle-right"></Icon> callbackFn** **_(Function)_**
 
-Pass a function that takes the previously yielded subject as its first argument.
+传递一个函数，该函数接受前面命令输出的目标作为它的第一个参数.
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### Yields 输出[<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-`.then()` is modeled identically to the way Promises work in JavaScript. Whatever is returned from the callback function becomes the new subject and will flow into the next command (with the exception of `undefined`).
+`.then()`的行为与JavaScript中的promise 工作方式相同. 从回调函数返回的任何内容都将成为新的目标，并将流向下一个命令 (除了 `undefined`).
 
-Additionally, the result of the last Cypress command in the callback function will be yielded as the new subject and flow into the next command if there is no `return`.
+此外，回调函数中最后一个Cypress命令的结果将作为新输出的目标，如果没有`return`，则流入下一个命令。
 
-When `undefined` is returned by the callback function, the subject will not be modified and will instead carry over to the next command.
+当回调函数return `undefined`时，目标将不会被修改，而是会继续执行下一个命令.
 
-Just like Promises, you can return any compatible "thenable" (anything that has a `.then()` interface) and Cypress will wait for that to resolve before continuing forward through the chain of commands.
+就像promise一样，你可以返回任何兼容的`thenable`(具有`.then()`接口)的东西，Cypress会等待它解决，然后继续通过命令链前进.
 
-## Examples
+## 例子
 
 <Alert type="info">
 
-We have several more examples in our [Core Concepts Guide](/guides/core-concepts/variables-and-aliases) which go into the various ways you can use `.then()` to store, compare, and debug values.
+在我们的[核心概念指南](/guides/core-concepts/variables-and-aliases)中有更多的例子，介绍了使用 `.then()`来存储、比较和调试值的各种方式.
 
 </Alert>
 
-### DOM element
+### DOM 元素
 
-#### The `button` element is yielded
+#### 将输出 `button`元素
 
 ```javascript
 cy.get('button').then(($btn) => {
@@ -76,7 +76,7 @@ cy.get('button').then(($btn) => {
 })
 ```
 
-#### The number is yielded from previous command
+#### 从先前的命令中输出 数值
 
 ```js
 cy.wrap(1)
@@ -86,9 +86,9 @@ cy.wrap(1)
   .should('equal', 1) // true
 ```
 
-### Change subject
+### 改变目标
 
-#### The el subject is changed with another command
+#### el目标 被另一个命令改变
 
 ```javascript
 cy.get('button')
@@ -96,22 +96,22 @@ cy.get('button')
     const cls = $btn.attr('class')
 
     cy.wrap($btn).click().should('not.have.class', cls).find('i')
-    // since there is no explicit return
-    // the last Cypress command's yield is yielded
+    // 因为没有显式的返回
+    // 会输出Cypress最后一个命令所输出的目标
   })
-  .should('have.class', 'spin') // assert on i element
+  .should('have.class', 'spin') //在 i 元素上断言
 ```
 
-#### The number subject is changed with another command
+#### 数值目标 被另一个命令更改
 
 ```javascript
 cy.wrap(1).then((num) => {
-  cy.wrap(num)).should('equal', 1) // true
+  cy.wrap(num).should('equal', 1) // true
   cy.wrap(2)
 }).should('equal', 2) // true
 ```
 
-#### The number subject is changed by returning
+#### return 改变 数值目标
 
 ```javascript
 cy.wrap(1)
@@ -123,40 +123,37 @@ cy.wrap(1)
   .should('equal', 2) // true
 ```
 
-#### Returning `undefined` will not modify the yielded subject
+#### 返回`undefined`将不会修改输出目标
 
 ```javascript
 cy.get('form')
   .then(($form) => {
     console.log('form is:', $form)
-    // undefined is returned here, but $form will be
-    // yielded to allow for continued chaining
+    //此处返回Undefined，但 $form 将被继续为输出目标
   })
   .find('input')
   .then(($input) => {
-    // we have our $input element here since
-    // our form element was yielded and we called
-    // .find('input') on it
+    //这里是input元素，因为我们在输出 form元素 上调用了 find('input')
   })
 ```
 
-### Raw HTMLElements are wrapped with jQuery
+### 原始 htmlelement 是用jQuery封装的
 
 ```javascript
 cy.get('div')
   .then(($div) => {
-    return $div[0] // type => HTMLDivElement
+    return $div[0] // jQuery封装对象的第一个元素 才是真正的 HTMLDivElement
   })
   .then(($div) => {
-    $div // type => JQuery<HTMLDivElement>
+    $div // 类型依然是 JQuery<HTMLDivElement>
   })
 ```
 
 ### Promises
 
-Cypress waits for Promises to resolve before continuing
+Cypress等待Promises 解决后才继续
 
-#### Example using Q
+#### 使用 Q 的例子
 
 ```javascript
 cy.get('button')
@@ -172,7 +169,7 @@ cy.get('button')
   })
 ```
 
-#### Example using bluebird
+#### 使用bluebird的例子
 
 ```javascript
 cy.get('button')
@@ -182,7 +179,7 @@ cy.get('button')
   })
 ```
 
-#### Example using jQuery deferred's
+#### 使用 jQuery deferred 的例子
 
 ```javascript
 cy.get('button')
@@ -198,33 +195,33 @@ cy.get('button')
   })
 ```
 
-## Notes
+## 注意
 
-### Differences
+### 区别
 
-### What's the difference between `.then()` and `.should()`/`.and()`?
+### `.then()` 和 `.should()`/`.and()`的区别是什么??
 
-Using `.then()` allows you to use the yielded subject in a callback function and should be used when you need to manipulate some values or do some actions.
+使用`.then()`允许您在回调函数中，能够使用输出的目标，操作一些值或执行一些操作.
 
-When using a callback function with `.should()` or `.and()`, on the other hand, there is special logic to rerun the callback function until no assertions throw within it. You should be careful of side affects in a `.should()` or `.and()` callback function that you would not want performed multiple times.
+另一方面，当使用带有`.should()` 或 `.and()`的回调函数时, 有一个特殊的逻辑可以重新运行回调函数，直到其中没有抛出断言为止. 你应该注意`.should()` 或 `.and()`回调函数中不希望被多次执行的副作用。
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 要求 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`.then()` requires being chained off a previous command.</li></List>
+<List><li>`.then()` 需要链接到一个命令.</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`.then()` will only run assertions you have chained once, and will not [retry](/guides/core-concepts/retry-ability).</li></List>
+<List><li>`.then()` 将只运行您链接过的断言一次，而不会[重试](/guides/core-concepts/retry-ability).</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`.then()` can time out waiting for a promise you've returned to resolve.</li></List>
+<List><li>`.then()` 可以等待 待解决的承诺.</li></List>
 
-## Command Log
+## 命令日志
 
-- `.then()` does _not_ log in the Command Log
+- `.then()` _不会_ 在命令日志中显示
 
 ## History
 
@@ -233,7 +230,7 @@ When using a callback function with `.should()` or `.and()`, on the other hand, 
 | [0.14.0](/guides/references/changelog#0-14-0) | Added `timeout` option  |
 | [< 0.3.3](/guides/references/changelog#0-3-3) | `.then()` command added |
 
-## See also
+## 另请参阅
 
 - [`.and()`](/api/commands/and)
 - [`.each()`](/api/commands/each)
@@ -241,5 +238,5 @@ When using a callback function with `.should()` or `.and()`, on the other hand, 
 - [`.its()`](/api/commands/its)
 - [`.should()`](/api/commands/should)
 - [`.spread()`](/api/commands/spread)
-- [Guide: Using Closures to compare values](/guides/core-concepts/variables-and-aliases#Closures)
-- [Guide: Chains of Commands](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+- [指南:使用闭包比较值](/guides/core-concepts/variables-and-aliases#Closures)
+- [指南:命令链](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
