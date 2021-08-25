@@ -2,7 +2,7 @@
 title: type
 ---
 
-Type into a DOM element.
+在DOM元素上输入。
 
 ## Syntax
 
@@ -11,113 +11,113 @@ Type into a DOM element.
 .type(text, options)
 ```
 
-### Usage
+### 用法
 
-**<Icon name="check-circle" color="green"></Icon> Correct Usage**
-
-```javascript
-cy.get('input').type('Hello, World') // Type 'Hello, World' into the 'input'
-```
-
-**<Icon name="exclamation-triangle" color="red"></Icon> Incorrect Usage**
+**<Icon name="check-circle" color="green"></Icon> 正确的用法**
 
 ```javascript
-cy.type('Welcome') // Errors, cannot be chained off 'cy'
-cy.url().type('www.cypress.io') // Errors, 'url' does not yield DOM element
+cy.get('input').type('Hello, World') // 在'input'内输入'Hello, World'
 ```
 
-### Arguments
+**<Icon name="exclamation-triangle" color="red"></Icon> 不正确的用法**
+
+```javascript
+cy.type('Welcome') // 错误，不能直接链接'cy'
+cy.url().type('www.cypress.io') //错误，'url'不输出DOM元素
+```
+
+### 参数
 
 **<Icon name="angle-right"></Icon> text** **_(String)_**
 
-The text to be typed into the DOM element.
+要输入到DOM元素中的文本。
 
-Text passed to `.type()` may include any of the special character sequences below. These characters will pass along the correct `keyCode`, `key`, and `which` codes to any events issued during `.type()`. Some of the special character sequences may perform actions during typing such as `{movetoend}`, `{movetostart}`, or `{selectall}`.
+传递给`.type()`的文本可以包括下面的任何特殊字符序列. 这些字符将向`.type()`期间发出的任何事件传递正确的`keyCode`, `key`, 何 `which`代码。. 一些特殊字符序列可能在键入过程中执行操作，如`{movetoend}`, `{movetostart}`, 或 `{selectall}`。
 
 <Alert type="info">
 
-To disable parsing special characters sequences, set the `parseSpecialCharSequences` option to `false`.
+若要禁用解析特殊字符序列，请将`parseSpecialCharSequences`选项设置为`false`。
 
 </Alert>
 
-| Sequence        | Notes                                            |
+| 序列            | 注释                                            |
 | --------------- | ------------------------------------------------ |
-| `{{}`           | Types the literal `{` key                        |
-| `{backspace}`   | Deletes character to the left of the cursor      |
-| `{del}`         | Deletes character to the right of the cursor     |
-| `{downarrow}`   | Moves cursor down                                |
-| `{end}`         | Moves cursor to the end of the line              |
-| `{enter}`       | Types the Enter key                              |
-| `{esc}`         | Types the Escape key                             |
-| `{home}`        | Moves cursor to the start of the line            |
-| `{insert}`      | Inserts character to the right of the cursor     |
-| `{leftarrow}`   | Moves cursor left                                |
-| `{movetoend}`   | Moves cursor to end of typeable element          |
-| `{movetostart}` | Moves cursor to the start of typeable element    |
-| `{pagedown}`    | Scrolls down                                     |
-| `{pageup}`      | Scrolls up                                       |
-| `{rightarrow}`  | Moves cursor right                               |
-| `{selectall}`   | Selects all text by creating a `selection range` |
-| `{uparrow}`     | Moves cursor up                                  |
+| `{{}`           | 键入文字`{`键                        |
+| `{backspace}`   | 删除光标左侧的字符      |
+| `{del}`         | 删除光标右侧的字符     |
+| `{downarrow}`   | 移动光标向下                               |
+| `{end}`         | 将光标移动到行尾             |
+| `{enter}`       | 输入回车键                              |
+| `{esc}`         | 键入Escape键                           |
+| `{home}`        | 将光标移到行首            |
+| `{insert}`      | 向光标右侧插入字符     |
+| `{leftarrow}`   | 向左移动光标                               |
+| `{movetoend}`   | 将光标移动到可输入元素的末尾         |
+| `{movetostart}` | 将光标移动到可输入元素的开头    |
+| `{pagedown}`    | 向下滚动                                   |
+| `{pageup}`      | 向上滚动                                     |
+| `{rightarrow}`  | 向右移动光标                              |
+| `{selectall}`   | 通过创建`selection range`选择所有文本 |
+| `{uparrow}`     | 向上移动光标                                 |
 
-Text passed to `.type()` may also include any of these modifier character sequences:
+传递给`.type()`的文本也可以包括这些修饰符字符序列中的任何一个:
 
-| Sequence  | Notes                                                           |
+| 序列      | 注释                                                           |
 | --------- | --------------------------------------------------------------- |
-| `{alt}`   | Activates the `altKey` modifier. Aliases: `{option}`            |
-| `{ctrl}`  | Activates the `ctrlKey` modifier. Aliases: `{control}`          |
-| `{meta}`  | Activates the `metaKey` modifier. Aliases: `{command}`, `{cmd}` |
-| `{shift}` | Activates the `shiftKey` modifier.                              |
+| `{alt}`   | 激活`altKey`修饰符。别名:`{option}`                              |
+| `{ctrl}`  | 激活 `ctrlKey`修饰符。别名:`{control}`          |
+| `{meta}`  | 激活`metaKey`修饰符。命令别名:`{command}`, `{cmd}` |
+| `{shift}` | 激活`shiftKey`修饰符.                              |
 
 **<Icon name="angle-right"></Icon> options** **_(Object)_**
 
-Pass in an options object to change the default behavior of `.type()`.
+传入一个options对象来改变`.type()`的默认行为。
 
-| Option                       | Default                                                                        | Description                                                                                                                                        |
+| 选项                         | 默认值                                                                          | 描述                                                                                                                                        |
 | ---------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `animationDistanceThreshold` | [`animationDistanceThreshold`](/guides/references/configuration#Actionability) | The distance in pixels an element must exceed over time to be [considered animating](/guides/core-concepts/interacting-with-elements#Animations).  |
-| `delay`                      | `10`                                                                           | Delay after each keypress                                                                                                                          |
-| `force`                      | `false`                                                                        | Forces the action, disables [waiting for actionability](#Assertions)                                                                               |
-| `log`                        | `true`                                                                         | Displays the command in the [Command log](/guides/core-concepts/test-runner#Command-Log)                                                           |
-| `parseSpecialCharSequences`  | `true`                                                                         | Parse special characters for strings surrounded by `{}`, such as `{esc}`. Set to `false` to type the literal characters instead                    |
-| `release`                    | `true`                                                                         | Keep a modifier activated between commands                                                                                                         |
-| `scrollBehavior`             | [`scrollBehavior`](/guides/references/configuration#Actionability)             | Viewport position to where an element [should be scrolled](/guides/core-concepts/interacting-with-elements#Scrolling) before executing the command |
-| `timeout`                    | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts)           | Time to wait for `.type()` to resolve before [timing out](#Timeouts)                                                                               |
-| `waitForAnimations`          | [`waitForAnimations`](/guides/references/configuration#Actionability)          | Whether to wait for elements to [finish animating](/guides/core-concepts/interacting-with-elements#Animations) before executing the command.       |
+| `animationDistanceThreshold` | [`animationDistanceThreshold`](/guides/references/configuration#Actionability) | 一个元素必须超过的像素距离[被认为是动画](/guides/core-concepts/interacting-with-elements#Animations).  |
+| `delay`                      | `10`                                                                           | 每次按键后延迟                                                                                                                          |
+| `force`                      | `false`                                                                        | 强制执行动作，禁用[等待可操作性](#Assertions)                                                                               |
+| `log`                        | `true`                                                                         | 在[命令日志](/guides/core-concepts/test-runner#Command-Log)中显示命令                                                           |
+| `parseSpecialCharSequences`  | `true`                                                                         | 解析`{}`包围的字符串的特殊字符, 比如 `{esc}`. 设置为`false` 以输入文字字符                   |
+| `release`                    | `true`                                                                         | 在命令之间保持一个激活的修饰符                                                                                                        |
+| `scrollBehavior`             | [`scrollBehavior`](/guides/references/configuration#Actionability)             | 在执行命令之前，Viewport元素[应该滚动](/guides/core-concepts/interacting-with-elements#Scrolling)的位置 |
+| `timeout`                    | [`defaultCommandTimeout`](/guides/references/configuration#Timeouts)           | 等待 `.type()`在[超时](#Timeouts) 之前解决的时间                                                                              |
+| `waitForAnimations`          | [`waitForAnimations`](/guides/references/configuration#Actionability)          | 是否在执行命令之前等待元素[完成动画](/guides/core-concepts/interacting-with-elements#Animations) .       |
 
-### Yields [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
+### Yields 输出 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Subject-Management)
 
-<List><li>`.type()` yields the same subject it was given from the previous command.</li></List>
+<List><li>`.type()`输出与前一个命令相同的目标.</li></List>
 
-## Examples
+## 例子
 
 ### Input/Textarea
 
-#### Type into a textarea.
+#### 在 textarea 内输入.
 
 ```javascript
-cy.get('textarea').type('Hello world') // yields <textarea>
+cy.get('textarea').type('Hello world') // 输出 <textarea>
 ```
 
-#### Type into a login form
+#### 在登录表单中输入
 
 <Alert type="info">
 
-[Check out our example recipe of logging in by typing username and password in HTML web forms](/examples/examples/recipes#Logging-In)
+[看看我们的例子配方：在HTML网页表单输入用户名和密码登录](/examples/examples/recipes#Logging-In)
 
 </Alert>
 
-#### Mimic user typing behavior
+#### 模拟用户输入行为
 
-Each keypress is delayed 10ms by default in order to simulate how a very fast user types!
+默认情况下，每个按键延迟10毫秒，以模拟用户快速键入的方式!
 
 ```javascript
 cy.get('[contenteditable]').type('some text!')
 ```
 
-#### 'Selecting' an option from datalist
+#### 从datalist中'selecting' 一个选项
 
-For 'selecting' an option, just type it into the input.
+要'selecting'一个选项，只需将它输入。
 
 ```html
 <input list="fruit" />
@@ -134,11 +134,11 @@ cy.get('input').type('Apple')
 
 ### Tabindex
 
-#### Type into a non-input or non-textarea element with `tabindex`
+#### 使用`tabindex`在非input或非textarea元素中键入
 
 ```html
 <body>
-  <div id="el" tabindex="1">This div can receive focus!</div>
+  <div id="el" tabindex="1">这个div可以接收焦点!</div>
 </body>
 ```
 
@@ -146,189 +146,189 @@ cy.get('input').type('Apple')
 cy.get('#el').type('supercalifragilisticexpialidocious')
 ```
 
-### Date Inputs
+### 日期 Inputs
 
-Using `.type()` on a date input (`<input type="date">`) requires specifying a valid date in the format:
+在日期input(`<input type="date">`)上使用`.type()`需要指定一个有效的日期，格式如下:
 
-- `yyyy-MM-dd` (e.g. `1999-12-31`)
+- `yyyy-MM-dd` (比如. `1999-12-31`)
 
-This isn't exactly how a user would type into a date input, but is a workaround since date input support varies between browsers and the format varies based on locale. `yyyy-MM-dd` is the format required by [the W3 spec](https://www.w3.org/TR/html/infrastructure.html#dates-and-times) and is what the input's `value` will be set to regardless of browser or locale.
+这并不是用户在日期输入中输入的确切方式，但这是一种变通方法，因为日期输入支持在不同的浏览器之间有所不同，格式也因地区而异. `yyyy-MM-dd`是[W3规范](https://www.w3.org/TR/html/infrastructure.html#dates-and-times)所要求的格式，并且是input 将被设置的 `value`，与浏览器或地区无关。
 
-Special characters (`{leftarrow}`, `{selectall}`, etc.) are not permitted.
+特殊字符(`{leftarrow}`, `{selectall}`等)是不允许的。
 
-### Month Inputs
+### 月份 Inputs
 
-Using `.type()` on a month input (`<input type="month">`) requires specifying a valid month in the format:
+在月 input (`<input type="month">`) 上使用 `.type()` 需要指定有效的月份，格式如下:
 
-- `yyyy-MM` (e.g. `1999-12`)
+- `yyyy-MM` (比如. `1999-12`)
 
-This isn't exactly how a user would type into a month input, but is a workaround since month input support varies between browsers and the format varies based on locale. `yyyy-MM` is the format required by [the W3 spec](https://www.w3.org/TR/html/infrastructure.html#months) and is what the input's `value` will be set to regardless of browser or locale.
+这并不是用户输入月输入的确切方式，但这是一种解决办法，因为月输入支持在不同的浏览器之间有所不同，格式也因地区而异. `yyyy-MM` 是[W3规范](https://www.w3.org/TR/html/infrastructure.html#months) 所要求的格式，并且是input 将被设置的 `value`，与浏览器或地区无关。
 
-Special characters (`{leftarrow}`, `{selectall}`, etc.) are not permitted.
+特殊字符(`{leftarrow}`, `{selectall}`等)是不允许的。
 
-### Week Inputs
+### 周 Inputs
 
-Using `.type()` on a week input (`<input type="week">`) requires specifying a valid week in the format:
+使用`.type()`对 周 input (`<input type="week">`)需要指定有效的 周 ，格式如下:
 
-- `yyyy-Www` (e.g. `1999-W23`)
+- `yyyy-Www` (比如. `1999-W23`)
 
-Where `W` is the literal character 'W' and `ww` is the number of the week (01-53).
+其中，`W`是字面字符`W`， `ww`是第几周(01-53)。
 
-This isn't exactly how a user would type into a week input, but is a workaround since week input support varies between browsers and the format varies based on locale. `yyyy-Www` is the format required by [the W3 spec](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-week-string) and is what the input's `value` will be set to regardless of browser or locale.
+这并不是用户输入周输入的确切方式，但这是一种解决方案，因为周输入支持在不同的浏览器之间有所不同，格式也因地区而异。 `yyyy-Www` 是[W3规范](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-week-string)所要求的格式，并且是input 将被设置的 `value`，与浏览器或地区无关
 
-Special characters (`{leftarrow}`, `{selectall}`, etc.) are not permitted.
+特殊字符(`{leftarrow}`, `{selectall}`等)是不允许的。
 
-### Time Inputs
+### 时间 Inputs
 
-Using `.type()` on a time input (`<input type="time">`) requires specifying a valid time in the format:
+在时间input (`<input type="time">`)上使用`.type()`需要指定有效的时间，格式如下:
 
-- `HH:mm` (e.g. `01:30` or `23:15`)
-- `HH:mm:ss` (e.g. `10:00:30`)
-- `HH:mm:ss.SSS` (e.g. `12:00:00.384`)
+- `HH:mm` (比如. `01:30` 或 `23:15`)
+- `HH:mm:ss` (比如. `10:00:30`)
+- `HH:mm:ss.SSS` (比如. `12:00:00.384`)
 
-Where `HH` is 00-23, `mm` is 00-59, `ss` is 00-59, and `SSS` is 000-999.
+其中，`HH`为00-23, `mm`为00-59,`ss`为00-59, `SSS`为000-999。
 
-Special characters (`{leftarrow}`, `{selectall}`, etc.) are not permitted.
+特殊字符(`{leftarrow}`, `{selectall}`等)是不允许的。
 
-### Key Combinations
+### 组合键
 
-When using special character sequences, it's possible to activate modifier keys and type key combinations, such as `CTRL+R` or `SHIFT+ALT+b`. Single key combinations can be specified with `{modifier+key}` syntax.
+当使用特殊字符序列时，可以激活修改键和键入组合键，如`CTRL+R` or `SHIFT+ALT+b`. 单个键组合可以用`{modifier+key}`语法指定.
 
-A `keydown` event is fired when a modifier is activated and a `keyup` event is fired when it is released.
+当一个修饰符被激活时触发一个 `keydown`事件，当它被释放时触发一个`keyup`事件。
 
 <Alert type="info">
 
-You can also use key combinations during [.click()](/api/commands/click#Click-with-key-combinations), [.rightclick()](/api/commands/rightclick#Right-click-with-key-combinations) and [.dblclick()](/api/commands/dblclick#Double-click-with-key-combinations) through their options. See each doc for more information.
+您还可以在 [.click()](/api/commands/click#Click-with-key-combinations), [.rightclick()](/api/commands/rightclick#Right-click-with-key-combinations) and [.dblclick()](/api/commands/dblclick#Double-click-with-key-combinations) 通过选项中使用键组合.更多信息请参阅对应文档.
 
 </Alert>
 
-#### Type a key combination
+#### 键入组合键
 
 ```javascript
-// This is the same as a user holding down SHIFT and ALT, then pressing b
-// The modifiers are released before typing 'hello'
+// 这与用户按住SHIFT和ALT，然后按b是相同的
+// 修饰符在输入'hello'之前被释放
 cy.get('input').type('{shift+alt+b}hello')
 ```
 
-When a modifier is specified on its own, it will remain activated for the duration of the `.type()` command, and is released when all subsequent characters are typed. However, [{release: false}](#Options) can be passed as an [option](#Key-Combinations).
+当一个修饰符单独指定时，它将在 `.type()`命令期间保持激活状态，并在键入所有后续字符时释放. 然而，[{release: false}](#Options)可以作为[option](#Key-Combinations)传递。
 
 ```javascript
-// This is the same as a user holding down SHIFT and ALT, then typing 'hello'
-// The modifiers are held for the duration of the command.
+// 这和用户按住SHIFT和ALT键，然后输入hello是一样的
+// 修饰符在命令执行期间被保留。
 cy.get('input').type('{shift}{alt}hello')
 ```
 
-#### Type literal `{` or `}` characters
+#### 输入字面量`{` 或 `}`字符
 
-To disable parsing special characters sequences, set the `parseSpecialCharSequences` option to `false`.
+若要禁用解析特殊字符序列，请将`parseSpecialCharSequences`选项设置为`false`。
 
 ```js
 cy.get('#code-input')
-  // will not escape { } characters
+  // 不会转移 { } 字符
   .type('function (num) {return num * num;}', {
     parseSpecialCharSequences: false,
   })
 ```
 
-#### Hold down modifier key and type a word
+#### 按住修饰键并键入一个单词
 
 ```javascript
-// all characters after {ctrl} will have 'ctrlKey'
-// set to 'true' on their key events
+// {ctrl}后面的所有字符都有'ctrlKey'
+// 在事件上设置为“true”
 cy.get('input').type('{ctrl}test')
 ```
 
-#### Release behavior
+#### 释放行为
 
-By default, modifiers are released after each type command.
+默认情况下，修饰符在每个type命令之后被释放。
 
 ```javascript
-// 'ctrlKey' will be true for each event while 'test' is typed
-// but false while 'everything' is typed
+// 当键入'test'时，'ctrlKey'始终是按下
+// 但当键入'everything'时已释放
 cy.get('input').type('{ctrl}test').type('everything')
 ```
 
-To keep a modifier activated between commands, specify `{release: false}` in the options.
+要在命令之间保留一个修饰符，请在选项中指定`{release: false}`。
 
 ```javascript
-// 'altKey' will be true while typing 'foo'
+// 'altKey'将在键入'foo' 保持按下
 cy.get('input').type('{alt}foo', { release: false })
-// 'altKey' will also be true during 'get' and 'click' commands
+// 'altKey'在'get'和'click'命令中也保持按下
 cy.get('button').click()
 ```
 
-Modifiers are automatically released between tests, even with `{release: false}`.
+即使使用`{release: false}`，修饰符也会在测试之间自动释放。
 
 ```javascript
 it('has modifiers activated', () => {
-  // 'altKey' will be true while typing 'foo'
+  // 'altKey'将在键入'foo'时保持按下
   cy.get('input').type('{alt}foo', { release: false })
 })
 
 it('does not have modifiers activated', () => {
-  // 'altKey' will be false while typing 'bar'
+  // 键入bar时'altKey'已释放
   cy.get('input').type('bar')
 })
 ```
 
-To manually release modifiers within a test after using `{release: false}`, use another `type` command and the modifier will be released after it.
+要在使用`{release: false}`之后在测试中手动释放修饰符，请使用另一个`type`命令，修饰符将在它之后释放。
 
 ```javascript
-// 'altKey' will be true while typing 'foo'
+// 'altKey'将在键入'foo'时 按下
 cy.get('input').type('{alt}foo', { release: false })
-// 'altKey' will be true during the 'get' and 'click' commands
+// 'altKey'将在'get'和'click'命令期间保持按下
 cy.get('button').click()
-// 'altKey' will be released after this command
+// 'altKey'将在此命令之后释放
 cy.get('input').type('{alt}')
-// 'altKey' will be false during the 'get' and 'click' commands
+// 'altKey'在'get'和'click'命令期间将为按下
 cy.get('button').click()
 ```
 
-### Global Shortcuts
+### 全局快捷键
 
-`.type()` requires a focusable element as the subject, since it's usually intended to type into something that's an input or textarea. Although there _are_ a few cases where it's valid to "type" into something other than an input or textarea:
+`.type()` 需要一个可聚焦的元素作为目标，因为它通常用于input或textarea。 尽管在一些情况下，它是有效的“输入”到其他东西，而不是一个input或textarea:
 
-- Keyboard shortcuts where the listener is on the `document` or `body`.
-- Holding modifier keys and clicking an arbitrary element.
+- 键盘快捷键，监听器在`document` or `body`上.
+- 按住修饰符键并单击任意元素.
 
-To support this, the `body` can be used as the DOM element to type into (even though it's _not_ a focusable element).
+为了支持这一点，'`body`可以用作输入的DOM元素 (即使它不是一个可聚焦的元素).
 
-#### Use keyboard shortcuts in body
+#### 在body使用键盘快捷键
 
 ```javascript
-// all of the type events are fired on the body
+// 所有类型事件都在body上触发
 cy.get('body').type(
   '{uparrow}{uparrow}{downarrow}{downarrow}{leftarrow}{rightarrow}{leftarrow}{rightarrow}ba'
 )
 ```
 
-#### Do a shift + click
+#### 实现 shift + click
 
 ```javascript
-// execute a SHIFT + click on the first <li>
-// {release: false} is necessary so that
-// SHIFT will not be released after the type command
+// 执行SHIFT + click在 第一个<li> 上
+// {release: false} 是必要的，
+// SHIFT不会在type命令之后被释放
 cy.get('body').type('{shift}', { release: false }).get('li:first').click()
 ```
 
-### Options
+### 选项
 
-#### Force typing regardless of its actionable state
+#### 强制输入，不管它的可操作状态
 
-Forcing typing overrides the [actionable checks](/guides/core-concepts/interacting-with-elements#Forcing) Cypress applies and will automatically fire the events.
+强制输入将覆盖[可操作的检查](/guides/core-concepts/interacting-with-elements#Forcing)  Cypress应用并自动触发事件。
 
 ```javascript
 cy.get('input[type=text]').type('Test all the things', { force: true })
 ```
 
-## Notes
+## 注意
 
-### Supported Elements
+### 支持的元素
 
-- ^HTML `<body>` and `<textarea>` elements.
-- Elements with a defined `tabindex` attribute.
-- Elements with a defined `contenteditable` attribute.
-- ^HTML `<input>` elements with a defined `type` attribute of one of the following:
+- ^HTML `<body>` 以及 `<textarea>` 元素.
+- 定义了`tabindex`属性的元素。
+- 定义了`contenteditable`属性的元素。
+- ^HTML 定义了`type` 属性的`<input>` 元素，其`type` 属性如下所示之一:
   - `text`
   - `password`
   - `email`
@@ -342,21 +342,21 @@ cy.get('input[type=text]').type('Test all the things', { force: true })
   - `url`
   - `tel`
 
-### Actionability
+### 可操作性
 
-`.type()` is an "action command" that follows all the rules [defined here](/guides/core-concepts/interacting-with-elements).
+`.type()`是一个“操作命令”，它遵循[在这里定义](/guides/core-concepts/interacting-with-elements)的所有规则。.
 
-### Events
+### 事件
 
-#### When element is not in focus
+#### 当元素不是焦点时
 
-If the element is currently not in focus, before issuing any keystrokes Cypress will first issue a [`.click()`](/api/commands/click) to the element to bring it into focus.
+如果元素当前不在焦点中，在发出任何击键之前，Cypress将首先向元素发出[`.click()`](/api/commands/click) 以使其进入焦点.
 
-#### Events that fire
+#### 触发事件
 
-Once the element is in focus, Cypress will begin firing keyboard events.
+一旦元素被聚焦，Cypress将开始触发键盘事件。
 
-The following events will be fired based on what key was pressed identical to the event spec:
+以下事件将根据按下的键触发，与事件规范相同:
 
 - `keydown`
 - `keypress`
@@ -365,92 +365,90 @@ The following events will be fired based on what key was pressed identical to th
 - `input`
 - `keyup`
 
-\* Firefox does not support the `beforeinput` event [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/beforeinput_event)
+\* Firefox 不支持 `beforeinput` 事件 [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/beforeinput_event)
 
-Additionally `change` events will be fired either when the `{enter}` key is pressed (and the value has changed since the last focus event), or whenever the element loses focus. This matches browser behavior.
+此外，`change`事件将在按下`{enter}` 键时触发(自上次焦点事件以来，该值已发生变化)，或元素失去焦点时触发。 这与浏览器行为相匹配.
 
-Events that should not fire on non input types such as elements with `tabindex` do not fire their `textInput` or `input` events. Only typing into elements which cause the actual value or text to change will fire those events.
+不会在非input类型元素上触发事件，比如带有`tabindex`的元素，不会触发它们的`textInput` 或 `input` 事件。 只有在导致实际值或文本更改的元素中输入元素才会触发这些事件。
 
-#### Event Firing
+#### 事件触发
 
-The following rules have been implemented that match real browser behavior (and the spec):
+下面的规则已经实现，以匹配真实的浏览器行为(和规范):
 
-1. Cypress respects not firing subsequent events if previous ones were canceled.
-2. Cypress will fire `keypress` _only_ if that key is supposed to actually fire `keypress`.
-3. Cypress will fire `textInput` _only_ if typing that key would have inserted an actual character.
-4. Cypress will fire `input` _only_ if typing that key modifies or changes the value of the element.
+1. 如果之前的事件被取消，Cypress 就不触发后续事件。
+2. Cypress会 _只_ 触发`keypress`，如果这个键应该实际触发`keypress`.
+3. 只有在键入该键时插入了一个实际字符时，Cypress _才_ 会触发`textInput`.
+4. 只有当输入的键修改或改变了元素的值时，Cypress _才会_ 触发`input`。
 
-#### Event Cancellation
+#### 事件取消
 
-Cypress respects all default browser behavior when events are canceled.
+当事件被取消时，Cypress尊重所有默认的浏览器行为。
 
 ```javascript
-// prevent the characters from being inserted
-// by canceling keydown, keypress, or textInput
+// 通过取消keydown, keypress, 或 textInput来阻止字符插入
 $('#username').on('keydown', (e) => {
   e.preventDefault()
 })
 
-// Cypress will not insert any characters if keydown, keypress, or textInput
-// are cancelled - which matches the default browser behavior
+// 如果keydown、keypress或textInput被取消，Cypress 将不会插入任何字符 - 匹配默认的浏览器行为
 cy.get('#username').type('bob@gmail.com').should('have.value', '') // true
 ```
 
-#### Preventing `mousedown` does not prevent typing
+#### 阻止`mousedown` 并不能阻止输入
 
-In a real browser, preventing `mousedown` on a form field will prevent it from receiving focus and thus prevent it from being able to be typed into. Currently, Cypress does not factor this in. [open an issue](https://github.com/cypress-io/cypress/issues/new/choose) if you need this to be fixed.
+在真正的浏览器中，阻止`mousedown` 表单字段将阻止它接收焦点，从而阻止它被输入. 目前，Cypress还没有考虑到这一点。 [打开一个问题](https://github.com/cypress-io/cypress/issues/new/choose) 如果你需要这个被修复.
 
-#### Key Events Table
+#### 按键事件表
 
-Cypress prints out a table of key events that detail the keys that were pressed when clicking on type within the [Command Log](#Command-Log). Each character will contain the `which` character code and the events that happened as a result of that key press.
+Cypress打印出一个键事件表，详细说明了当在[命令日志](#Command-Log)中type时按下的键。每个字符都将包含`which`字符代码和按下该键后发生的事件。
 
-Events that were `defaultPrevented` may prevent other events from firing and those will show up as empty. For instance, canceling `keydown` will not fire `keypress` or `textInput` or `input`, but will fire `keyup` (which matches the spec).
+`defaultPrevented`的事件可能会阻止其他事件的触发，这些事件将显示为空。 For instance, 取消`keydown`就不会触发 `keypress` 或 `textInput` 或 `input`, 但会触发`keyup`(符合规范).
 
-Additionally, events that cause a `change` event to fire (such as typing `{enter}`) will display with the `change` event column as `true`.
+此外，触发`change`事件的事件(例如键入`{enter}`)将会让 `change`事件列显示为`true`。
 
-Any modifiers activated for the event are also listed in a `modifiers` column.
+为事件激活的任何修饰符也列在 `modifiers`列中。
 
 <DocsImage src="/img/api/type/key-events-table-shown-in-console-for-testing-typing.png" alt="Cypress .type() key events table" ></DocsImage>
 
 ### Tabbing
 
-#### Typing `tab` key does not work
+#### 键入`tab`键不起作用
 
-In the meantime, you can use the experimental [cypress-plugin-tab](https://github.com/Bkucera/cypress-plugin-tab) and can thumbs up [this issue](https://github.com/cypress-io/cypress/issues/299).
+同时，您可以使用实验性的[cypress-plugin-tab](https://github.com/Bkucera/cypress-plugin-tab) ，并可以点[这个问题](https://github.com/cypress-io/cypress/issues/299).
 
-### Modifiers
+### 修饰符
 
-#### Modifier effects
+#### 修饰符的影响
 
-In a real browser, if a user holds `SHIFT` and types `a`, a capital `A` will be typed into the input. Currently, Cypress does not simulate that behavior.
+在真正的浏览器中，如果用户按住`SHIFT`并输入`a`，则会输入大写的 `A`。目前，Cypress还没有模拟这种行为。
 
-Modifiers are simulated by setting their corresponding values to `true` for key and click events. So, for example, activating the `{shift}` modifier will set `event.shiftKey` to true for any key events, such as `keydown`.
+通过将按键和点击事件的相应值设置为`true`来模拟修饰符. 例如，激活`{shift}`修饰符将为所有健事件设置`event.shiftKey`为true， 比如 `keydown`.
 
 ```javascript
-// app code
+// 应用程序代码
 document.querySelector('input:first').addEventListener('keydown', (e) => {
-  // e.shiftKey will be true
+  // e.shiftKey === true
 })
 
-// in test
+// 测试代码
 cy.get('input:first').type('{shift}a')
 ```
 
-In the example above, a lowercase `a` will be typed, because that's the literal character specified. To type a capital `A`, you can use `.type('{shift}A')` (or `.type('A')` if you don't care about the `shiftKey` property on any key events).
+在上面的例子中，将输入小写的`a`，因为这是指定的文字字符.要键入大写的`A`，你可以使用 `.type('{shift}A')` (或`.type('A')`，如果你不关心任何键事件的`shiftKey`属性).
 
-This holds true for other special key combinations as well (that may be OS-specific). For example, on OSX, typing `ALT + SHIFT + K` creates the special character ``. Like with capitalization, `.type()` will not output ``, but the letter `k`.
+这也适用于其他特殊的键组合(可能是特定于操作系统的). 例如，在OSX上，键入`ALT + SHIFT + K`将创建特殊字符 ``. 与大写一样，`.type()`不会输出 ``, 除了字符 `k`.
 
-Similarly, modifiers will not affect arrow keys or deletion keys. For example `{ctrl}{backspace}` will not delete an entire word. [open an issue](https://github.com/cypress-io/cypress/issues/new) if you need modifier effects to be implemented.
+类似地，修改器不会影响方向键或删除键。 例如`{ctrl}{backspace}`将不会删除整个单词. 如果你需要修改效果被实现，[打开一个问题](https://github.com/cypress-io/cypress/issues/new).
 
-### Form Submission
+### 表单提交
 
-#### Implicit form submission behavior
+#### 隐式表单提交行为
 
-Cypress automatically matches the spec and browser behavior for pressing the `{enter}` key when the input belongs to a `<form>`.
+当input属于`<form>`时，Cypress自动匹配按`{enter}`键的规范和浏览器行为。
 
-This behavior is defined here: [Form Implicit Submission](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#implicit-submission).
+这个行为定义在这里:[表单隐式提交](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#implicit-submission).
 
-For instance the following will submit the form.
+例如，下面将提交表单.
 
 ```html
 <form action="/login">
@@ -465,46 +463,46 @@ cy.get('#username').type('bob@burgers.com')
 cy.get('#password').type('password123{enter}')
 ```
 
-Because there are multiple `inputs` and one `submit` button, Cypress submits the form (and fires submit events) as well as a synthetic `click` event to the `button`.
+因为有多个`inputs` 以及一个`submit`按钮，Cypress提交表单(并触发提交事件)以及一个合成的`click` 事件到`button`。.
 
-The spec defines the "submit" button as the first `input[type=submit]` or `button[type!=button]` from the form.
+规范将`submit`按钮定义为表单内的第一个 `input[type=submit]` 或 `button[type!=button]` 按钮。
 
-Additionally Cypress handles these 4 other situations as defined in the spec:
+此外，Cypress还处理了规范中定义的其他4种情况:
 
-1. Does not submit a form if there are multiple inputs and no `submit` button.
-2. Does not submit a form if the `submit` button is disabled.
-3. Submits a form, but does not fire synthetic `click` event, if there is 1 `input` and no `submit` button
-4. Submits form and fires a synthetic `click` event to the `submit` when it exists.
+1. 如果有多个输入且没有`submit`按钮，则不提交表单。
+2. 如果`submit`按钮被禁用，不提交表单.
+3. 提交表单，但如果有1个`input`而没有`submit`按钮，则不触发合成的`click`事件
+4. 提交表单，并在`submit`存在时触发一个合成的`click`事件。
 
-If the form's `submit` event is `preventedDefault` the form will not actually be submitted.
+如果表单的`submit`事件是 `preventedDefault`，表单实际上就不会被提交。
 
-## Rules
+## 规则
 
-### Requirements [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
+### 要求 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Chains-of-Commands)
 
-<List><li>`.type()` requires being chained off a command that yields DOM element(s).</li></List>
+<List><li>`.type()`需要链接一个命令，该命令输出DOM元素.</li></List>
 
-### Assertions [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
+### 断言 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Assertions)
 
-<List><li>`.type()` will automatically wait for the element to reach an [actionable state](/guides/core-concepts/interacting-with-elements)</li><li>`.type()` will automatically [retry](/guides/core-concepts/retry-ability) until all chained assertions have passed</li></List>
+<List><li>`.type()` 将自动等待元素达到[可操作状态](/guides/core-concepts/interacting-with-elements)</li><li>`.type()` 将自动[重试](/guides/core-concepts/retry-ability) 直到所有链式断言都通过</li></List>
 
-### Timeouts [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
+### 超时 [<Icon name="question-circle"/>](/guides/core-concepts/introduction-to-cypress#Timeouts)
 
-<List><li>`.type()` can time out waiting for the element to reach an [actionable state](/guides/core-concepts/interacting-with-elements).</li><li>`.type()` can time out waiting for assertions you've added to pass.</li></List>
+<List><li>`.type()` 在元素达到[可操作状态](/guides/core-concepts/interacting-with-elements) 的超时设定.</li><li>`.type()` 在等待添加的断言通过时会超时.</li></List>
 
-## Command Log
+## 命令日志
 
-**Type into the input**
+**在 input 上输入**
 
 ```javascript
 cy.get('input[name=firstName]').type('Jane Lane')
 ```
 
-The commands above will display in the Command Log as:
+上面的命令将在命令日志中显示为:
 
 <DocsImage src="/img/api/type/type-in-input-shown-in-command-log.png" alt="Command Log type" ></DocsImage>
 
-When clicking on `type` within the command log, the console outputs the following:
+当点击命令日志中的`type`时，控制台输出如下:
 
 <DocsImage src="/img/api/type/console-log-of-typing-with-entire-key-events-table-for-each-character.png" alt="Console Log type" ></DocsImage>
 
@@ -527,7 +525,7 @@ When clicking on `type` within the command log, the console outputs the followin
 | [0.8.0](/guides/references/changelog#0-8-0)   | Added small delay (10ms) between each keystroke during `cy.type()`                                                        |
 | [0.6.12](/guides/references/changelog#0-6-12) | Added option `force`                                                                                                      |
 
-## See also
+## 另请参阅
 
 - [`.blur()`](/api/commands/blur)
 - [`.clear()`](/api/commands/clear)
